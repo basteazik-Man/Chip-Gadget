@@ -13,6 +13,9 @@ const FALLBACK_BRANDS = [
 ];
 
 export default function Home() {
+	if (process.env.NODE_ENV === 'development' && window.location.search.includes('test-error=1')) {
+    throw new Error("Тестовая ошибка для проверки ErrorBoundary");
+  }
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
