@@ -1,4 +1,4 @@
-// Home.jsx
+// Home.jsx (обновленная версия с улучшенными кнопками категорий)
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -64,8 +64,20 @@ export default function Home() {
   const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
 
   const categories = [
-    { id: "tv", title: "Телевизоры", icon: "📺", color: "from-purple-500 to-blue-600" },
-    { id: "laptops", title: "Ноутбуки", icon: "💻", color: "from-green-500 to-teal-600" },
+    { 
+      id: "laptops", 
+      title: "Ноутбуки", 
+      icon: "💻", 
+      gradient: "from-purple-500 to-blue-600",
+      hoverGradient: "from-purple-600 to-blue-700"
+    },
+    { 
+      id: "tv", 
+      title: "Телевизоры", 
+      icon: "📺", 
+      gradient: "from-green-500 to-teal-600",
+      hoverGradient: "from-green-600 to-teal-700"
+    },
   ];
 
   const handleCategoryClick = (categoryId) => {
@@ -73,7 +85,7 @@ export default function Home() {
   };
 
   return (
-    <div className="flex flex-col items-center text-center px-6 relative z-10 pt-16">
+    <div className="flex flex-col items-center text-center px-4 sm:px-6 relative z-10 pt-16">
       {/* === Поиск === */}
       <motion.div
         ref={searchRef}
@@ -174,21 +186,21 @@ export default function Home() {
         >
           <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Выберите бренд</h2>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 md:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
             {brandsToShow.map((brand) => (
               <motion.button
                 key={brand.id}
                 onClick={() => navigate(`/brand/${brand.id}`)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex flex-col items-center p-5 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer"
+                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer"
               >
                 <img
                   src={brand.logo}
                   alt={brand.title}
-                  className="w-16 h-16 md:w-20 md:h-20 mb-3 object-contain"
+                  className="w-14 h-14 md:w-20 md:h-20 mb-3 object-contain"
                 />
-                <p className="font-medium text-gray-700">{brand.title}</p>
+                <p className="font-medium text-gray-700 text-sm md:text-base">{brand.title}</p>
               </motion.button>
             ))}
           </div>
@@ -209,16 +221,16 @@ export default function Home() {
       >
         <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Ремонт техники</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {categories.map((cat) => (
             <motion.button
               key={cat.id}
               onClick={() => handleCategoryClick(cat.id)}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className={`w-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-r ${cat.color} shadow-xl hover:shadow-2xl text-white min-h-[140px]`}
+              className={`w-full flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl bg-gradient-to-r ${cat.gradient} shadow-xl hover:shadow-2xl text-white min-h-[140px] transition-all duration-300 hover:bg-gradient-to-r ${cat.hoverGradient}`}
             >
-              <span className="text-3xl mb-3">
+              <span className="text-3xl md:text-4xl mb-3">
                 {cat.icon}
               </span>
               <span className="text-xl font-bold">{cat.title}</span>
