@@ -7,8 +7,6 @@ import { getBrandStatus } from "../utils/priceUtils";
 
 // Вспомогательная функция для получения всех моделей из brandData
 const getAllModelsFromBrandData = (brandKey) => {
-  // В реальном коде здесь должна быть логика из brandData
-  // Создаем заглушку для демонстрации
   const mockModels = {
     'apple': ['iphone-13', 'iphone-14', 'iphone-15', 'ipad-pro'],
     'samsung': ['galaxy-s23', 'galaxy-s24', 'galaxy-tab'],
@@ -72,7 +70,8 @@ const saveToLocal = (data) => {
 };
 
 const exportJSON = (data) => {
-  const blob = new Blob([JSON.stringify(data, null, 2)], {
+  const transformedData = transformDataForExport(data);
+  const blob = new Blob([JSON.stringify(transformedData, null, 2)], {
     type: "application/json",
   });
   const a = document.createElement("a");
@@ -106,6 +105,16 @@ const transformDataForExport = (data) => {
       });
     });
   });
+
+  // ДОБАВЛЕНО: Экспорт данных категорий услуг
+  try {
+    const categoryServices = localStorage.getItem("chipgadget_category_services");
+    if (categoryServices) {
+      transformed._categoryServices = JSON.parse(categoryServices);
+    }
+  } catch (e) {
+    console.error("Ошибка при экспорте категорий услуг:", e);
+  }
   
   return transformed;
 };
@@ -159,6 +168,16 @@ const mergeImportedData = (currentData, importedData) => {
       }
     }
   });
+
+  // ДОБАВЛЕНО: Импорт данных категорий услуг
+  if (importedData._categoryServices) {
+    try {
+      localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData._categoryServices));
+      console.log("✅ Категории услуг импортированы");
+    } catch (e) {
+      console.error("❌ Ошибка импорта категорий услуг:", e);
+    }
+  }
   
   return merged;
 };
@@ -174,6 +193,8 @@ const exportJSFilesAsZip = async (data) => {
     
     // Добавляем каждый бренд как отдельный JS файл в архив
     Object.keys(transformedData).forEach((key) => {
+      if (key === '_categoryServices') return; // Пропускаем категории услуг в основном экспорте
+      
       const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
         transformedData[key],
         null,
@@ -181,6 +202,16 @@ const exportJSFilesAsZip = async (data) => {
       )};`;
       zip.file(`${key}.js`, content);
     });
+
+    // Добавляем файл с категориями услуг
+    if (transformedData._categoryServices) {
+      const categoryContent = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
+        transformedData._categoryServices,
+        null,
+        2
+      )};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
+      zip.file(`category-services.js`, categoryContent);
+    }
 
     // Добавляем README файл с инструкциями
     const readmeContent = `# Chip&Gadget Price Files
@@ -192,10 +223,12 @@ const exportJSFilesAsZip = async (data) => {
 1. Распакуйте этот архив
 2. Скопируйте все .js файлы в папку: src/data/prices/
 3. Замените существующие файлы
+4. Файл category-services.js содержит услуги по категориям (телевизоры, ноутбуки)
 
 ## Содержимое архива:
 
-${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key].brand}`).join('\n')}
+${Object.keys(transformedData).filter(key => key !== '_categoryServices').map(key => `- ${key}.js → ${transformedData[key].brand}`).join('\n')}
+${transformedData._categoryServices ? '- category-services.js → Услуги по категориям' : ''}
 
 Сгенерировано: ${new Date().toLocaleString()}
 `;
@@ -219,6 +252,8 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
     const transformedData = transformDataForExport(data);
     alert('Не удалось создать ZIP архив. Используем старый метод экспорта.');
     Object.keys(transformedData).forEach((key) => {
+      if (key === '_categoryServices') return;
+      
       const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
         transformedData[key],
         null,
@@ -428,8 +463,7 @@ export default function AdminPanel() {
   };
 
   const handleExport = () => {
-    const transformedData = transformDataForExport(data);
-    exportJSON(transformedData);
+    exportJSON(data);
   };
 
   const handleExportJS = async () => {
