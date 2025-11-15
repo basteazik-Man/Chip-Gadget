@@ -228,6 +228,7 @@ export default function Home() {
               onClick={() => handleCategoryClick(cat.id)}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
+			  {(() => { throw new Error("Тестовая ошибка") })()}
               className={`w-full flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl bg-gradient-to-r ${cat.gradient} shadow-xl hover:shadow-2xl text-white min-h-[140px] transition-all duration-300 hover:bg-gradient-to-r ${cat.hoverGradient}`}
             >
               <span className="text-3xl md:text-4xl mb-3">
