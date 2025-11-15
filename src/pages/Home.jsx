@@ -1,6 +1,4 @@
-[file name]: Home.jsx
-[file content begin]
-// [file name]: Home.jsx
+// Home.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -228,4 +226,3 @@ export default function Home() {
     </div>
   );
 }
-[file content end]

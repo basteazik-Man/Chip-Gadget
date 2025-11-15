@@ -1,6 +1,4 @@
-[file name]: CategoryServicesEditor.jsx
-[file content begin]
-// [file name]: CategoryServicesEditor.jsx
+//: CategoryServicesEditor.jsx
 // СОЗДАТЬ новый файл в: src/components/admin/CategoryServicesEditor.jsx
 
 import React, { useState } from 'react';

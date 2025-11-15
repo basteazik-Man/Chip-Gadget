@@ -1,4 +1,4 @@
-// [file name]: AdminPanel.jsx
+// AdminPanel.jsx
 // ЗАМЕНИТЬ существующий файл в: src/pages/AdminPanel.jsx
 
 import React, { useState, useEffect, useRef } from "react";
