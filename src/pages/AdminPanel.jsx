@@ -1,14 +1,31 @@
-// AdminPanel.jsx (добавлена вкладка для услуг категорий)
+// AdminPanel.jsx
 import React, { useState, useEffect, useRef } from "react";
-import { PRICES } from "../data/prices";
-import { brandData } from "../data/brandData";
-import { SERVICES } from "../data/services";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
-import { getModelStatus, getBrandStatus } from '../utils/priceUtils';
 import AdminAuth from "../components/AdminAuth";
 
-// ... (остальные функции остаются такими же)
+// Упрощенная функция инициализации данных
+const buildInitialData = () => {
+  try {
+    const saved = localStorage.getItem("chipgadget_prices");
+    if (saved) {
+      return JSON.parse(saved);
+    }
+  } catch (e) {
+    console.error("Ошибка загрузки из localStorage:", e);
+  }
+  return {};
+};
+
+const saveToLocal = (data) => {
+  try {
+    localStorage.setItem("chipgadget_prices", JSON.stringify(data));
+    return true;
+  } catch (e) {
+    console.error("❌ Ошибка сохранения:", e);
+    return false;
+  }
+};
 
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(() => {
@@ -16,17 +33,17 @@ export default function AdminPanel() {
   });
   const [data, setData] = useState(() => buildInitialData());
   const [categoryServices, setCategoryServices] = useState(() => {
-    const saved = localStorage.getItem("chipgadget_category_services");
-    return saved ? JSON.parse(saved) : {};
+    try {
+      const saved = localStorage.getItem("chipgadget_category_services");
+      return saved ? JSON.parse(saved) : {};
+    } catch (error) {
+      console.error("Ошибка загрузки categoryServices:", error);
+      return {};
+    }
   });
   const [brandKey, setBrandKey] = useState("");
   const [message, setMessage] = useState("");
-  const [unsaved, setUnsaved] = useState(false);
-  const [isExporting, setIsExporting] = useState(false);
-  const [activeTab, setActiveTab] = useState("brands"); // "brands" или "categories"
-  const saveTimer = useRef(null);
-  const importJsonRef = useRef(null);
-  const importJsRef = useRef(null);
+  const [activeTab, setActiveTab] = useState("brands");
 
   // Если не аутентифицирован, показываем форму входа
   if (!authenticated) {
@@ -37,12 +54,7 @@ export default function AdminPanel() {
 
   // Автосохранение при изменении данных
   useEffect(() => {
-    if (saveTimer.current) clearTimeout(saveTimer.current);
-    saveTimer.current = setTimeout(() => {
-      saveToLocal(data);
-      setUnsaved(false);
-    }, 1000);
-    return () => clearTimeout(saveTimer.current);
+    saveToLocal(data);
   }, [data]);
 
   // Автосохранение категорий
@@ -50,24 +62,71 @@ export default function AdminPanel() {
     localStorage.setItem("chipgadget_category_services", JSON.stringify(categoryServices));
   }, [categoryServices]);
 
-  // Проверяем наличие данных при загрузке
-  useEffect(() => {
-    const saved = localStorage.getItem("chipgadget_prices");
-    if (saved) {
-      setMessage("✅ Данные загружены из сохранения");
-      setTimeout(() => setMessage(""), 3000);
-    } else {
-      setMessage("🆕 Создана новая структура данных");
-      setTimeout(() => setMessage(""), 3000);
-    }
-  }, []);
+  const handleSave = () => {
+    saveToLocal(data);
+    setMessage("💾 Изменения сохранены");
+    setTimeout(() => setMessage(""), 3000);
+  };
 
-  // ... (остальные функции остаются такими же)
+  const addBrand = () => {
+    const name = prompt("Введите название нового бренда:");
+    if (!name) return;
+    const key = name.toLowerCase().replace(/\s+/g, "-");
+    if (data[key]) return alert("Такой бренд уже существует!");
+
+    const newBrand = {
+      brand: name,
+      currency: "₽",
+      discount: { type: "none", value: 0 },
+      models: {},
+    };
+
+    const updated = { ...data, [key]: newBrand };
+    setData(updated);
+    setBrandKey(key);
+    setMessage(`✅ Бренд "${name}" добавлен`);
+    setTimeout(() => setMessage(""), 3000);
+  };
+
+  const deleteBrand = () => {
+    if (!brandKey) return alert("Сначала выберите бренд!");
+    if (!confirm(`Удалить бренд "${data[brandKey]?.brand}"?`)) return;
+    const updated = { ...data };
+    delete updated[brandKey];
+    setData(updated);
+    setBrandKey("");
+    setMessage("🗑️ Бренд удалён");
+    setTimeout(() => setMessage(""), 3000);
+  };
+
+  const currentBrand = brandKey ? data[brandKey] : null;
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-4 py-8">
       <div className="bg-gradient-to-r from-cyan-700 to-purple-700 text-white text-sm py-2 px-4 rounded-b-lg shadow-md mb-6 text-center">
-        ⚙️ Админка Chip&Gadget — редактирование брендов, моделей и услуг
+        ⚙️ Админка Chip&Gadget
+      </div>
+
+      {/* Кнопки управления */}
+      <div className="flex flex-wrap gap-2 mb-6 justify-center">
+        <button
+          onClick={handleSave}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-cyan-600 hover:bg-cyan-700"
+        >
+          💾 Сохранить
+        </button>
+        <button
+          onClick={addBrand}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-emerald-600 hover:bg-emerald-700"
+        >
+          ➕ Добавить бренд
+        </button>
+        <button
+          onClick={deleteBrand}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-rose-600 hover:bg-rose-700"
+        >
+          🗑️ Удалить бренд
+        </button>
       </div>
 
       {/* Переключение вкладок */}
@@ -96,22 +155,11 @@ export default function AdminPanel() {
         </div>
       </div>
 
-      {/* Кнопки управления */}
-      <div className="flex flex-wrap gap-2 mb-6 justify-center">
-        {/* ... остальные кнопки ... */}
-      </div>
-
       {message && (
         <div className={`text-center font-medium mb-4 ${
           message.includes('❌') ? 'text-red-700' : 'text-green-700'
         }`}>
           {message}
-        </div>
-      )}
-
-      {unsaved && (
-        <div className="text-center text-orange-600 font-medium mb-4">
-          ⚠️ Есть несохраненные изменения
         </div>
       )}
 
@@ -130,15 +178,15 @@ export default function AdminPanel() {
             >
               <option value="">— Не выбран —</option>
               {brands.map((key) => (
-                <option key={key} value={key} style={getBrandStyle(key)}>
-                  {getBrandLabel(key)}
+                <option key={key} value={key}>
+                  {data[key]?.brand || key}
                 </option>
               ))}
             </select>
           </div>
 
           {/* Редактор брендов */}
-          {brandKey ? (
+          {currentBrand ? (
             <BrandEditor
               brandKey={brandKey}
               data={data}
