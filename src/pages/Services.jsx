@@ -1,5 +1,4 @@
-[file name]: Services.jsx
-[file content begin]
+// Services.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -82,7 +81,7 @@ export default function Services() {
               {items.map((service, index) => (
                 <div 
                   key={index}
-                  className="p-4 bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-300"
+                  className="p-4 bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
                 >
                   <div className="flex justify-between items-start">
                     <div>
@@ -124,4 +123,3 @@ export default function Services() {
     </div>
   );
 }
-[file content end]

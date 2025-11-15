@@ -1,11 +1,10 @@
-// [file name]: App.jsx
-// ЗАМЕНИТЬ существующий файл в: src/App.jsx
-
+// App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import BrandPage from "./components/BrandPage";
 import ModelPage from "./pages/ModelPage";
 import SearchResults from "./pages/SearchResults";
+import Services from "./pages/Services";
 import ScrollToTop from "./components/ScrollToTop";
 import HeaderMain from "./components/HeaderMain";
 import FooterMain from "./components/FooterMain";
@@ -24,6 +23,7 @@ function MainLayout() {
           <Route path="/brand/:brand" element={<BrandPage />} />
           <Route path="/brand/:brand/model/:model" element={<ModelPage />} />
           <Route path="/search" element={<SearchResults />} />
+          <Route path="/services" element={<Services />} />
         </Routes>
         <ShareButton />
       </main>
@@ -35,7 +35,6 @@ function MainLayout() {
 function App() {
   return (
     <Routes>
-      {/* Админка с изолированным layout - ДОЛЖНА БЫТЬ ПЕРВОЙ */}
       <Route 
         path="/admin/*" 
         element={
@@ -44,8 +43,6 @@ function App() {
           </AdminLayout>
         } 
       />
-      
-      {/* Основные маршруты с обычным layout */}
       <Route path="/*" element={<MainLayout />} />
     </Routes>
   );

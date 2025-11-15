@@ -1,5 +1,4 @@
-// src/data/services.js
-// Услуги и цены по категориям. Цены примерные, уточняйте в админке.
+// services.js (данные по умолчанию)
 export const SERVICES_BY_CATEGORY = {
   laptops: [
     { name: "Замена экрана (ноутбук)", price: "от 3500₽" },

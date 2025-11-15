@@ -64,34 +64,38 @@ export default function Home() {
   const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
 
   const categories = [
-    { id: "tv", title: "Телевизоры", icon: "📺" },
-    { id: "laptops", title: "Ноутбуки", icon: "💻" },
+    { id: "tv", title: "Телевизоры", icon: "📺", color: "from-purple-500 to-blue-600" },
+    { id: "laptops", title: "Ноутбуки", icon: "💻", color: "from-green-500 to-teal-600" },
   ];
+
+  const handleCategoryClick = (categoryId) => {
+    navigate(`/services?category=${categoryId}`);
+  };
 
   return (
     <div className="flex flex-col items-center text-center px-6 relative z-10 pt-16">
       {/* === Поиск === */}
       <motion.div
         ref={searchRef}
-        className="w-full max-w-4xl mb-10 relative"
-        initial={{ opacity: 0, y: 10 }}
+        className="w-full max-w-4xl mb-8 relative"
+        initial={{ opacity: 0, y: 5 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeOut" }}
+        transition={{ duration: 0.2 }}
       >
         <div className="flex">
           <input
             type="text"
-            placeholder="🔍 Поиск модели или бренда (например, note, iphone 15, galaxy)"
+            placeholder="🔍 Поиск модели или бренда..."
             value={query}
             onChange={handleInputChange}
             onFocus={handleInputFocus}
             onKeyDown={(e) => e.key === "Enter" && handleSearchAll()}
-            className="w-full p-4 rounded-l-2xl border border-gray-300 shadow-md focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none text-gray-800 text-lg transition-all"
+            className="w-full p-4 rounded-l-2xl border border-gray-300 shadow-md focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none text-gray-800 text-lg"
           />
           <button
             onClick={handleSearchAll}
             disabled={!query.trim()}
-            className={`px-6 py-4 font-semibold rounded-r-2xl transition-all ${
+            className={`px-6 py-4 font-semibold rounded-r-2xl ${
               query.trim()
                 ? "bg-blue-600 text-white hover:bg-blue-700"
                 : "bg-gray-300 text-gray-500 cursor-not-allowed"
@@ -107,7 +111,7 @@ export default function Home() {
               initial={{ opacity: 0, y: -5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.2 }}
+              transition={{ duration: 0.15 }}
               className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 max-h-80 overflow-auto"
             >
               {hasResults ? (
@@ -116,7 +120,7 @@ export default function Home() {
                     <motion.li
                       key={index}
                       onClick={() => handleSelect(item.brandKey, item.model)}
-                      className="px-4 py-3 text-left text-gray-800 hover:bg-blue-50 cursor-pointer transition-all border-b border-gray-100 last:border-b-0"
+                      className="px-4 py-3 text-left text-gray-800 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
                     >
                       <div className="flex justify-between items-center">
                         <div>
@@ -149,12 +153,12 @@ export default function Home() {
 
       {/* === Приветствие === */}
       <motion.section
-        className="w-full max-w-5xl mt-4 mb-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, ease: "easeOut" }}
+        className="w-full max-w-5xl mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
       >
-        <h1 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow-sm">
+        <h1 className="text-3xl md:text-4xl font-extrabold text-white">
           Добро пожаловать в <span className="text-white/90">Чип&Гаджет</span>
         </h1>
         <p className="text-white/90 mt-2 text-lg">Ремонт смартфонов, планшетов и ноутбуков всех брендов</p>
@@ -164,9 +168,9 @@ export default function Home() {
       {brandsToShow && brandsToShow.length > 0 ? (
         <motion.section
           className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm mb-6"
-          initial={{ opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.3 }}
         >
           <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Выберите бренд</h2>
 
@@ -175,9 +179,9 @@ export default function Home() {
               <motion.button
                 key={brand.id}
                 onClick={() => navigate(`/brand/${brand.id}`)}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="flex flex-col items-center p-5 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="flex flex-col items-center p-5 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer"
               >
                 <img
                   src={brand.logo}
@@ -199,9 +203,9 @@ export default function Home() {
       {/* === КАТЕГОРИИ (TV / LAPTOPS) === */}
       <motion.section
         className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm"
-        initial={{ opacity: 0, y: 15 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
       >
         <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Ремонт техники</h2>
 
@@ -209,12 +213,12 @@ export default function Home() {
           {categories.map((cat) => (
             <motion.button
               key={cat.id}
-              onClick={() => navigate(`/services?category=${cat.id}`)}
-              whileHover={{ scale: 1.05, y: -3 }}
+              onClick={() => handleCategoryClick(cat.id)}
+              whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 shadow-xl hover:shadow-2xl transition-all duration-300 text-white min-h-[140px] group"
+              className={`w-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-r ${cat.color} shadow-xl hover:shadow-2xl text-white min-h-[140px]`}
             >
-              <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
+              <span className="text-3xl mb-3">
                 {cat.icon}
               </span>
               <span className="text-xl font-bold">{cat.title}</span>
