@@ -1,6 +1,4 @@
-//: CategoryServicesEditor.jsx
-// СОЗДАТЬ новый файл в: src/components/admin/CategoryServicesEditor.jsx
-
+// CategoryServicesEditor.jsx
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -283,4 +281,3 @@ const CategoryServicesEditor = ({ data, onChange }) => {
 };
 
 export default CategoryServicesEditor;
-[file content end]

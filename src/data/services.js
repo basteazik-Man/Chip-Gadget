@@ -1,4 +1,4 @@
-// services.js (данные по умолчанию)
+// services.js
 export const SERVICES_BY_CATEGORY = {
   laptops: [
     { name: "Замена экрана (ноутбук)", price: "от 3500₽" },
