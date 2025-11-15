@@ -1,4 +1,4 @@
-// Home.jsx (обновленная версия с улучшенными кнопками категорий)
+// Home.jsx (обновленная версия с улучшенными тенями кнопок брендов)
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -179,7 +179,7 @@ export default function Home() {
       {/* === Кнопки брендов === */}
       {brandsToShow && brandsToShow.length > 0 ? (
         <motion.section
-          className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm mb-6"
+          className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.3 }}
@@ -193,7 +193,7 @@ export default function Home() {
                 onClick={() => navigate(`/brand/${brand.id}`)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-xl hover:shadow-2xl cursor-pointer transition-all duration-300 border border-gray-100"
+                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-2xl hover:shadow-3xl cursor-pointer transition-all duration-300 border border-gray-100"
               >
                 <img
                   src={brand.logo}
@@ -214,7 +214,7 @@ export default function Home() {
 
       {/* === КАТЕГОРИИ (TV / LAPTOPS) === */}
       <motion.section
-        className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm"
+        className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
