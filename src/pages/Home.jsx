@@ -1,3 +1,5 @@
+[file name]: Home.jsx
+[file content begin]
 // [file name]: Home.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -64,12 +66,12 @@ export default function Home() {
   const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
 
   const categories = [
-    { id: "tv", title: "Телевизоры" },
-    { id: "laptops", title: "Ноутбуки" },
+    { id: "tv", title: "Телевизоры", icon: "📺" },
+    { id: "laptops", title: "Ноутбуки", icon: "💻" },
   ];
 
   return (
-    <div className="flex flex-col items-center text-center px-6 relative z-10">
+    <div className="flex flex-col items-center text-center px-6 relative z-10 pt-16">
       {/* === Поиск === */}
       <motion.div
         ref={searchRef}
@@ -210,11 +212,15 @@ export default function Home() {
             <motion.button
               key={cat.id}
               onClick={() => navigate(`/services?category=${cat.id}`)}
-              whileHover={{ scale: 1.03, y: -2 }}
+              whileHover={{ scale: 1.05, y: -3 }}
               whileTap={{ scale: 0.98 }}
-              className="w-full flex items-center justify-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 text-xl font-semibold text-gray-700 min-h-[120px]"
+              className="w-full flex flex-col items-center justify-center p-8 rounded-2xl bg-gradient-to-r from-purple-500 to-blue-600 shadow-xl hover:shadow-2xl transition-all duration-300 text-white min-h-[140px] group"
             >
-              {cat.title}
+              <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">
+                {cat.icon}
+              </span>
+              <span className="text-xl font-bold">{cat.title}</span>
+              <span className="text-white/80 text-sm mt-2">Посмотреть услуги и цены</span>
             </motion.button>
           ))}
         </div>
@@ -222,3 +228,4 @@ export default function Home() {
     </div>
   );
 }
+[file content end]
