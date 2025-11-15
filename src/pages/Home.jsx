@@ -193,7 +193,7 @@ export default function Home() {
                 onClick={() => navigate(`/brand/${brand.id}`)}
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-xl cursor-pointer"
+                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-xl hover:shadow-2xl cursor-pointer transition-all duration-300 border border-gray-100"
               >
                 <img
                   src={brand.logo}

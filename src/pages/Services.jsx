@@ -1,6 +1,7 @@
 // Services.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { SERVICES_BY_CATEGORY } from "../data/services";
 
 export default function Services() {
   const { search } = useLocation();
@@ -11,7 +12,7 @@ export default function Services() {
   const [servicesData, setServicesData] = useState({});
   const [items, setItems] = useState([]);
 
-  // Загружаем данные только из localStorage
+  // Загружаем данные из localStorage или из файла
   useEffect(() => {
     const loadServicesData = () => {
       try {
@@ -20,19 +21,31 @@ export default function Services() {
           const parsed = JSON.parse(saved);
           setServicesData(parsed);
           
-          // Устанавливаем элементы для отображения только если они есть в localStorage
           if (category && parsed[category]) {
             setItems(parsed[category]);
           } else {
             setItems([]);
           }
         } else {
-          // Если в localStorage нет данных - пустой массив
-          setItems([]);
+          // Если в localStorage нет данных - используем данные из файла
+          setServicesData(SERVICES_BY_CATEGORY);
+          
+          if (category && SERVICES_BY_CATEGORY[category]) {
+            setItems(SERVICES_BY_CATEGORY[category]);
+          } else {
+            setItems([]);
+          }
         }
       } catch (error) {
         console.error("Ошибка загрузки данных услуг:", error);
-        setItems([]);
+        // Fallback на файловые данные
+        setServicesData(SERVICES_BY_CATEGORY);
+        
+        if (category && SERVICES_BY_CATEGORY[category]) {
+          setItems(SERVICES_BY_CATEGORY[category]);
+        } else {
+          setItems([]);
+        }
       }
     };
 

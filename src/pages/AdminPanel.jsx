@@ -372,43 +372,75 @@ export default function AdminPanel() {
     reader.onload = (e) => {
       try {
         const fileContent = e.target.result;
-        const match = fileContent.match(/export default (\{[\s\S]*\});?$/);
-        if (!match) {
-          throw new Error('Неверный формат JS файла');
+        
+        let importedData;
+        
+        // Пытаемся распарсить как export default
+        const defaultMatch = fileContent.match(/export default (\{[\s\S]*\});?$/);
+        if (defaultMatch) {
+          const dataStr = defaultMatch[1];
+          const jsonStr = dataStr
+            .replace(/(\w+):/g, '"$1":')
+            .replace(/'/g, '"');
+          importedData = JSON.parse(jsonStr);
+        } 
+        // Пытаемся распарсить как export const SERVICES_BY_CATEGORY
+        else {
+          const constMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*\});?$/);
+          if (constMatch) {
+            const dataStr = constMatch[1];
+            const jsonStr = dataStr
+              .replace(/(\w+):/g, '"$1":')
+              .replace(/'/g, '"');
+            importedData = JSON.parse(jsonStr);
+          } else {
+            throw new Error('Неверный формат JS файла');
+          }
         }
         
-        const dataStr = match[1];
-        const jsonStr = dataStr
-          .replace(/(\w+):/g, '"$1":')
-          .replace(/'/g, '"');
-        
-        const importedData = JSON.parse(jsonStr);
         const brandKey = file.name.replace('.js', '');
         
-        if (!confirm(`Импортировать данные для бренда ${brandKey}?`)) {
-          return;
-        }
-        
-        const mergedData = { ...data };
-        if (mergedData[brandKey] && importedData.models) {
-          Object.keys(importedData.models).forEach(modelKey => {
-            if (mergedData[brandKey].models[modelKey]) {
-              mergedData[brandKey].models[modelKey] = importedData.models[modelKey].map(service => ({
-                name: service.name || service.title || "Услуга",
-                price: service.price || service.basePrice || 0,
-                finalPrice: service.finalPrice || service.price || service.basePrice || 0,
-                active: service.active !== undefined ? service.active : true,
-                discount: service.discount || 0
-              }));
-            }
-          });
+        if (brandKey === 'category-services') {
+          // Обработка импорта категорий услуг
+          if (!confirm(`Импортировать данные категорий услуг?`)) {
+            return;
+          }
           
-          setData(mergedData);
-          saveToLocal(mergedData);
-          setUnsaved(false);
-          setMessage(`✅ Данные для ${brandKey} успешно импортированы!`);
+          try {
+            localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData));
+            setCategoryServices(importedData);
+            setMessage(`✅ Данные категорий услуг успешно импортированы!`);
+          } catch (e) {
+            console.error('Ошибка импорта категорий:', e);
+            setMessage('❌ Ошибка при импорте категорий услуг');
+          }
         } else {
-          setMessage('❌ Бренд не найден в текущей структуре');
+          // Обработка импорта данных бренда
+          if (!confirm(`Импортировать данные для бренда ${brandKey}?`)) {
+            return;
+          }
+          
+          const mergedData = { ...data };
+          if (mergedData[brandKey] && importedData.models) {
+            Object.keys(importedData.models).forEach(modelKey => {
+              if (mergedData[brandKey].models[modelKey]) {
+                mergedData[brandKey].models[modelKey] = importedData.models[modelKey].map(service => ({
+                  name: service.name || service.title || "Услуга",
+                  price: service.price || service.basePrice || 0,
+                  finalPrice: service.finalPrice || service.price || service.basePrice || 0,
+                  active: service.active !== undefined ? service.active : true,
+                  discount: service.discount || 0
+                }));
+              }
+            });
+            
+            setData(mergedData);
+            saveToLocal(mergedData);
+            setUnsaved(false);
+            setMessage(`✅ Данные для ${brandKey} успешно импортированы!`);
+          } else {
+            setMessage('❌ Бренд не найден в текущей структуре');
+          }
         }
         
       } catch (error) {
