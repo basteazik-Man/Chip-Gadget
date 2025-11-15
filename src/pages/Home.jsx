@@ -1,0 +1,224 @@
+// [file name]: Home.jsx
+import React, { useState, useRef, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { useNavigate } from "react-router-dom";
+import { useSearch } from "../hooks/useSearch";
+import { BRANDS } from "../data/brands";
+
+const FALLBACK_BRANDS = [
+  { id: "apple", title: "Apple", logo: "/logos/apple.svg" },
+  { id: "samsung", title: "Samsung", logo: "/logos/samsung.svg" },
+  { id: "xiaomi", title: "Xiaomi", logo: "/logos/xiaomi.svg" },
+  { id: "honor", title: "Honor", logo: "/logos/honor.svg" },
+];
+
+export default function Home() {
+  const [query, setQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const navigate = useNavigate();
+
+  const searchHook = useSearch || (() => ({ searchResults: [] }));
+  const { searchResults: results = [] } = searchHook(query);
+
+  const searchRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  const handleSelect = (brand, model) => {
+    setQuery("");
+    setShowSuggestions(false);
+    navigate(`/brand/${brand}/model/${encodeURIComponent(model)}`);
+  };
+
+  const handleSearchAll = () => {
+    setShowSuggestions(false);
+    if (query.trim()) {
+      navigate(`/search?q=${encodeURIComponent(query.trim())}`);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    setQuery(value);
+    setShowSuggestions(value.trim().length > 0);
+  };
+
+  const handleInputFocus = () => {
+    if (query.trim().length > 0) {
+      setShowSuggestions(true);
+    }
+  };
+
+  const hasQuery = query.trim().length > 0;
+  const hasResults = results.length > 0;
+
+  const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
+
+  const categories = [
+    { id: "tv", title: "Телевизоры" },
+    { id: "laptops", title: "Ноутбуки" },
+  ];
+
+  return (
+    <div className="flex flex-col items-center text-center px-6 relative z-10">
+      {/* === Поиск === */}
+      <motion.div
+        ref={searchRef}
+        className="w-full max-w-4xl mb-10 relative"
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4, ease: "easeOut" }}
+      >
+        <div className="flex">
+          <input
+            type="text"
+            placeholder="🔍 Поиск модели или бренда (например, note, iphone 15, galaxy)"
+            value={query}
+            onChange={handleInputChange}
+            onFocus={handleInputFocus}
+            onKeyDown={(e) => e.key === "Enter" && handleSearchAll()}
+            className="w-full p-4 rounded-l-2xl border border-gray-300 shadow-md focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none text-gray-800 text-lg transition-all"
+          />
+          <button
+            onClick={handleSearchAll}
+            disabled={!query.trim()}
+            className={`px-6 py-4 font-semibold rounded-r-2xl transition-all ${
+              query.trim()
+                ? "bg-blue-600 text-white hover:bg-blue-700"
+                : "bg-gray-300 text-gray-500 cursor-not-allowed"
+            }`}
+          >
+            Поиск
+          </button>
+        </div>
+
+        <AnimatePresence>
+          {showSuggestions && hasQuery && (
+            <motion.ul
+              initial={{ opacity: 0, y: -5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -5 }}
+              transition={{ duration: 0.2 }}
+              className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 max-h-80 overflow-auto"
+            >
+              {hasResults ? (
+                <>
+                  {results.slice(0, 10).map((item, index) => (
+                    <motion.li
+                      key={index}
+                      onClick={() => handleSelect(item.brandKey, item.model)}
+                      className="px-4 py-3 text-left text-gray-800 hover:bg-blue-50 cursor-pointer transition-all border-b border-gray-100 last:border-b-0"
+                    >
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <span className="font-semibold">{item.model}</span>
+                          <span className="text-gray-500 text-sm ml-2">({item.brand})</span>
+                        </div>
+                        <span className="text-xs text-gray-400">→</span>
+                      </div>
+                    </motion.li>
+                  ))}
+
+                  {results.length > 10 && (
+                    <li
+                      onClick={handleSearchAll}
+                      className="px-4 py-3 text-center font-semibold text-blue-600 hover:bg-blue-50 cursor-pointer border-t border-gray-200"
+                    >
+                      Показать все {results.length} результатов →
+                    </li>
+                  )}
+                </>
+              ) : (
+                <li className="px-4 py-3 text-center text-gray-600">
+                  Не найдено результатов для "{query}"
+                </li>
+              )}
+            </motion.ul>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* === Приветствие === */}
+      <motion.section
+        className="w-full max-w-5xl mt-4 mb-8 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
+      >
+        <h1 className="text-3xl md:text-4xl font-extrabold text-white drop-shadow-sm">
+          Добро пожаловать в <span className="text-white/90">Чип&Гаджет</span>
+        </h1>
+        <p className="text-white/90 mt-2 text-lg">Ремонт смартфонов, планшетов и ноутбуков всех брендов</p>
+      </motion.section>
+
+      {/* === Кнопки брендов === */}
+      {brandsToShow && brandsToShow.length > 0 ? (
+        <motion.section
+          className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm mb-6"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: "easeOut", delay: 0.1 }}
+        >
+          <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Выберите бренд</h2>
+
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5 md:gap-6">
+            {brandsToShow.map((brand) => (
+              <motion.button
+                key={brand.id}
+                onClick={() => navigate(`/brand/${brand.id}`)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex flex-col items-center p-5 md:p-6 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer"
+              >
+                <img
+                  src={brand.logo}
+                  alt={brand.title}
+                  className="w-16 h-16 md:w-20 md:h-20 mb-3 object-contain"
+                />
+                <p className="font-medium text-gray-700">{brand.title}</p>
+              </motion.button>
+            ))}
+          </div>
+        </motion.section>
+      ) : (
+        <div className="w-full max-w-5xl bg-yellow-50 p-6 rounded-3xl border border-yellow-200">
+          <h2 className="text-xl font-semibold text-yellow-800">Бренды не загружены</h2>
+          <p className="text-yellow-700 mt-2">Проверьте файл с данными брендов</p>
+        </div>
+      )}
+
+      {/* === КАТЕГОРИИ (TV / LAPTOPS) === */}
+      <motion.section
+        className="w-full max-w-5xl bg-white/80 p-6 md:p-8 rounded-3xl shadow-md backdrop-blur-sm"
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.2 }}
+      >
+        <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Ремонт техники</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 md:gap-6">
+          {categories.map((cat) => (
+            <motion.button
+              key={cat.id}
+              onClick={() => navigate(`/services?category=${cat.id}`)}
+              whileHover={{ scale: 1.03, y: -2 }}
+              whileTap={{ scale: 0.98 }}
+              className="w-full flex items-center justify-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-300 text-xl font-semibold text-gray-700 min-h-[120px]"
+            >
+              {cat.title}
+            </motion.button>
+          ))}
+        </div>
+      </motion.section>
+    </div>
+  );
+}

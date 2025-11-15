@@ -1,0 +1,16 @@
+﻿/* Базовые стили, светлая тема */
+* { box-sizing: border-box; }
+body { margin: 0; font-family: Inter, Arial, sans-serif; background: #f6f7fb; color: #111; }
+a { color: inherit; }
+h1, h2 { margin: 0; }
+
+/* контейнер */
+.container { max-width: 1100px; margin: 0 auto; padding: 16px; }
+
+/* карточки и кнопки */
+.card { background: #fff; border-radius: 10px; padding: 14px; box-shadow: 0 6px 18px rgba(20,20,20,0.04); }
+.btn { display:inline-block; padding: 8px 12px; border-radius: 8px; text-decoration: none; color:#fff; background:#2563eb; }
+
+/* сетки */
+.grid { display: grid; gap: 12px; }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }

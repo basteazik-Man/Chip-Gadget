@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* дополнительные базовые правила */
+body {
+  @apply bg-slate-50 text-gray-800;
+}
