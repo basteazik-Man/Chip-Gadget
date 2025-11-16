@@ -26,7 +26,7 @@ export default function BrandPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Бренд не найден</h1>
           <button
             onClick={() => navigate("/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
           >
             На главную
           </button>
@@ -43,7 +43,7 @@ export default function BrandPage() {
           <h1 className="text-2xl font-bold text-gray-800 mb-4">Бренд "{brand}" не поддерживается</h1>
           <button
             onClick={() => navigate("/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg"
+            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
           >
             На главную
           </button>
@@ -87,10 +87,10 @@ export default function BrandPage() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-5 py-3 rounded-2xl font-semibold transition-all relative z-30 ${
+                className={`px-5 py-3 rounded-2xl font-semibold transition-all relative z-30 shadow-lg hover:shadow-xl ${
                   selectedCategory === cat
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-white text-gray-700 border border-gray-200 hover:bg-blue-50"
+                    ? "bg-gradient-to-r from-blue-600 to-purple-600 text-white shadow-xl"
+                    : "bg-white text-gray-700 border border-gray-200 hover:bg-blue-50 hover:border-blue-200"
                 }`}
                 style={{ cursor: 'pointer' }}
               >
@@ -106,7 +106,7 @@ export default function BrandPage() {
               <button
                 key={model.id}
                 onClick={() => navigate(`/brand/${brand}/model/${encodeURIComponent(model.id)}`)}
-                className="bg-white rounded-2xl py-4 px-6 text-gray-800 font-semibold border border-gray-200 hover:shadow-lg transition-all text-base md:text-lg w-full text-center relative z-10"
+                className="bg-white rounded-2xl py-4 px-6 text-gray-800 font-semibold border border-gray-200 shadow-md hover:shadow-xl transition-all text-base md:text-lg w-full text-center relative z-10 hover:border-blue-300 hover:bg-blue-50"
                 style={{ cursor: 'pointer' }}
               >
                 {model.name}
