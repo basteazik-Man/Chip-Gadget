@@ -4,7 +4,6 @@ import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
 import AdminAuth from "../components/AdminAuth";
 import { getBrandStatus } from "../utils/priceUtils";
-import { BRANDS } from "../data/brands";
 
 // Вспомогательная функция для получения всех моделей из brandData
 const getAllModelsFromBrandData = (brandKey) => {
@@ -12,11 +11,7 @@ const getAllModelsFromBrandData = (brandKey) => {
     'apple': ['iphone-13', 'iphone-14', 'iphone-15', 'ipad-pro'],
     'samsung': ['galaxy-s23', 'galaxy-s24', 'galaxy-tab'],
     'xiaomi': ['redmi-note-12', 'poco-x5', 'mi-13'],
-    'honor': ['honor-90', 'honor-x8', 'honor-pad'],
-    'huawei': ['huawei-p50', 'huawei-mate-50', 'huawei-tablet'],
-    'realme': ['realme-10', 'realme-11', 'realme-pad'],
-    'infinix': ['infinix-hot-30', 'infinix-zero-ultra'],
-    'tecno': ['tecno-camon-20', 'tecno-spark-10']
+    'honor': ['honor-90', 'honor-x8', 'honor-pad']
   };
   return mockModels[brandKey] || [];
 };
@@ -41,9 +36,8 @@ const buildInitialData = () => {
     }
   }
 
-  // Создаем базовую структуру для ВСЕХ брендов из brands.js
-  const defaultBrands = BRANDS.map(brand => brand.id);
-  
+  // Создаем базовую структуру
+  const defaultBrands = ['apple', 'samsung', 'xiaomi', 'honor'];
   defaultBrands.forEach((key) => {
     const modelsObj = {};
     const allModels = getAllModelsFromBrandData(key);
@@ -53,12 +47,8 @@ const buildInitialData = () => {
       modelsObj[modelKey] = [];
     });
 
-    // Находим название бренда из BRANDS
-    const brandInfo = BRANDS.find(b => b.id === key);
-    const brandName = brandInfo ? brandInfo.title : key.charAt(0).toUpperCase() + key.slice(1);
-
     data[key] = {
-      brand: brandName,
+      brand: key.charAt(0).toUpperCase() + key.slice(1),
       currency: "₽",
       discount: { type: "none", value: 0 },
       models: modelsObj,
