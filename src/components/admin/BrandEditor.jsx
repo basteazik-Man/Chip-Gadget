@@ -1,9 +1,8 @@
-// BrandEditor.jsx (ПОЛНАЯ ВЕРСИЯ со счетчиком и всеми моделями)
+// BrandEditor.jsx (исправленная версия)
 import React, { useState, useMemo } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
 import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
-import { BRANDS } from "../../data/brands";
 
 export default function BrandEditor({ brandKey, data, onChange }) {
   const brand = data[brandKey];
@@ -98,7 +97,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     if (newName) updateBrand({ brand: newName });
   };
 
-  // Получаем статус бренда с подсчетом незаполненных моделей
+  // Получаем статус бренда
   const brandStatusObj = getBrandStatus(brand);
   const statusMap = {
     full: "green",
@@ -166,19 +165,9 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     return [];
   };
 
-  // Получаем ВСЕ модели бренда (включая кастомные)
-  const getAllBrandModels = () => {
-    return Object.keys(brand.models || {});
-  };
-
   // Получаем модели для выбранной категории
   const getModelsForCategory = () => {
     if (!selectedCategory) return [];
-
-    if (selectedCategory === "all") {
-      // Все модели бренда
-      return getAllBrandModels();
-    }
 
     if (selectedCategory === "custom") {
       // Кастомные модели (не из категорий)
@@ -199,45 +188,18 @@ export default function BrandEditor({ brandKey, data, onChange }) {
 
   const modelsToShow = getModelsForCategory();
 
-  // Получаем статистику по моделям для отображения
-  const getModelsStats = () => {
-    const allModels = getAllBrandModels();
-    let filled = 0;
-    let partial = 0;
-    let empty = 0;
-
-    allModels.forEach(modelKey => {
-      const status = getModelStatusInfo(modelKey).status;
-      if (status === "full") filled++;
-      else if (status === "partial") partial++;
-      else empty++;
-    });
-
-    return { total: allModels.length, filled, partial, empty };
-  };
-
-  const modelsStats = getModelsStats();
-
   return (
     <div className={`p-6 rounded-2xl border shadow-md mb-8 ${colorMap[brandStatus]}`}>
-      {/* Заголовок бренда с кнопками управления и статистикой */}
+      {/* Заголовок бренда с кнопками управления */}
       <div className="flex justify-between items-center mb-6">
-        <div>
-          <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3 mb-2">
-            {brand.brand}
-            <span className="text-lg">
-              {brandStatus === "green" && "🟢"}
-              {brandStatus === "yellow" && "🟡"} 
-              {brandStatus === "red" && "🔴"}
-            </span>
-          </h2>
-          <div className="text-sm text-gray-600">
-            Модели: <span className="font-semibold">{modelsStats.total}</span> | 
-            Заполнены: <span className="text-green-600 font-semibold">{modelsStats.filled}</span> | 
-            Частично: <span className="text-yellow-600 font-semibold">{modelsStats.partial}</span> | 
-            Пустые: <span className="text-red-600 font-semibold">{modelsStats.empty}</span>
-          </div>
-        </div>
+        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
+          {brand.brand}
+          <span className="text-lg">
+            {brandStatus === "green" && "🟢"}
+            {brandStatus === "yellow" && "🟡"} 
+            {brandStatus === "red" && "🔴"}
+          </span>
+        </h2>
         <div className="flex gap-2 items-center">
           <button
             onClick={handleRenameBrand}
@@ -288,9 +250,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           className="w-full max-w-md border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
         >
           <option value="">— Выберите категорию —</option>
-          <option value="all">
-            📱 Все модели ({getAllBrandModels().length})
-          </option>
           {Object.keys(brandCategories).map(category => (
             <option key={category} value={category}>
               {category.replace(/_/g, ' ').toUpperCase()} ({brandCategories[category].filter(model => brand.models[model.id]).length})
@@ -304,7 +263,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
             return true;
           }).length > 0 && (
             <option value="custom">
-              🆕 Другие модели ({Object.keys(brand.models || {}).filter(modelKey => {
+              Другие модели ({Object.keys(brand.models || {}).filter(modelKey => {
                 for (const category of Object.values(brandCategories)) {
                   if (category.find(m => m.id === modelKey)) return false;
                 }
@@ -320,10 +279,9 @@ export default function BrandEditor({ brandKey, data, onChange }) {
         <div className="mb-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="font-semibold text-gray-700 text-lg">
-              {selectedCategory === "all" && "📱 Все модели"}
-              {selectedCategory === "custom" && "🆕 Другие модели"}
-              {!["all", "custom"].includes(selectedCategory) && 
-                selectedCategory.replace(/_/g, ' ').toUpperCase()
+              {selectedCategory === "custom" 
+                ? "Другие модели" 
+                : selectedCategory.replace(/_/g, ' ').toUpperCase()
               } 
               ({modelsToShow.length})
             </h3>
@@ -388,8 +346,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
             <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
               {selectedCategory === "custom" 
                 ? "Нет кастомных моделей" 
-                : selectedCategory === "all"
-                ? "Нет моделей для этого бренда"
                 : "В этой категории нет моделей с данными"
               }
             </div>
@@ -403,12 +359,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           <div className="text-4xl mb-4">📱</div>
           <p className="text-lg font-medium mb-2">Выберите категорию выше</p>
           <p className="text-sm">Чтобы увидеть список моделей для редактирования</p>
-          <div className="mt-4 text-xs text-gray-400">
-            Всего моделей: {getAllBrandModels().length} | 
-            Заполнено: {modelsStats.filled} | 
-            Частично: {modelsStats.partial} | 
-            Пустых: {modelsStats.empty}
-          </div>
         </div>
       )}
 
