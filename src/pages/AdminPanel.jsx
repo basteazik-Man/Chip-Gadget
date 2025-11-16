@@ -383,7 +383,7 @@ export default function AdminPanel() {
         let importedData;
         
         // Пытаемся распарсить как export default
-        const defaultMatch = fileContent.match(/export default (\{[\s\S]*\});?$/);
+        const defaultMatch = fileContent.match(/export default (\{[\s\S]*?\});?$/);
         if (defaultMatch) {
           const dataStr = defaultMatch[1];
           const jsonStr = dataStr
@@ -393,15 +393,41 @@ export default function AdminPanel() {
         } 
         // Пытаемся распарсить как export const SERVICES_BY_CATEGORY
         else {
-          const constMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*\});?$/);
+          const constMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*?\});?$/);
           if (constMatch) {
             const dataStr = constMatch[1];
             const jsonStr = dataStr
               .replace(/(\w+):/g, '"$1":')
               .replace(/'/g, '"');
             importedData = JSON.parse(jsonStr);
-          } else {
-            throw new Error('Неверный формат JS файла');
+          } 
+          // Пытаемся распарсить как export const defaultPrices
+          else {
+            const defaultPricesMatch = fileContent.match(/export const defaultPrices = (\{[\s\S]*?\});?$/);
+            if (defaultPricesMatch) {
+              const dataStr = defaultPricesMatch[1];
+              const jsonStr = dataStr
+                .replace(/(\w+):/g, '"$1":')
+                .replace(/'/g, '"');
+              importedData = JSON.parse(jsonStr);
+              
+              // Преобразуем структуру defaultPrices в нужный формат
+              importedData = {
+                brand: importedData.brand || "default",
+                currency: importedData.currency || "₽",
+                discount: importedData.discount || { type: "none", value: 0 },
+                models: {
+                  "default-model": (importedData.defaults || []).map(item => ({
+                    name: item.title,
+                    price: item.basePrice,
+                    finalPrice: item.basePrice,
+                    active: item.active !== false
+                  }))
+                }
+              };
+            } else {
+              throw new Error('Неверный формат JS файла');
+            }
           }
         }
         
