@@ -1,4 +1,6 @@
-// BrandEditor.jsx (исправленная версия)
+// === BrandEditor.jsx ===
+// УЛУЧШЕННАЯ ВЕРСИЯ - без дублирующей кнопки, с выпадающим списком валют и редактированием названий
+
 import React, { useState, useMemo } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
@@ -57,13 +59,13 @@ export default function BrandEditor({ brandKey, data, onChange }) {
 
     // Обновляем кастомное имя в данных модели
     const updatedModels = { ...brand.models };
-    if (Array.isArray(updatedModels[modelKey])) {
-      // Если это массив услуг, преобразуем в объект с кастомным именем
+    if (!updatedModels[modelKey]._customName) {
+      // Если это первый раз, когда меняем имя, добавляем поле
       updatedModels[modelKey] = {
-        services: updatedModels[modelKey],
+        ...updatedModels[modelKey],
         _customName: newName
       };
-    } else if (typeof updatedModels[modelKey] === 'object') {
+    } else {
       updatedModels[modelKey]._customName = newName;
     }
     
@@ -71,7 +73,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   };
 
   const deleteModel = (modelKey) => {
-    if (!confirm(`Удалить модель "${getModelDisplayName(modelKey)}"?`)) return;
+    if (!confirm(`Удалить модель "${modelKey}"?`)) return;
     const newModels = { ...brand.models };
     delete newModels[modelKey];
     updateBrand({ models: newModels });
@@ -108,15 +110,9 @@ export default function BrandEditor({ brandKey, data, onChange }) {
 
   // Функция для получения статуса модели
   const getModelStatusInfo = (modelKey) => {
-    const modelData = brand.models[modelKey];
-    let services = [];
-    
-    if (Array.isArray(modelData)) {
-      services = modelData;
-    } else if (modelData && modelData.services) {
-      services = modelData.services;
-    }
-    
+    const services = Array.isArray(brand.models[modelKey]) 
+      ? brand.models[modelKey] 
+      : brand.models[modelKey]?.services || [];
     return getModelStatus(services);
   };
 
@@ -139,9 +135,8 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   // Функция для получения человеко-читаемого имени модели
   const getModelDisplayName = (modelKey) => {
     // Проверяем есть ли кастомное имя
-    const modelData = brand.models[modelKey];
-    if (modelData && typeof modelData === 'object' && modelData._customName) {
-      return modelData._customName;
+    if (brand.models[modelKey]?._customName) {
+      return brand.models[modelKey]._customName;
     }
     
     // Ищем модель в brandData для получения красивого имени
@@ -152,17 +147,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     
     // Если не нашли, преобразуем ключ
     return modelKey.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
-  };
-
-  // Получаем услуги для модели (универсальный метод)
-  const getModelServices = (modelKey) => {
-    const modelData = brand.models[modelKey];
-    if (Array.isArray(modelData)) {
-      return modelData;
-    } else if (modelData && modelData.services) {
-      return modelData.services;
-    }
-    return [];
   };
 
   // Получаем модели для выбранной категории
@@ -378,7 +362,9 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           </div>
           <ModelEditor
             modelKey={selectedModel}
-            services={getModelServices(selectedModel)}
+            services={Array.isArray(brand.models[selectedModel]) 
+              ? brand.models[selectedModel] 
+              : brand.models[selectedModel]?.services || []}
             onChange={(updated) => handleModelChange(selectedModel, updated)}
           />
         </div>
