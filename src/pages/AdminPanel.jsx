@@ -4,16 +4,23 @@ import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
 import AdminAuth from "../components/AdminAuth";
 import { getBrandStatus } from "../utils/priceUtils";
+import { BRANDS } from "../data/brands";
+import { brandData } from "../data/brandData";
 
 // Вспомогательная функция для получения всех моделей из brandData
 const getAllModelsFromBrandData = (brandKey) => {
-  const mockModels = {
-    'apple': ['iphone-13', 'iphone-14', 'iphone-15', 'ipad-pro'],
-    'samsung': ['galaxy-s23', 'galaxy-s24', 'galaxy-tab'],
-    'xiaomi': ['redmi-note-12', 'poco-x5', 'mi-13'],
-    'honor': ['honor-90', 'honor-x8', 'honor-pad']
-  };
-  return mockModels[brandKey] || [];
+  const brandInfo = brandData[brandKey];
+  if (!brandInfo || !brandInfo.categories) return [];
+  
+  const models = [];
+  Object.values(brandInfo.categories).forEach((category) => {
+    if (Array.isArray(category)) {
+      category.forEach((model) => {
+        models.push(model.id);
+      });
+    }
+  });
+  return models;
 };
 
 const buildInitialData = () => {
@@ -36,9 +43,9 @@ const buildInitialData = () => {
     }
   }
 
-  // Создаем базовую структуру
-  const defaultBrands = ['apple', 'samsung', 'xiaomi', 'honor'];
-  defaultBrands.forEach((key) => {
+  // Используем все бренды из BRANDS вместо фиксированного списка
+  BRANDS.forEach((brand) => {
+    const key = brand.id;
     const modelsObj = {};
     const allModels = getAllModelsFromBrandData(key);
     
@@ -48,7 +55,7 @@ const buildInitialData = () => {
     });
 
     data[key] = {
-      brand: key.charAt(0).toUpperCase() + key.slice(1),
+      brand: brand.title, // Используем title из BRANDS
       currency: "₽",
       discount: { type: "none", value: 0 },
       models: modelsObj,
