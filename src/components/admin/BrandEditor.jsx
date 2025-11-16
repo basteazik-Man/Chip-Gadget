@@ -1,387 +1,714 @@
-// BrandEditor.jsx (исправленная версия)
-import React, { useState, useMemo } from "react";
-import ModelEditor from "./ModelEditor";
-import { brandData } from "../../data/brandData";
-import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
+// AdminPanel.jsx
+import React, { useState, useEffect, useRef } from "react";
+import BrandEditor from "../components/admin/BrandEditor";
+import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
+import AdminAuth from "../components/AdminAuth";
+import { getBrandStatus } from "../utils/priceUtils";
+import { BRANDS } from "../data/brands";
 
-export default function BrandEditor({ brandKey, data, onChange }) {
-  const brand = data[brandKey];
-  const [selectedModel, setSelectedModel] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
+// Вспомогательная функция для получения всех моделей из brandData
+const getAllModelsFromBrandData = (brandKey) => {
+  const mockModels = {
+    'apple': ['iphone-13', 'iphone-14', 'iphone-15', 'ipad-pro'],
+    'samsung': ['galaxy-s23', 'galaxy-s24', 'galaxy-tab'],
+    'xiaomi': ['redmi-note-12', 'poco-x5', 'mi-13'],
+    'honor': ['honor-90', 'honor-x8', 'honor-pad'],
+    'huawei': ['huawei-p50', 'huawei-mate-50', 'huawei-tablet'],
+    'realme': ['realme-10', 'realme-11', 'realme-pad'],
+    'infinix': ['infinix-hot-30', 'infinix-zero-ultra'],
+    'tecno': ['tecno-camon-20', 'tecno-spark-10']
+  };
+  return mockModels[brandKey] || [];
+};
 
-  // Получаем категории и модели из brandData
-  const brandCategories = useMemo(() => {
-    const brandInfo = brandData[brandKey];
-    return brandInfo?.categories || {};
-  }, [brandKey]);
+const buildInitialData = () => {
+  const data = {};
+  
+  // Пробуем загрузить из localStorage
+  const saved = localStorage.getItem("chipgadget_prices");
+  if (saved) {
+    try {
+      const parsed = JSON.parse(saved);
+      
+      // Валидация структуры данных
+      if (typeof parsed !== 'object' || parsed === null) {
+        throw new Error('Invalid data structure in localStorage');
+      }
+      return parsed;
+    } catch (e) {
+      console.error("Ошибка загрузки из localStorage:", e);
+      localStorage.removeItem("chipgadget_prices");
+    }
+  }
 
-  const colorMap = {
-    red: "border-red-400 bg-red-50",
-    yellow: "border-yellow-400 bg-yellow-50", 
-    green: "border-green-400 bg-green-50",
+  // Создаем базовую структуру для ВСЕХ брендов из brands.js
+  const defaultBrands = BRANDS.map(brand => brand.id);
+  
+  defaultBrands.forEach((key) => {
+    const modelsObj = {};
+    const allModels = getAllModelsFromBrandData(key);
+    
+    allModels.forEach((model) => {
+      const modelKey = typeof model === 'string' ? model : (model.id || "unknown-model");
+      modelsObj[modelKey] = [];
+    });
+
+    // Находим название бренда из BRANDS
+    const brandInfo = BRANDS.find(b => b.id === key);
+    const brandName = brandInfo ? brandInfo.title : key.charAt(0).toUpperCase() + key.slice(1);
+
+    data[key] = {
+      brand: brandName,
+      currency: "₽",
+      discount: { type: "none", value: 0 },
+      models: modelsObj,
+    };
+  });
+
+  return data;
+};
+
+const saveToLocal = (data) => {
+  try {
+    localStorage.setItem("chipgadget_prices", JSON.stringify(data));
+    console.log("✅ Данные сохранены в localStorage");
+    return true;
+  } catch (e) {
+    console.error("❌ Ошибка сохранения в localStorage:", e);
+    return false;
+  }
+};
+
+const exportJSON = (data) => {
+  const transformedData = transformDataForExport(data);
+  const blob = new Blob([JSON.stringify(transformedData, null, 2)], {
+    type: "application/json",
+  });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = `chipgadget-prices-${new Date().toISOString().split('T')[0]}.json`;
+  a.click();
+};
+
+const transformDataForExport = (data) => {
+  const transformed = JSON.parse(JSON.stringify(data));
+  
+  Object.keys(transformed).forEach(brandKey => {
+    const brand = transformed[brandKey];
+    
+    Object.keys(brand.models).forEach(modelKey => {
+      const services = brand.models[modelKey];
+      
+      brand.models[modelKey] = services.map(service => {
+        const transformedService = {
+          name: service.name || service.title || "Услуга",
+          price: service.price || service.basePrice || 0,
+          finalPrice: service.finalPrice || service.price || service.basePrice || 0,
+          active: service.active !== undefined ? service.active : true
+        };
+        
+        if (service.discount && service.discount !== 0) {
+          transformedService.discount = service.discount;
+        }
+        
+        return transformedService;
+      });
+    });
+  });
+
+  // ДОБАВЛЕНО: Экспорт данных категорий услуг
+  try {
+    const categoryServices = localStorage.getItem("chipgadget_category_services");
+    if (categoryServices) {
+      transformed._categoryServices = JSON.parse(categoryServices);
+    }
+  } catch (e) {
+    console.error("Ошибка при экспорте категорий услуг:", e);
+  }
+  
+  return transformed;
+};
+
+const mergeImportedData = (currentData, importedData) => {
+  const merged = { ...currentData };
+  
+  Object.keys(importedData).forEach(brandKey => {
+    const importedBrand = importedData[brandKey];
+    
+    if (merged[brandKey]) {
+      if (importedBrand.currency) {
+        merged[brandKey].currency = importedBrand.currency;
+      }
+      
+      if (importedBrand.discount) {
+        merged[brandKey].discount = importedBrand.discount;
+      }
+      
+      if (importedBrand.models) {
+        Object.keys(importedBrand.models).forEach(modelKey => {
+          if (merged[brandKey].models[modelKey]) {
+            const importedServices = importedBrand.models[modelKey];
+            
+            if (Array.isArray(importedServices) && importedServices.length > 0) {
+              const serviceMap = {};
+              importedServices.forEach(service => {
+                const serviceName = service.name || service.title;
+                if (serviceName) {
+                  serviceMap[serviceName] = service;
+                }
+              });
+              
+              merged[brandKey].models[modelKey] = merged[brandKey].models[modelKey].map(currentService => {
+                const currentServiceName = currentService.name || currentService.title;
+                const importedService = serviceMap[currentServiceName];
+                if (importedService) {
+                  return {
+                    name: currentServiceName,
+                    price: importedService.price || importedService.basePrice || 0,
+                    finalPrice: importedService.finalPrice || importedService.price || importedService.basePrice || 0,
+                    active: importedService.active !== undefined ? importedService.active : true,
+                    discount: importedService.discount || currentService.discount
+                  };
+                }
+                return currentService;
+              });
+            }
+          }
+        });
+      }
+    }
+  });
+
+  // ДОБАВЛЕНО: Импорт данных категорий услуг
+  if (importedData._categoryServices) {
+    try {
+      localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData._categoryServices));
+      console.log("✅ Категории услуг импортированы");
+    } catch (e) {
+      console.error("❌ Ошибка импорта категорий услуг:", e);
+    }
+  }
+  
+  return merged;
+};
+
+// Функция для создания и скачивания ZIP архива
+const exportJSFilesAsZip = async (data) => {
+  try {
+    const transformedData = transformDataForExport(data);
+    
+    // Динамически импортируем JSZip
+    const JSZip = await import('jszip');
+    const zip = new JSZip.default();
+    
+    // Добавляем каждый бренд как отдельный JS файл в архив
+    Object.keys(transformedData).forEach((key) => {
+      if (key === '_categoryServices') return; // Пропускаем категории услуг в основном экспорте
+      
+      const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
+        transformedData[key],
+        null,
+        2
+      )};`;
+      zip.file(`${key}.js`, content);
+    });
+
+    // Добавляем файл с категориями услуг
+    if (transformedData._categoryServices) {
+      const categoryContent = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
+        transformedData._categoryServices,
+        null,
+        2
+      )};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
+      zip.file(`category-services.js`, categoryContent);
+    }
+
+    // Добавляем README файл с инструкциями
+    const readmeContent = `# Chip&Gadget Price Files
+
+Этот архив содержит файлы с ценами для сайта Chip&Gadget.
+
+## Инструкция по установке:
+
+1. Распакуйте этот архив
+2. Скопируйте все .js файлы в папку: src/data/prices/
+3. Замените существующие файлы
+4. Файл category-services.js содержит услуги по категориям (телевизоры, ноутбуки)
+
+## Содержимое архива:
+
+${Object.keys(transformedData).filter(key => key !== '_categoryServices').map(key => `- ${key}.js → ${transformedData[key].brand}`).join('\n')}
+${transformedData._categoryServices ? '- category-services.js → Услуги по категориям' : ''}
+
+Сгенерировано: ${new Date().toLocaleString()}
+`;
+    zip.file("README.txt", readmeContent);
+
+    // Генерируем и скачиваем ZIP
+    const blob = await zip.generateAsync({ type: "blob" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `chipgadget-prices-${new Date().toISOString().split('T')[0]}.zip`;
+    a.click();
+    
+    // Освобождаем память
+    URL.revokeObjectURL(a.href);
+    
+    return true;
+  } catch (error) {
+    console.error('Ошибка при создании ZIP архива:', error);
+    
+    // Fallback: старый способ экспорта с преобразованием данных
+    const transformedData = transformDataForExport(data);
+    alert('Не удалось создать ZIP архив. Используем старый метод экспорта.');
+    Object.keys(transformedData).forEach((key) => {
+      if (key === '_categoryServices') return;
+      
+      const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
+        transformedData[key],
+        null,
+        2
+      )};`;
+      const blob = new Blob([content], { type: "application/javascript" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `${key}.js`;
+      a.click();
+    });
+    return false;
+  }
+};
+
+export default function AdminPanel() {
+  const [authenticated, setAuthenticated] = useState(() => {
+    return localStorage.getItem('admin_authenticated') === 'true';
+  });
+  const [data, setData] = useState(() => buildInitialData());
+  const [categoryServices, setCategoryServices] = useState(() => {
+    const saved = localStorage.getItem("chipgadget_category_services");
+    return saved ? JSON.parse(saved) : {};
+  });
+  const [brandKey, setBrandKey] = useState("");
+  const [message, setMessage] = useState("");
+  const [unsaved, setUnsaved] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+  const [activeTab, setActiveTab] = useState("brands");
+  const saveTimer = useRef(null);
+  const importJsonRef = useRef(null);
+  const importJsRef = useRef(null);
+
+  if (!authenticated) {
+    return <AdminAuth onAuthenticate={setAuthenticated} />;
+  }
+
+  const brands = Object.keys(data);
+
+  useEffect(() => {
+    if (saveTimer.current) clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      saveToLocal(data);
+      setUnsaved(false);
+    }, 1000);
+    return () => clearTimeout(saveTimer.current);
+  }, [data]);
+
+  useEffect(() => {
+    localStorage.setItem("chipgadget_category_services", JSON.stringify(categoryServices));
+  }, [categoryServices]);
+
+  useEffect(() => {
+    const saved = localStorage.getItem("chipgadget_prices");
+    if (saved) {
+      setMessage("✅ Данные загружены из сохранения");
+      setTimeout(() => setMessage(""), 3000);
+    } else {
+      setMessage("🆕 Создана новая структура данных");
+      setTimeout(() => setMessage(""), 3000);
+    }
+  }, []);
+
+  const handleImport = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const importedData = JSON.parse(e.target.result);
+        
+        if (!confirm(`Импортировать данные? Будут обновлены цены для ${Object.keys(importedData).length} брендов.`)) {
+          return;
+        }
+
+        const backupData = { ...data };
+        
+        try {
+          const mergedData = mergeImportedData(data, importedData);
+          setData(mergedData);
+          saveToLocal(mergedData);
+          setUnsaved(false);
+          setMessage(`✅ Данные успешно импортированы! Обновлено ${Object.keys(importedData).length} брендов`);
+          
+          setTimeout(() => {
+            if (confirm('Сохранить импортированные данные?')) {
+              setMessage('✅ Импорт подтвержден');
+            } else {
+              setData(backupData);
+              saveToLocal(backupData);
+              setUnsaved(false);
+              setMessage('🔄 Импорт отменен, восстановлены предыдущие данные');
+            }
+          }, 2000);
+          
+        } catch (mergeError) {
+          console.error('Ошибка при слиянии данных:', mergeError);
+          setMessage('❌ Ошибка при обработке импортированных данных');
+        }
+        
+      } catch (error) {
+        console.error('Ошибка парсинга JSON:', error);
+        setMessage('❌ Ошибка: неверный формат файла JSON');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
   };
 
-  // Список доступных валют
-  const currencies = ["₽", "$", "€", "¥", "£", "₹"];
+  const handleImportJS = (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  // --- Управление изменениями бренда ---
-  const updateBrand = (changes) => {
-    const updated = { ...brand, ...changes };
-    onChange(brandKey, updated);
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const fileContent = e.target.result;
+        
+        let importedData;
+        
+        // Пытаемся распарсить как export default
+        const defaultMatch = fileContent.match(/export default (\{[\s\S]*\});?$/);
+        if (defaultMatch) {
+          const dataStr = defaultMatch[1];
+          const jsonStr = dataStr
+            .replace(/(\w+):/g, '"$1":')
+            .replace(/'/g, '"');
+          importedData = JSON.parse(jsonStr);
+        } 
+        // Пытаемся распарсить как export const SERVICES_BY_CATEGORY
+        else {
+          const constMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*\});?$/);
+          if (constMatch) {
+            const dataStr = constMatch[1];
+            const jsonStr = dataStr
+              .replace(/(\w+):/g, '"$1":')
+              .replace(/'/g, '"');
+            importedData = JSON.parse(jsonStr);
+          } else {
+            throw new Error('Неверный формат JS файла');
+          }
+        }
+        
+        const brandKey = file.name.replace('.js', '');
+        
+        if (brandKey === 'category-services') {
+          // Обработка импорта категорий услуг
+          if (!confirm(`Импортировать данные категорий услуг?`)) {
+            return;
+          }
+          
+          try {
+            localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData));
+            setCategoryServices(importedData);
+            setMessage(`✅ Данные категорий услуг успешно импортированы!`);
+          } catch (e) {
+            console.error('Ошибка импорта категорий:', e);
+            setMessage('❌ Ошибка при импорте категорий услуг');
+          }
+        } else {
+          // Обработка импорта данных бренда
+          if (!confirm(`Импортировать данные для бренда ${brandKey}?`)) {
+            return;
+          }
+          
+          const mergedData = { ...data };
+          if (mergedData[brandKey] && importedData.models) {
+            Object.keys(importedData.models).forEach(modelKey => {
+              if (mergedData[brandKey].models[modelKey]) {
+                mergedData[brandKey].models[modelKey] = importedData.models[modelKey].map(service => ({
+                  name: service.name || service.title || "Услуга",
+                  price: service.price || service.basePrice || 0,
+                  finalPrice: service.finalPrice || service.price || service.basePrice || 0,
+                  active: service.active !== undefined ? service.active : true,
+                  discount: service.discount || 0
+                }));
+              }
+            });
+            
+            setData(mergedData);
+            saveToLocal(mergedData);
+            setUnsaved(false);
+            setMessage(`✅ Данные для ${brandKey} успешно импортированы!`);
+          } else {
+            setMessage('❌ Бренд не найден в текущей структуре');
+          }
+        }
+        
+      } catch (error) {
+        console.error('Ошибка импорта JS:', error);
+        setMessage('❌ Ошибка: неверный формат JS файла');
+      }
+    };
+    reader.readAsText(file);
+    event.target.value = '';
   };
 
-  // Добавление кастомной модели
-  const addCustomModel = () => {
-    const name = prompt("Введите название модели:");
+  const addBrand = () => {
+    const name = prompt("Введите название нового бренда:");
     if (!name) return;
     const key = name.toLowerCase().replace(/\s+/g, "-");
-    
-    if (brand.models[key]) {
-      alert("Такая модель уже существует!");
-      return;
-    }
+    if (data[key]) return alert("Такой бренд уже существует!");
 
-    const servicesArray = [];
-    const newModels = { ...brand.models, [key]: servicesArray };
-    updateBrand({ models: newModels });
-    setSelectedModel(key);
-    setSelectedCategory("custom");
-  };
-
-  // Редактирование названия модели
-  const editModelName = (modelKey, e) => {
-    e.stopPropagation();
-    const currentName = getModelDisplayName(modelKey);
-    const newName = prompt("Введите новое название модели:", currentName);
-    if (!newName || newName === currentName) return;
-
-    // Обновляем кастомное имя в данных модели
-    const updatedModels = { ...brand.models };
-    if (Array.isArray(updatedModels[modelKey])) {
-      // Если это массив услуг, преобразуем в объект с кастомным именем
-      updatedModels[modelKey] = {
-        services: updatedModels[modelKey],
-        _customName: newName
-      };
-    } else if (typeof updatedModels[modelKey] === 'object') {
-      updatedModels[modelKey]._customName = newName;
-    }
-    
-    updateBrand({ models: updatedModels });
-  };
-
-  const deleteModel = (modelKey) => {
-    if (!confirm(`Удалить модель "${getModelDisplayName(modelKey)}"?`)) return;
-    const newModels = { ...brand.models };
-    delete newModels[modelKey];
-    updateBrand({ models: newModels });
-    if (selectedModel === modelKey) setSelectedModel("");
-  };
-
-  const handleModelChange = (modelKey, updated) => {
     const newBrand = {
-      ...brand,
-      models: { ...brand.models, [modelKey]: updated },
+      brand: name,
+      currency: "₽",
+      discount: { type: "none", value: 0 },
+      models: {},
     };
-    onChange(brandKey, newBrand);
+
+    const updated = { ...data, [key]: newBrand };
+    setData(updated);
+    setBrandKey(key);
+    saveToLocal(updated);
+    setUnsaved(false);
+    setMessage(`✅ Бренд "${name}" добавлен`);
+    setTimeout(() => setMessage(""), 3000);
   };
 
-  // Изменение валюты через выпадающий список
-  const handleCurrencyChange = (e) => {
-    const newCurrency = e.target.value;
-    if (newCurrency) updateBrand({ currency: newCurrency });
+  const deleteBrand = () => {
+    if (!brandKey) return alert("Сначала выберите бренд!");
+    if (!confirm(`Удалить бренд "${data[brandKey]?.brand}"?`)) return;
+    const updated = { ...data };
+    delete updated[brandKey];
+    setData(updated);
+    setBrandKey("");
+    saveToLocal(updated);
+    setUnsaved(false);
+    setMessage("🗑️ Бренд удалён");
+    setTimeout(() => setMessage(""), 3000);
   };
 
-  const handleRenameBrand = () => {
-    const newName = prompt("Новое название бренда:", brand.brand);
-    if (newName) updateBrand({ brand: newName });
+  const handleSave = () => {
+    saveToLocal(data);
+    setUnsaved(false);
+    setMessage("💾 Изменения сохранены локально");
+    setTimeout(() => setMessage(""), 3000);
   };
 
-  // Получаем статус бренда
-  const brandStatusObj = getBrandStatus(brand);
-  const statusMap = {
-    full: "green",
-    partial: "yellow", 
-    empty: "red"
+  const handleExport = () => {
+    exportJSON(data);
   };
-  const brandStatus = statusMap[brandStatusObj.status] || "red";
 
-  // Функция для получения статуса модели
-  const getModelStatusInfo = (modelKey) => {
-    const modelData = brand.models[modelKey];
-    let services = [];
+  const handleExportJS = async () => {
+    setIsExporting(true);
+    setMessage("📦 Создание ZIP архива...");
     
-    if (Array.isArray(modelData)) {
-      services = modelData;
-    } else if (modelData && modelData.services) {
-      services = modelData.services;
-    }
+    const success = await exportJSFilesAsZip(data);
     
-    return getModelStatus(services);
-  };
-
-  // Функция для получения цвета статуса модели
-  const getModelStatusColor = (modelKey) => {
-    const { status } = getModelStatusInfo(modelKey);
-    return status === "full" ? "text-green-600 bg-green-100" :
-           status === "partial" ? "text-yellow-600 bg-yellow-100" :
-           "text-red-600 bg-red-100";
-  };
-
-  // Функция для получения иконки статуса модели
-  const getModelStatusIcon = (modelKey) => {
-    const { status } = getModelStatusInfo(modelKey);
-    return status === "full" ? "🟢" :
-           status === "partial" ? "🟡" :
-           "🔴";
-  };
-
-  // Функция для получения человеко-читаемого имени модели
-  const getModelDisplayName = (modelKey) => {
-    // Проверяем есть ли кастомное имя
-    const modelData = brand.models[modelKey];
-    if (modelData && typeof modelData === 'object' && modelData._customName) {
-      return modelData._customName;
+    if (success) {
+      setMessage("✅ JS-файлы упакованы в ZIP архив");
+    } else {
+      setMessage("✅ JS-файлы экспортированы по отдельности");
     }
     
-    // Ищем модель в brandData для получения красивого имени
-    for (const category of Object.values(brandCategories)) {
-      const model = category.find(m => m.id === modelKey);
-      if (model) return model.name;
-    }
-    
-    // Если не нашли, преобразуем ключ
-    return modelKey.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
+    setTimeout(() => {
+      setMessage("");
+      setIsExporting(false);
+    }, 4000);
   };
 
-  // Получаем услуги для модели (универсальный метод)
-  const getModelServices = (modelKey) => {
-    const modelData = brand.models[modelKey];
-    if (Array.isArray(modelData)) {
-      return modelData;
-    } else if (modelData && modelData.services) {
-      return modelData.services;
-    }
-    return [];
+  const getBrandStyle = (key) => {
+    const { status } = getBrandStatus(data[key]);
+    if (status === "empty")
+      return { color: "#b91c1c", backgroundColor: "#fee2e2" };
+    if (status === "partial")
+      return { color: "#92400e", backgroundColor: "#fef3c7" };
+    if (status === "full")
+      return { color: "#065f46", backgroundColor: "#d1fae5" };
+    return {};
   };
 
-  // Получаем модели для выбранной категории
-  const getModelsForCategory = () => {
-    if (!selectedCategory) return [];
-
-    if (selectedCategory === "custom") {
-      // Кастомные модели (не из категорий)
-      return Object.keys(brand.models || {}).filter(modelKey => {
-        for (const category of Object.values(brandCategories)) {
-          if (category.find(m => m.id === modelKey)) return false;
-        }
-        return true;
-      });
-    }
-
-    // Модели из выбранной категории
-    const modelsInCategory = brandCategories[selectedCategory] || [];
-    return modelsInCategory
-      .map(model => model.id)
-      .filter(modelKey => brand.models[modelKey]);
+  const getBrandLabel = (key) => {
+    const { status, emptyCount } = getBrandStatus(data[key]);
+    const icon = status === "empty" ? "🔴" : status === "partial" ? "🟡" : "🟢";
+    const brandName = data[key]?.brand?.toUpperCase?.() || key;
+    return `${icon} ${brandName}${
+      emptyCount > 0 ? ` (${emptyCount} незаполненных)` : ""
+    }`;
   };
 
-  const modelsToShow = getModelsForCategory();
+  const currentBrand = brandKey ? data[brandKey] : null;
 
   return (
-    <div className={`p-6 rounded-2xl border shadow-md mb-8 ${colorMap[brandStatus]}`}>
-      {/* Заголовок бренда с кнопками управления */}
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
-          {brand.brand}
-          <span className="text-lg">
-            {brandStatus === "green" && "🟢"}
-            {brandStatus === "yellow" && "🟡"} 
-            {brandStatus === "red" && "🔴"}
-          </span>
-        </h2>
-        <div className="flex gap-2 items-center">
+    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-4 py-8">
+      <div className="bg-gradient-to-r from-cyan-700 to-purple-700 text-white text-sm py-2 px-4 rounded-b-lg shadow-md mb-6 text-center">
+        ⚙️ Админка Chip&Gadget — редактирование брендов, моделей и услуг
+      </div>
+
+      {/* Переключение вкладок */}
+      <div className="flex justify-center mb-6">
+        <div className="bg-white rounded-lg p-1 shadow-md">
           <button
-            onClick={handleRenameBrand}
-            className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm font-medium transition-colors"
+            onClick={() => setActiveTab("brands")}
+            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+              activeTab === "brands" 
+                ? "bg-blue-600 text-white" 
+                : "text-gray-600 hover:text-gray-800"
+            }`}
           >
-            ✏️ Переименовать бренд
+            📱 Бренды и модели
           </button>
-          
-          <select
-            value={brand.currency || "₽"}
-            onChange={handleCurrencyChange}
-            className="px-3 py-2 rounded-lg bg-blue-200 hover:bg-blue-300 text-sm font-medium transition-colors focus:ring-2 focus:ring-blue-500"
+          <button
+            onClick={() => setActiveTab("categories")}
+            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+              activeTab === "categories" 
+                ? "bg-blue-600 text-white" 
+                : "text-gray-600 hover:text-gray-800"
+            }`}
           >
-            {currencies.map(currency => (
-              <option key={currency} value={currency}>
-                💱 {currency}
-              </option>
-            ))}
-          </select>
+            🛠️ Услуги по категориям
+          </button>
         </div>
       </div>
 
-      {/* Блок добавления моделей */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
-        <h3 className="font-semibold text-gray-700 mb-3">Добавить модель:</h3>
-        <div className="flex flex-wrap gap-2 items-center">
-          <button
-            onClick={addCustomModel}
-            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
-          >
-            ➕ Создать свою модель
-          </button>
-          <span className="text-sm text-gray-500">
-            Модели из каталога добавляются автоматически при сохранении
-          </span>
-        </div>
-      </div>
-
-      {/* Выбор категории */}
-      <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
-        <h3 className="font-semibold text-gray-700 mb-3">Выберите категорию:</h3>
-        <select
-          value={selectedCategory}
-          onChange={(e) => {
-            setSelectedCategory(e.target.value);
-            setSelectedModel("");
-          }}
-          className="w-full max-w-md border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+      {/* Кнопки управления */}
+      <div className="flex flex-wrap gap-2 mb-6 justify-center">
+        <button
+          onClick={handleSave}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-cyan-600 hover:bg-cyan-700"
         >
-          <option value="">— Выберите категорию —</option>
-          {Object.keys(brandCategories).map(category => (
-            <option key={category} value={category}>
-              {category.replace(/_/g, ' ').toUpperCase()} ({brandCategories[category].filter(model => brand.models[model.id]).length})
-            </option>
-          ))}
-          {/* Опция для кастомных моделей */}
-          {Object.keys(brand.models || {}).filter(modelKey => {
-            for (const category of Object.values(brandCategories)) {
-              if (category.find(m => m.id === modelKey)) return false;
-            }
-            return true;
-          }).length > 0 && (
-            <option value="custom">
-              Другие модели ({Object.keys(brand.models || {}).filter(modelKey => {
-                for (const category of Object.values(brandCategories)) {
-                  if (category.find(m => m.id === modelKey)) return false;
-                }
-                return true;
-              }).length})
-            </option>
-          )}
-        </select>
+          💾 Сохранить
+        </button>
+        <button
+          onClick={handleExport}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
+        >
+          ⬇️ Экспорт JSON
+        </button>
+        <button
+          onClick={handleExportJS}
+          disabled={isExporting}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            isExporting ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
+          }`}
+        >
+          {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
+        </button>
+        <button
+          onClick={() => importJsonRef.current?.click()}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700"
+        >
+          📤 Импорт JSON
+        </button>
+        <button
+          onClick={() => importJsRef.current?.click()}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-purple-600 hover:bg-purple-700"
+        >
+          📤 Импорт JS
+        </button>
+        <button
+          onClick={addBrand}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-emerald-600 hover:bg-emerald-700"
+        >
+          ➕ Добавить бренд
+        </button>
+        <button
+          onClick={deleteBrand}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-rose-600 hover:bg-rose-700"
+        >
+          🗑️ Удалить бренд
+        </button>
       </div>
 
-      {/* Список моделей выбранной категории */}
-      {selectedCategory && (
-        <div className="mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="font-semibold text-gray-700 text-lg">
-              {selectedCategory === "custom" 
-                ? "Другие модели" 
-                : selectedCategory.replace(/_/g, ' ').toUpperCase()
-              } 
-              ({modelsToShow.length})
-            </h3>
-          </div>
-          
-          {modelsToShow.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {modelsToShow.map(modelKey => {
-                const isSelected = selectedModel === modelKey;
-                const statusColor = getModelStatusColor(modelKey);
-                const statusIcon = getModelStatusIcon(modelKey);
-                const modelStatus = getModelStatusInfo(modelKey);
+      {/* Скрытые input'ы для импорта */}
+      <input
+        type="file"
+        accept=".json"
+        ref={importJsonRef}
+        onChange={handleImport}
+        style={{ display: 'none' }}
+      />
+      <input
+        type="file"
+        accept=".js"
+        ref={importJsRef}
+        onChange={handleImportJS}
+        style={{ display: 'none' }}
+      />
 
-                return (
-                  <div
-                    key={modelKey}
-                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
-                      isSelected 
-                        ? 'border-blue-500 bg-blue-50 shadow-md' 
-                        : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
-                    }`}
-                    onClick={() => setSelectedModel(modelKey)}
-                  >
-                    <div className="flex justify-between items-start mb-3">
-                      <div className="flex items-center gap-2 flex-1">
-                        <span className="text-sm">{statusIcon}</span>
-                        <h5 className="font-medium text-gray-800 text-sm leading-tight">
-                          {getModelDisplayName(modelKey)}
-                        </h5>
-                      </div>
-                      <div className="flex gap-1">
-                        <button
-                          onClick={(e) => editModelName(modelKey, e)}
-                          className="text-blue-400 hover:text-blue-600 text-sm"
-                          title="Редактировать название"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            deleteModel(modelKey);
-                          }}
-                          className="text-red-400 hover:text-red-600 text-sm"
-                          title="Удалить модель"
-                        >
-                          ✖
-                        </button>
-                      </div>
-                    </div>
-                    
-                    <div className={`text-xs px-2 py-1 rounded-full ${statusColor} text-center`}>
-                      {modelStatus.status === "full" && "✓ Все услуги заполнены"}
-                      {modelStatus.status === "partial" && `⚠ ${modelStatus.emptyCount} незаполненных`}
-                      {modelStatus.status === "empty" && "✗ Нет данных"}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+      {message && (
+        <div className={`text-center font-medium mb-4 ${
+          message.includes('❌') ? 'text-red-700' : 'text-green-700'
+        }`}>
+          {message}
+        </div>
+      )}
+
+      {unsaved && (
+        <div className="text-center text-orange-600 font-medium mb-4">
+          ⚠️ Есть несохраненные изменения
+        </div>
+      )}
+
+      {/* Контент в зависимости от активной вкладки */}
+      {activeTab === "brands" ? (
+        <>
+          {/* Выбор бренда */}
+          <div className="max-w-md mx-auto bg-white/90 rounded-2xl shadow p-6 border border-gray-200 mb-8">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Выберите бренд:
+            </h2>
+            <select
+              className="w-full border border-gray-300 rounded-lg p-2 text-gray-700 focus:ring-2 focus:ring-cyan-500"
+              value={brandKey}
+              onChange={(e) => setBrandKey(e.target.value)}
+            >
+              <option value="">— Не выбран —</option>
+              {brands.map((key) => (
+                <option key={key} value={key} style={getBrandStyle(key)}>
+                  {getBrandLabel(key)}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Редактор брендов */}
+          {currentBrand ? (
+            <BrandEditor
+              brandKey={brandKey}
+              data={data}
+              onChange={(key, updated) => {
+                if (updated === null) {
+                  const updatedData = { ...data };
+                  delete updatedData[key];
+                  setData(updatedData);
+                  setBrandKey("");
+                } else {
+                  setData((prev) => ({ ...prev, [key]: updated }));
+                }
+              }}
+            />
           ) : (
-            <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-              {selectedCategory === "custom" 
-                ? "Нет кастомных моделей" 
-                : "В этой категории нет моделей с данными"
-              }
+            <div className="text-center text-gray-500 italic">
+              Выберите или создайте бренд.
             </div>
           )}
-        </div>
-      )}
-
-      {/* Сообщение когда категория не выбрана */}
-      {!selectedCategory && (
-        <div className="text-center py-12 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
-          <div className="text-4xl mb-4">📱</div>
-          <p className="text-lg font-medium mb-2">Выберите категорию выше</p>
-          <p className="text-sm">Чтобы увидеть список моделей для редактирования</p>
-        </div>
-      )}
-
-      {/* Редактор выбранной модели */}
-      {selectedModel && (
-        <div className="mt-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">
-              Редактирование: {getModelDisplayName(selectedModel)}
-            </h3>
-            <button
-              onClick={() => setSelectedModel("")}
-              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm"
-            >
-              ✕ Закрыть
-            </button>
-          </div>
-          <ModelEditor
-            modelKey={selectedModel}
-            services={getModelServices(selectedModel)}
-            onChange={(updated) => handleModelChange(selectedModel, updated)}
-          />
-        </div>
+        </>
+      ) : (
+        /* Редактор услуг по категориям */
+        <CategoryServicesEditor 
+          data={categoryServices} 
+          onChange={setCategoryServices} 
+        />
       )}
     </div>
   );
