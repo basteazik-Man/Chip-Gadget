@@ -1,4 +1,4 @@
-// BrandEditor.jsx (исправленная версия)
+// BrandEditor.jsx (ИСПРАВЛЕННАЯ версия)
 import React, { useState, useMemo } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
@@ -14,11 +14,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   const brandCategories = useMemo(() => {
     const brandInfo = brandData[brandKey];
     return brandInfo?.categories || {};
-  }, [brandKey]);
-
-  // Получаем информацию о бренде из BRANDS
-  const brandInfoFromBrands = useMemo(() => {
-    return BRANDS.find(b => b.id === brandKey) || {};
   }, [brandKey]);
 
   const colorMap = {
@@ -200,13 +195,6 @@ export default function BrandEditor({ brandKey, data, onChange }) {
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
           {brand.brand}
-          {brandInfoFromBrands.logo && (
-            <img 
-              src={brandInfoFromBrands.logo} 
-              alt={`${brand.brand} logo`}
-              className="w-8 h-8 object-contain"
-            />
-          )}
           <span className="text-lg">
             {brandStatus === "green" && "🟢"}
             {brandStatus === "yellow" && "🟡"} 
