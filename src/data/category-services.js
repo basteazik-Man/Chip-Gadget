@@ -5,6 +5,12 @@ export const SERVICES_BY_CATEGORY = {
       "name": "Замена матрицы",
       "price": "от 5000₽"
     }
+  ],
+  "tv": [
+    {
+      "name": "Замена подсветки ",
+      "price": "от 4000₽"
+    }
   ]
 };
 

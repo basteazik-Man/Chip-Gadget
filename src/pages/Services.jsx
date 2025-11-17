@@ -1,41 +1,16 @@
 // Services.jsx
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import { SERVICES_BY_CATEGORY as exportedServices } from "../data/category-services";
 
 export default function Services() {
   const { search } = useLocation();
   const navigate = useNavigate();
   const params = new URLSearchParams(search);
   const category = params.get("category") || null;
-  
-  const [items, setItems] = useState([]);
 
-  // Загружаем данные ТОЛЬКО из localStorage
-  useEffect(() => {
-    const loadServicesData = () => {
-      try {
-        const saved = localStorage.getItem("chipgadget_category_services");
-        if (saved) {
-          const parsed = JSON.parse(saved);
-          
-          if (category && parsed[category]) {
-            setItems(parsed[category]);
-          } else {
-            setItems([]);
-          }
-        } else {
-          // Если в localStorage нет данных - не показываем никакие услуги
-          setItems([]);
-        }
-      } catch (error) {
-        console.error("Ошибка загрузки данных услуг:", error);
-        // В случае ошибки тоже не показываем услуги
-        setItems([]);
-      }
-    };
-
-    loadServicesData();
-  }, [category]);
+  // ВСЕГДА используем данные из файла category-services.js
+  const items = category ? (exportedServices[category] || []) : [];
 
   const getCategoryTitle = () => {
     switch (category) {
