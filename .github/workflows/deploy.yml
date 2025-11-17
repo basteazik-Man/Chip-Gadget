@@ -19,12 +19,12 @@ jobs:
     - name: Install dependencies
       run: npm install
     
-    - name: Build project
+    - name: Build project (Vite)
       run: npm run build
       
     - name: Create .htaccess file
       run: |
-        cd build
+        cd dist
         echo 'RewriteEngine On
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
@@ -36,5 +36,5 @@ jobs:
         server: ${{ secrets.FTP_SERVER }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./build/
+        local-dir: ./dist/
         server-dir: ${{ secrets.FTP_DIR }}
