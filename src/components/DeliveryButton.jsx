@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaTruck } from "react-icons/fa"; // ДОБАВЛЕНО
+import { FaTruck } from "react-icons/fa";
 
 export default function DeliveryButton() {
   const [visible, setVisible] = useState(true);
@@ -53,9 +53,9 @@ export default function DeliveryButton() {
           "
         >
           <span className="text-sm md:text-base font-medium tracking-wide">
-            ДОСТАВКА
+            Доставка {/* ИЗМЕНЕНО: ДОСТАВКА → Доставка */}
           </span>
-          <FaTruck className="w-4 h-4 drop-shadow-md" /> {/* ИЗМЕНЕНО */}
+          <FaTruck className="w-4 h-4 drop-shadow-md" />
         </motion.button>
       )}
     </AnimatePresence>

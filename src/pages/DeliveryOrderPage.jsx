@@ -73,14 +73,18 @@ const DeliveryOrderPage = () => {
             <p className="text-green-100">Заполните форму и мы свяжемся с вами для расчета стоимости доставки</p>
           </div>
 
-          {/* Кнопка условий доставки */}
-          <div className="p-4 bg-blue-50 border-b border-blue-200">
-            <button
-              onClick={() => navigate('/delivery')}
-              className="text-blue-600 hover:text-blue-800 font-medium text-sm flex items-center gap-1"
-            >
-              📋 Условия доставки
-            </button>
+          {/* УЛУЧШЕННАЯ Кнопка условий доставки */}
+          <div className="p-4 bg-gradient-to-r from-blue-50 to-indigo-50 border-b border-blue-200 text-center">
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <span className="text-blue-700 font-medium">Хотите узнать подробности о доставке?</span>
+              <button
+                onClick={() => navigate('/delivery')}
+                className="bg-white border border-blue-500 text-blue-600 hover:bg-blue-50 hover:text-blue-700 px-4 py-2 rounded-lg font-medium transition-all duration-200 flex items-center gap-2 shadow-sm hover:shadow-md"
+              >
+                <span className="text-lg">📋</span>
+                Условия доставки
+              </button>
+            </div>
           </div>
 
           {/* Форма */}
