@@ -1,4 +1,4 @@
-// Home.jsx (обновленная версия с улучшенными тенями кнопок брендов)
+// Home.jsx (обновленная версия с кнопкой доставки и улучшенными тенями)
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -165,7 +165,7 @@ export default function Home() {
 
       {/* === Приветствие === */}
       <motion.section
-        className="w-full max-w-5xl mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
+        className="w-full max-w-5xl mb-4 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -176,13 +176,30 @@ export default function Home() {
         <p className="text-white/90 mt-2 text-lg">Ремонт смартфонов, планшетов и ноутбуков всех брендов</p>
       </motion.section>
 
+      {/* === Кнопка ДОСТАВКА === */}
+      <motion.section
+        className="w-full max-w-5xl mb-6"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, delay: 0.1 }}
+      >
+        <motion.button
+          onClick={() => navigate('/delivery')}
+          whileHover={{ scale: 1.02, y: -2 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full max-w-md mx-auto flex items-center justify-center p-4 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 shadow-2xl hover:shadow-3xl text-white font-bold text-lg transition-all duration-300"
+        >
+          🚚 ДОСТАВКА
+        </motion.button>
+      </motion.section>
+
       {/* === Кнопки брендов === */}
       {brandsToShow && brandsToShow.length > 0 ? (
         <motion.section
           className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl mb-6"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ duration: 0.3 }}
+          transition={{ duration: 0.3, delay: 0.2 }}
         >
           <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Выберите бренд</h2>
 
@@ -217,10 +234,8 @@ export default function Home() {
         className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
+        transition={{ duration: 0.3, delay: 0.3 }}
       >
-        <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Ремонт техники</h2>
-
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
           {categories.map((cat) => (
             <motion.button
@@ -228,7 +243,7 @@ export default function Home() {
               onClick={() => handleCategoryClick(cat.id)}
               whileHover={{ scale: 1.02, y: -2 }}
               whileTap={{ scale: 0.98 }}
-              className={`w-full flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl bg-gradient-to-r ${cat.gradient} shadow-xl hover:shadow-2xl text-white min-h-[140px] transition-all duration-300 hover:bg-gradient-to-r ${cat.hoverGradient}`}
+              className={`w-full flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl bg-gradient-to-r ${cat.gradient} shadow-2xl hover:shadow-3xl text-white min-h-[140px] transition-all duration-300 hover:bg-gradient-to-r ${cat.hoverGradient}`}
             >
               <span className="text-3xl md:text-4xl mb-3">
                 {cat.icon}

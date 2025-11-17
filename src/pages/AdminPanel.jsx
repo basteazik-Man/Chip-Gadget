@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
+import DeliveryEditor from "../components/admin/DeliveryEditor";
 import AdminAuth from "../components/AdminAuth";
 import { getBrandStatus } from "../utils/priceUtils";
 import { BRANDS } from "../data/brands";
@@ -109,6 +110,30 @@ const content = `// Автоматически сгенерировано Chip&G
   }
 };
 
+// ФУНКЦИЯ: Экспорт данных доставки
+const exportDeliveryData = () => {
+  try {
+    const deliveryData = localStorage.getItem("chipgadget_delivery");
+    if (!deliveryData) {
+      alert("Нет данных доставки для экспорта");
+      return false;
+    }
+    
+    const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const DELIVERY_DATA = ${deliveryData};\n\nexport default DELIVERY_DATA;`;
+    
+    const blob = new Blob([content], { type: "application/javascript" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `delivery-data.js`;
+    a.click();
+    
+    return true;
+  } catch (error) {
+    console.error('Ошибка при экспорте данных доставки:', error);
+    return false;
+  }
+};
+
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -197,6 +222,16 @@ const mergeImportedData = (currentData, importedData) => {
       console.error("❌ Ошибка импорта категорий услуг:", e);
     }
   }
+
+  // ДОБАВЛЕНО: Импорт данных доставки
+  if (importedData._deliveryData) {
+    try {
+      localStorage.setItem("chipgadget_delivery", JSON.stringify(importedData._deliveryData));
+      console.log("✅ Данные доставки импортированы");
+    } catch (e) {
+      console.error("❌ Ошибка импорта данных доставки:", e);
+    }
+  }
   
   return merged;
 };
@@ -238,6 +273,7 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
 ## Важно:
 - Этот архив содержит ТОЛЬКО бренды (телефоны, планшеты)
 - Услуги по категориям (ТВ, ноутбуки) экспортируются отдельно через кнопку "📺 Экспорт ТВ/ноутбуки"
+- Данные доставки экспортируются отдельно через кнопку "🚚 Экспорт доставки"
 
 Сгенерировано: ${new Date().toLocaleString()}
 `;
@@ -294,6 +330,22 @@ const parseJSFile = (fileContent, fileName) => {
         return JSON.parse(jsonStr);
       }
       throw new Error('Не найден SERVICES_BY_CATEGORY в файле');
+    }
+    
+    // Для delivery-data.js - ищем DELIVERY_DATA
+    if (fileName === 'delivery-data') {
+      const deliveryMatch = fileContent.match(/export const DELIVERY_DATA = (\{[\s\S]*?\});/);
+      if (deliveryMatch) {
+        const dataStr = deliveryMatch[1];
+        const jsonStr = dataStr
+          .replace(/(\w+):/g, '"$1":')
+          .replace(/'/g, '"')
+          .replace(/,\s*}/g, '}')
+          .replace(/,\s*]/g, ']');
+        
+        return JSON.parse(jsonStr);
+      }
+      throw new Error('Не найден DELIVERY_DATA в файле');
     }
     
     // Для файлов брендов - ищем export default
@@ -442,6 +494,19 @@ export default function AdminPanel() {
             console.error('Ошибка импорта категорий:', e);
             setMessage('❌ Ошибка при импорте категорий услуг');
           }
+        } else if (fileName === 'delivery-data') {
+          // Обработка импорта данных доставки
+          if (!confirm(`Импортировать данные доставки?`)) {
+            return;
+          }
+          
+          try {
+            localStorage.setItem("chipgadget_delivery", JSON.stringify(importedData));
+            setMessage(`✅ Данные доставки успешно импортированы!`);
+          } catch (e) {
+            console.error('Ошибка импорта доставки:', e);
+            setMessage('❌ Ошибка при импорте данных доставки');
+          }
         } else {
           // Обработка импорта данных бренда
           if (!confirm(`Импортировать данные для бренда ${fileName}?`)) {
@@ -556,6 +621,18 @@ export default function AdminPanel() {
     }
   };
 
+  // ФУНКЦИЯ: Экспорт данных доставки
+  const handleExportDeliveryData = () => {
+    const success = exportDeliveryData();
+    if (success) {
+      setMessage("✅ Данные доставки экспортированы в delivery-data.js");
+      setTimeout(() => setMessage(""), 3000);
+    } else {
+      setMessage("❌ Ошибка при экспорте данных доставки");
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
   const getBrandStyle = (key) => {
     const { status } = getBrandStatus(data[key]);
     if (status === "empty")
@@ -607,6 +684,16 @@ export default function AdminPanel() {
           >
             🛠️ Услуги по категориям
           </button>
+          <button
+            onClick={() => setActiveTab("delivery")}
+            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+              activeTab === "delivery" 
+                ? "bg-blue-600 text-white" 
+                : "text-gray-600 hover:text-gray-800"
+            }`}
+          >
+            🚚 Доставка
+          </button>
         </div>
       </div>
 
@@ -639,6 +726,13 @@ export default function AdminPanel() {
           className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
         >
           📺 Экспорт ТВ/ноутбуки
+        </button>
+        {/* КНОПКА: Экспорт доставки */}
+        <button
+          onClick={handleExportDeliveryData}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-red-600 hover:bg-red-700"
+        >
+          🚚 Экспорт доставки
         </button>
         <button
           onClick={() => importJsonRef.current?.click()}
@@ -740,12 +834,15 @@ export default function AdminPanel() {
             </div>
           )}
         </>
-      ) : (
+      ) : activeTab === "categories" ? (
         /* Редактор услуг по категориям */
         <CategoryServicesEditor 
           data={categoryServices} 
           onChange={setCategoryServices} 
         />
+      ) : (
+        /* Редактор доставки */
+        <DeliveryEditor />
       )}
     </div>
   );

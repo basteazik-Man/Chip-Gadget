@@ -5,6 +5,7 @@ import BrandPage from "./components/BrandPage";
 import ModelPage from "./pages/ModelPage";
 import SearchResults from "./pages/SearchResults";
 import Services from "./pages/Services";
+import DeliveryPage from "./pages/DeliveryPage";
 import ScrollToTop from "./components/ScrollToTop";
 import HeaderMain from "./components/HeaderMain";
 import FooterMain from "./components/FooterMain";
@@ -26,6 +27,7 @@ function MainLayout() {
             <Route path="/brand/:brand/model/:model" element={<ModelPage />} />
             <Route path="/search" element={<SearchResults />} />
             <Route path="/services" element={<Services />} />
+            <Route path="/delivery" element={<DeliveryPage />} />
           </Routes>
           <ShareButton />
         </main>
