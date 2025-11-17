@@ -120,6 +120,22 @@ export default function BrandPage() {
             </p>
           )}
         </div>
+
+        {/* БЛОК ДОСТАВКИ ДОБАВЛЕН */}
+        <div className="mt-12 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl text-center">
+          <h3 className="text-xl font-semibold text-green-800 mb-3">
+            🚚 Нужна доставка устройства?
+          </h3>
+          <p className="text-green-700 mb-4">
+            Мы бесплатно заберем ваш {data?.brand || brand} на ремонт и доставим обратно после выполнения работ
+          </p>
+          <button
+            onClick={() => navigate('/delivery-order')}
+            className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
+          >
+            Заказать доставку
+          </button>
+        </div>
       </div>
     </div>
   );

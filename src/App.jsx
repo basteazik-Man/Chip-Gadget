@@ -6,11 +6,12 @@ import ModelPage from "./pages/ModelPage";
 import SearchResults from "./pages/SearchResults";
 import Services from "./pages/Services";
 import DeliveryPage from "./pages/DeliveryPage";
+import DeliveryOrderPage from "./pages/DeliveryOrderPage"; // ДОБАВЛЕНО
 import ScrollToTop from "./components/ScrollToTop";
 import HeaderMain from "./components/HeaderMain";
 import FooterMain from "./components/FooterMain";
 import ShareButton from "./components/ShareButton";
-import DeliveryButton from "./components/DeliveryButton"; // ДОБАВЛЕНО
+import DeliveryButton from "./components/DeliveryButton";
 import AdminPanel from "./pages/AdminPanel";
 import AdminLayout from "./components/AdminLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
@@ -29,9 +30,10 @@ function MainLayout() {
             <Route path="/search" element={<SearchResults />} />
             <Route path="/services" element={<Services />} />
             <Route path="/delivery" element={<DeliveryPage />} />
+            <Route path="/delivery-order" element={<DeliveryOrderPage />} /> {/* ДОБАВЛЕНО */}
           </Routes>
           <ShareButton />
-          <DeliveryButton /> {/* ДОБАВЛЕНО */}
+          <DeliveryButton />
         </main>
         <FooterMain />
       </div>
