@@ -1,7 +1,6 @@
 // Services.jsx
 import React, { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { SERVICES_BY_CATEGORY } from "../data/services";
 
 export default function Services() {
   const { search } = useLocation();
@@ -9,17 +8,15 @@ export default function Services() {
   const params = new URLSearchParams(search);
   const category = params.get("category") || null;
   
-  const [servicesData, setServicesData] = useState({});
   const [items, setItems] = useState([]);
 
-  // Загружаем данные из localStorage или из файла
+  // Загружаем данные ТОЛЬКО из localStorage
   useEffect(() => {
     const loadServicesData = () => {
       try {
         const saved = localStorage.getItem("chipgadget_category_services");
         if (saved) {
           const parsed = JSON.parse(saved);
-          setServicesData(parsed);
           
           if (category && parsed[category]) {
             setItems(parsed[category]);
@@ -27,25 +24,13 @@ export default function Services() {
             setItems([]);
           }
         } else {
-          // Если в localStorage нет данных - используем данные из файла
-          setServicesData(SERVICES_BY_CATEGORY);
-          
-          if (category && SERVICES_BY_CATEGORY[category]) {
-            setItems(SERVICES_BY_CATEGORY[category]);
-          } else {
-            setItems([]);
-          }
+          // Если в localStorage нет данных - не показываем никакие услуги
+          setItems([]);
         }
       } catch (error) {
         console.error("Ошибка загрузки данных услуг:", error);
-        // Fallback на файловые данные
-        setServicesData(SERVICES_BY_CATEGORY);
-        
-        if (category && SERVICES_BY_CATEGORY[category]) {
-          setItems(SERVICES_BY_CATEGORY[category]);
-        } else {
-          setItems([]);
-        }
+        // В случае ошибки тоже не показываем услуги
+        setItems([]);
       }
     };
 
@@ -60,7 +45,7 @@ export default function Services() {
     }
   };
 
-  // Функция для получения типа устройства и текста для кнопки - ОБНОВЛЕНО
+  // Функция для получения типа устройства и текста для кнопки
   const getDeviceInfo = () => {
     switch (category) {
       case 'laptops': 
@@ -69,7 +54,7 @@ export default function Services() {
           deviceName: 'ноутбук',
           emoji: '💻',
           placeholder: 'Модель обычно указана на нижней панели или под аккумулятором',
-          modelHint: 'Модель обычно указана на нижней панели или под аккумулятором' // ДОБАВЛЕНО
+          modelHint: 'Модель обычно указана на нижней панели или под аккумулятором'
         };
       case 'tv': 
         return {
@@ -77,7 +62,7 @@ export default function Services() {
           deviceName: 'телевизор', 
           emoji: '📺',
           placeholder: 'Модель обычно указана на задней панели или в меню настроек',
-          modelHint: 'Модель обычно указана на задней панели или в меню настроек' // ДОБАВЛЕНО
+          modelHint: 'Модель обычно указана на задней панели или в меню настроек'
         };
       default: 
         return {
@@ -85,7 +70,7 @@ export default function Services() {
           deviceName: 'устройство',
           emoji: '📱',
           placeholder: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.',
-          modelHint: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.' // ДОБАВЛЕНО
+          modelHint: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.'
         };
     }
   };
@@ -151,7 +136,7 @@ export default function Services() {
             </div>
           )}
 
-          {/* Кнопка заказа доставки - ОБНОВЛЕНО */}
+          {/* Кнопка заказа доставки */}
           <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl text-center">
             <h3 className="text-xl font-semibold text-green-800 mb-3">
               🚚 Нужна доставка {deviceInfo.deviceName}?
@@ -163,8 +148,8 @@ export default function Services() {
               onClick={() => navigate('/delivery-order', { 
                 state: { 
                   deviceType: deviceInfo.deviceType,
-                  modelHint: deviceInfo.modelHint, // ДОБАВЛЕНО: передаем подсказку
-                  emoji: deviceInfo.emoji // ДОБАВЛЕНО: передаем эмодзи
+                  modelHint: deviceInfo.modelHint,
+                  emoji: deviceInfo.emoji
                 }
               })}
               className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
