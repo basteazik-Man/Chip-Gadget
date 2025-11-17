@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "realme",
+  "brand": "Realme",
   "currency": "₽",
   "discount": {
     "type": "none",

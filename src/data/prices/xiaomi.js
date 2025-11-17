@@ -1,117 +1,22 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "xiaomi",
+  "brand": "Xiaomi",
   "currency": "₽",
   "discount": {
     "type": "none",
     "value": 0
   },
   "models": {
-    "note-9": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 2700,
-        "finalPrice": 2700,
-        "active": true
-      },
-      {
-        "name": "Замена разъема",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      }
-    ],
-    "note-9s": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 2700,
-        "finalPrice": 2700,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      }
-    ],
-    "note-9-pro": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 2700,
-        "finalPrice": 2700,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      }
-    ],
+    "12": [],
+    "13": [],
+    "14": [],
+    "15": [],
+    "17": [],
+    "note-9": [],
+    "note-9s": [],
+    "note-9-pro": [],
     "note-9-pro-max": [],
-    "note-10": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      }
-    ],
+    "note-10": [],
     "note-10s": [],
     "note-10-pro": [],
     "note-11": [],
@@ -134,9 +39,53 @@ export default {
     "redmi-12c": [],
     "redmi-13": [],
     "redmi-13c": [],
+    "mi-9": [],
+    "mi-9-se": [],
+    "mi-9t": [],
+    "mi-a3": [],
+    "mi-9t-pro": [],
+    "mi-9-lite": [],
+    "mi-note-10": [],
+    "mi-mix-3": [],
+    "mi-10": [],
+    "mi-10-pro": [],
+    "mi-note-10-lite": [],
+    "mi-10-lite-5g": [],
+    "mi-10t-pro": [],
+    "mi-10t": [],
+    "mi-10t-lite": [],
+    "mi-11-lite-5g": [],
+    "mi-11-ultra": [],
+    "mi-11-lite-4g": [],
+    "mi-11-pro": [],
+    "mi-10s": [],
+    "mi-11i": [],
     "mi-11": [],
-    "mi-12": [],
-    "mi-13": [],
+    "11t-pro": [],
+    "11-lite-5g-ne": [],
+    "11t": [],
+    "12x": [],
+    "12-pro": [],
+    "12-lite": [],
+    "12s-ultra": [],
+    "12t-pro": [],
+    "12t": [],
+    "12s": [],
+    "12s-pro": [],
+    "13-pro": [],
+    "13-ultra": [],
+    "13-lite": [],
+    "13t": [],
+    "13t-pro": [],
+    "14-pro": [],
+    "14-ultra": [],
+    "14t": [],
+    "14t-pro": [],
+    "15-ultra": [],
+    "mix-4": [],
+    "mix-fold-2": [],
+    "mix-fold-3": [],
+    "mix-flip": [],
     "k50": [],
     "k60": [],
     "k70": []

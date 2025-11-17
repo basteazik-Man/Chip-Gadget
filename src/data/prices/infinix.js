@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "infinix",
+  "brand": "Infinix",
   "currency": "₽",
   "discount": {
     "type": "none",

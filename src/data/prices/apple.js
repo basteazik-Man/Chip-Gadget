@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "apple",
+  "brand": "Apple",
   "currency": "₽",
   "discount": {
     "type": "none",

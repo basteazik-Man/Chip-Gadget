@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "tecno",
+  "brand": "Tecno",
   "currency": "₽",
   "discount": {
     "type": "none",

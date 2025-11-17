@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "huawei",
+  "brand": "Huawei",
   "currency": "₽",
   "discount": {
     "type": "none",

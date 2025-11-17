@@ -1,4 +1,3 @@
-// === ModelPage.jsx ===
 import React, { useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { PRICES } from "../data/prices";
@@ -99,7 +98,7 @@ export default function ModelPage() {
               )}
             </div>
 
-            {/* БЛОК ДОСТАВКИ ДОБАВЛЕН */}
+            {/* БЛОК ДОСТАВКИ - ОБНОВЛЕН */}
             <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl text-center">
               <h3 className="text-xl font-semibold text-green-800 mb-3">
                 🚚 Нужна доставка устройства?
@@ -108,7 +107,13 @@ export default function ModelPage() {
                 Мы бесплатно заберем ваш {model} на ремонт и доставим обратно после выполнения работ
               </p>
               <button
-                onClick={() => navigate('/delivery-order')}
+                onClick={() => navigate('/delivery-order', { 
+                  state: { 
+                    model: model.replace(/%20/g, " "),
+                    brand: brand,
+                    deviceType: 'smartphone' // ДОБАВЛЕНО: тип устройства по умолчанию для страниц моделей
+                  }
+                })}
                 className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
               >
                 Заказать доставку

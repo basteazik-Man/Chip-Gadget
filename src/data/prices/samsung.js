@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "samsung",
+  "brand": "Samsung",
   "currency": "₽",
   "discount": {
     "type": "none",

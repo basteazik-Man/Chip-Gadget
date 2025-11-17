@@ -1,18 +1,169 @@
 // === DeliveryOrderPage.jsx ===
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { CONTACT } from '../data/contact';
+import { PRICES } from '../data/prices';
+import { normalizeKey, normalizeService } from '../utils/priceUtils';
 
 const DeliveryOrderPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // Функция для определения модели из различных источников
+  const detectModelFromNavigation = () => {
+    // 1. Попробуем получить из состояния навигации
+    if (location.state?.model) {
+      return {
+        model: location.state.model,
+        brand: location.state.brand,
+        deviceType: location.state.deviceType,
+        autoDetected: true
+      };
+    }
+    
+    // 2. Попробуем извлечь из URL (если перешли со страницы модели)
+    const pathParts = location.pathname.split('/');
+    const modelIndex = pathParts.indexOf('model') + 1;
+    const brandIndex = pathParts.indexOf('brand') + 1;
+    
+    if (modelIndex > 0 && modelIndex < pathParts.length && brandIndex > 0 && brandIndex < pathParts.length) {
+      return {
+        model: decodeURIComponent(pathParts[modelIndex]),
+        brand: decodeURIComponent(pathParts[brandIndex]),
+        deviceType: location.state?.deviceType,
+        autoDetected: true
+      };
+    }
+    
+    return { model: '', brand: '', deviceType: '', autoDetected: false };
+  };
+
+  const detectedData = detectModelFromNavigation();
+  
   const [formData, setFormData] = useState({
     address: '',
-    deviceModel: '',
+    deviceModel: detectedData.model,
     problem: '',
     customerName: '',
     phone: '',
     contactMethod: 'whatsapp'
   });
+
+  const [services, setServices] = useState([]);
+  const [selectedService, setSelectedService] = useState('');
+  const [showCustomProblem, setShowCustomProblem] = useState(false);
+  const [isModelAutoDetected] = useState(detectedData.autoDetected);
+
+  // Улучшенная функция определения типа устройства - ОБНОВЛЕНО
+  const getDeviceTypeInfo = () => {
+    // Если передан emoji и modelHint из состояния навигации - используем их
+    if (location.state?.emoji && location.state?.modelHint) {
+      return {
+        emoji: location.state.emoji,
+        placeholder: location.state.modelHint
+      };
+    }
+
+    // Если тип устройства передан явно
+    if (detectedData.deviceType) {
+      switch(detectedData.deviceType.toLowerCase()) {
+        case 'laptop':
+        case 'notebook':
+        case 'macbook':
+          return {
+            emoji: '💻',
+            placeholder: 'Модель обычно указана на нижней панели или под аккумулятором'
+          };
+        case 'tv':
+        case 'television':
+          return {
+            emoji: '📺', 
+            placeholder: 'Модель обычно указана на задней панели или в меню настроек'
+          };
+        default:
+          return {
+            emoji: '📱',
+            placeholder: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.'
+          };
+      }
+    }
+
+    // Определяем по названию модели
+    const model = formData.deviceModel.toLowerCase();
+    
+    // Ключевые слова для ноутбуков
+    const laptopKeywords = ['macbook', 'mac book', 'notebook', 'laptop', 'ultrabook', 'mbp', 'mba', 'mac'];
+    const isLaptop = laptopKeywords.some(keyword => model.includes(keyword));
+    
+    // Ключевые слова для телевизоров  
+    const tvKeywords = ['tv', 'television', 'телевизор', 'smart tv', 'led tv', 'oled tv', 'qled tv'];
+    const isTV = tvKeywords.some(keyword => model.includes(keyword));
+
+    if (isLaptop) {
+      return {
+        emoji: '💻',
+        placeholder: 'Модель обычно указана на нижней панели или под аккумулятором'
+      };
+    }
+    
+    if (isTV) {
+      return {
+        emoji: '📺',
+        placeholder: 'Модель обычно указана на задней панели или в меню настроек'
+      };
+    }
+    
+    // По умолчанию для смартфонов и других устройств
+    return {
+      emoji: '📱',
+      placeholder: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.'
+    };
+  };
+
+  const deviceTypeInfo = getDeviceTypeInfo();
+
+  // Загружаем услуги для текущей модели
+  useEffect(() => {
+    if (formData.deviceModel && isModelAutoDetected && detectedData.brand) {
+      const brandKey = detectedData.brand.toLowerCase();
+      
+      if (PRICES[brandKey]) {
+        const brandPrices = PRICES[brandKey];
+        const modelKey = normalizeKey(formData.deviceModel);
+        
+        let modelServices = [];
+        
+        // Прямое совпадение
+        if (brandPrices.models?.[modelKey]) {
+          modelServices = brandPrices.models[modelKey];
+        } else {
+          // Поиск по нормализованному ключу
+          const found = Object.entries(brandPrices.models || {}).find(
+            ([key]) => normalizeKey(key) === modelKey
+          );
+          modelServices = found?.[1] || [];
+        }
+        
+        // Нормализуем и фильтруем активные услуги
+        const normalizedServices = modelServices
+          .map(normalizeService)
+          .filter(service => service.active !== false);
+        
+        setServices(normalizedServices);
+        
+        // Автоматически выбираем первую услугу, если есть
+        if (normalizedServices.length > 0 && !selectedService) {
+          setSelectedService(normalizedServices[0].id);
+          setFormData(prev => ({ 
+            ...prev, 
+            problem: normalizedServices[0].title 
+          }));
+        }
+      }
+    } else {
+      setServices([]);
+    }
+  }, [formData.deviceModel, isModelAutoDetected, detectedData.brand, selectedService]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -22,15 +173,45 @@ const DeliveryOrderPage = () => {
     }));
   };
 
+  const handleServiceChange = (e) => {
+    const value = e.target.value;
+    setSelectedService(value);
+    
+    if (value === 'custom') {
+      setShowCustomProblem(true);
+      setFormData(prev => ({ ...prev, problem: '' }));
+    } else {
+      setShowCustomProblem(false);
+      const selectedServiceObj = services.find(s => s.id === value);
+      setFormData(prev => ({ 
+        ...prev, 
+        problem: selectedServiceObj ? selectedServiceObj.title : '' 
+      }));
+    }
+  };
+
+  const handleCustomProblemChange = (e) => {
+    setFormData(prev => ({
+      ...prev,
+      problem: e.target.value
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
+    
+    // Проверяем, что проблема описана
+    if (!formData.problem.trim()) {
+      alert('Пожалуйста, выберите услугу или опишите проблему');
+      return;
+    }
     
     // Формируем сообщение для отправки
     const message = `📦 НОВЫЙ ЗАКАЗ ДОСТАВКИ:%0A%0A
 👤 Имя: ${formData.customerName}%0A
 📞 Телефон: ${formData.phone}%0A
 📍 Адрес: ${formData.address}%0A
-📱 Модель устройства: ${formData.deviceModel}%0A
+${deviceTypeInfo.emoji} Модель устройства: ${formData.deviceModel}%0A
 🔧 Неисправность: ${formData.problem}%0A
 💬 Предпочтительный способ связи: ${formData.contactMethod === 'whatsapp' ? 'WhatsApp' : 'Telegram'}`;
 
@@ -47,12 +228,14 @@ const DeliveryOrderPage = () => {
     // Очищаем форму
     setFormData({
       address: '',
-      deviceModel: '',
+      deviceModel: isModelAutoDetected ? detectedData.model : '',
       problem: '',
       customerName: '',
       phone: '',
       contactMethod: 'whatsapp'
     });
+    setSelectedService('');
+    setShowCustomProblem(false);
   };
 
   return (
@@ -109,7 +292,7 @@ const DeliveryOrderPage = () => {
               {/* Модель устройства */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  📱 Модель устройства *
+                  {deviceTypeInfo.emoji} Модель устройства *
                 </label>
                 <input
                   type="text"
@@ -117,25 +300,75 @@ const DeliveryOrderPage = () => {
                   value={formData.deviceModel}
                   onChange={handleInputChange}
                   required
-                  placeholder="Например: iPhone 14, Samsung Galaxy S23 и т.д."
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  readOnly={isModelAutoDetected}
+                  placeholder={deviceTypeInfo.placeholder}
+                  className={`w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 ${
+                    isModelAutoDetected ? 'bg-gray-100 cursor-not-allowed' : ''
+                  }`}
                 />
+                {isModelAutoDetected && (
+                  <p className="text-sm text-green-600 mt-1">
+                    ✅ Модель определена автоматически
+                  </p>
+                )}
               </div>
 
-              {/* Неисправность */}
+              {/* Неисправность - динамический выпадающий список */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">
-                  🔧 Описание неисправности *
+                  🔧 {isModelAutoDetected && services.length > 0 ? 'Выберите услугу' : 'Описание неисправности'} *
                 </label>
-                <textarea
-                  name="problem"
-                  value={formData.problem}
-                  onChange={handleInputChange}
-                  required
-                  rows="3"
-                  placeholder="Опишите что случилось с устройством, какие симптомы..."
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                />
+                
+                {isModelAutoDetected && services.length > 0 ? (
+                  <>
+                    <select
+                      value={selectedService}
+                      onChange={handleServiceChange}
+                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-3"
+                      required
+                    >
+                      <option value="">-- Выберите услугу --</option>
+                      {services.map((service) => (
+                        <option key={service.id} value={service.id}>
+                          {service.title} {service.finalPrice ? `- ${service.finalPrice.toLocaleString()} ₽` : ''}
+                        </option>
+                      ))}
+                      <option value="custom">❌ Нет нужной услуги</option>
+                    </select>
+
+                    {showCustomProblem && (
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Опишите проблему подробнее *
+                        </label>
+                        <textarea
+                          value={formData.problem}
+                          onChange={handleCustomProblemChange}
+                          required
+                          rows="3"
+                          placeholder="Опишите что случилось с устройством, какие симптомы..."
+                          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                        />
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <textarea
+                    name="problem"
+                    value={formData.problem}
+                    onChange={handleInputChange}
+                    required
+                    rows="3"
+                    placeholder="Опишите что случилось с устройством, какие симптомы..."
+                    className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+                  />
+                )}
+                
+                {isModelAutoDetected && services.length === 0 && (
+                  <p className="text-sm text-gray-500 mt-1">
+                    Для этой модели нет доступных услуг в базе данных
+                  </p>
+                )}
               </div>
 
               {/* Имя */}

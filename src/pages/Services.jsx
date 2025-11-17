@@ -60,6 +60,38 @@ export default function Services() {
     }
   };
 
+  // Функция для получения типа устройства и текста для кнопки - ОБНОВЛЕНО
+  const getDeviceInfo = () => {
+    switch (category) {
+      case 'laptops': 
+        return {
+          deviceType: 'laptop',
+          deviceName: 'ноутбук',
+          emoji: '💻',
+          placeholder: 'Модель обычно указана на нижней панели или под аккумулятором',
+          modelHint: 'Модель обычно указана на нижней панели или под аккумулятором' // ДОБАВЛЕНО
+        };
+      case 'tv': 
+        return {
+          deviceType: 'tv',
+          deviceName: 'телевизор', 
+          emoji: '📺',
+          placeholder: 'Модель обычно указана на задней панели или в меню настроек',
+          modelHint: 'Модель обычно указана на задней панели или в меню настроек' // ДОБАВЛЕНО
+        };
+      default: 
+        return {
+          deviceType: 'smartphone',
+          deviceName: 'устройство',
+          emoji: '📱',
+          placeholder: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.',
+          modelHint: 'Например: iPhone 14, Samsung Galaxy S23 и т.д.' // ДОБАВЛЕНО
+        };
+    }
+  };
+
+  const deviceInfo = getDeviceInfo();
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
@@ -119,16 +151,22 @@ export default function Services() {
             </div>
           )}
 
-          {/* Кнопка заказа доставки */}
+          {/* Кнопка заказа доставки - ОБНОВЛЕНО */}
           <div className="mt-8 p-6 bg-gradient-to-r from-green-50 to-emerald-50 border border-green-200 rounded-2xl text-center">
             <h3 className="text-xl font-semibold text-green-800 mb-3">
-              🚚 Нужна доставка устройства?
+              🚚 Нужна доставка {deviceInfo.deviceName}?
             </h3>
             <p className="text-green-700 mb-4">
-              Мы бесплатно заберем ваш {category === 'laptops' ? 'ноутбук' : category === 'tv' ? 'телевизор' : 'устройство'} на ремонт и доставим обратно после выполнения работ
+              Мы бесплатно заберем ваш {deviceInfo.deviceName} на ремонт и доставим обратно после выполнения работ
             </p>
             <button
-              onClick={() => navigate('/delivery-order')}
+              onClick={() => navigate('/delivery-order', { 
+                state: { 
+                  deviceType: deviceInfo.deviceType,
+                  modelHint: deviceInfo.modelHint, // ДОБАВЛЕНО: передаем подсказку
+                  emoji: deviceInfo.emoji // ДОБАВЛЕНО: передаем эмодзи
+                }
+              })}
               className="bg-gradient-to-r from-green-500 to-emerald-600 text-white px-8 py-3 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
             >
               Заказать доставку

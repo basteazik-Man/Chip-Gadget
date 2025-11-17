@@ -1,6 +1,6 @@
 // Автоматически сгенерировано Chip&Gadget Admin
 export default {
-  "brand": "honor",
+  "brand": "Honor",
   "currency": "₽",
   "discount": {
     "type": "none",
