@@ -15,7 +15,6 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'
     
     - name: Install dependencies
       run: npm install
@@ -25,10 +24,11 @@ jobs:
       
     - name: Create .htaccess file
       run: |
+        cd build
         echo 'RewriteEngine On
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule . /index.html [L]' > build/.htaccess
+        RewriteRule . /index.html [L]' > .htaccess
     
     - name: Deploy to Beget via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.0
