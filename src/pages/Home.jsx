@@ -1,4 +1,4 @@
-// Home.jsx (обновленная версия с кнопкой доставки и улучшенными тенями)
+// Home.jsx (убрана кнопка доставки)
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -165,7 +165,7 @@ export default function Home() {
 
       {/* === Приветствие === */}
       <motion.section
-        className="w-full max-w-5xl mb-4 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
+        className="w-full max-w-5xl mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.3 }}
@@ -174,23 +174,6 @@ export default function Home() {
           Добро пожаловать в <span className="text-white/90">Чип&Гаджет</span>
         </h1>
         <p className="text-white/90 mt-2 text-lg">Ремонт смартфонов, планшетов и ноутбуков всех брендов</p>
-      </motion.section>
-
-      {/* === Кнопка ДОСТАВКА === */}
-      <motion.section
-        className="w-full max-w-5xl mb-6"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-      >
-        <motion.button
-          onClick={() => navigate('/delivery')}
-          whileHover={{ scale: 1.02, y: -2 }}
-          whileTap={{ scale: 0.98 }}
-          className="w-full max-w-md mx-auto flex items-center justify-center p-4 rounded-2xl bg-gradient-to-r from-orange-500 to-red-500 shadow-2xl hover:shadow-3xl text-white font-bold text-lg transition-all duration-300"
-        >
-          🚚 ДОСТАВКА
-        </motion.button>
       </motion.section>
 
       {/* === Кнопки брендов === */}

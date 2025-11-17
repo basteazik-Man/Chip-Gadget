@@ -1,12 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useDelivery } from '../data/deliveryData';
 
 const DeliveryPage = () => {
+  const navigate = useNavigate();
   const deliveryData = useDelivery();
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-8 px-4">
       <div className="max-w-4xl mx-auto">
+        {/* Кнопка назад как на других страницах */}
+        <button
+          onClick={() => navigate(-1)}
+          className="mb-6 flex items-center text-blue-600 hover:text-blue-800 font-medium"
+        >
+          ← Назад
+        </button>
+
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           {/* Красивое изображение на всю ширину */}
           <div className="h-64 bg-gradient-to-r from-blue-400 to-cyan-500 flex items-center justify-center">
