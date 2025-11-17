@@ -56,6 +56,20 @@ const CategoryServicesEditor = ({ data, onChange }) => {
     }
   };
 
+  const handleRemoveCategory = (categoryId) => {
+    if (!confirm(`Удалить категорию "${categoryId.replace(/-/g, ' ')}"? Все услуги в этой категории будут удалены.`)) {
+      return;
+    }
+    
+    const newData = { ...data };
+    delete newData[categoryId];
+    onChange(newData);
+    
+    if (expandedCategory === categoryId) {
+      setExpandedCategory(null);
+    }
+  };
+
   // Объединяем предопределенные и пользовательские категории
   const allCategories = [
     ...predefinedCategories,
@@ -84,6 +98,7 @@ const CategoryServicesEditor = ({ data, onChange }) => {
         
         <p className="text-gray-600 mb-6">
           Здесь вы можете редактировать услуги, которые отображаются при нажатии на кнопки "Ноутбуки" и "Телевизоры" на главной странице.
+          <strong> Все категории (включая созданные вручную) будут экспортированы при нажатии кнопки "📺 Экспорт ТВ/ноутбуки".</strong>
         </p>
 
         <div className="space-y-4">
@@ -93,22 +108,37 @@ const CategoryServicesEditor = ({ data, onChange }) => {
               className="border border-gray-200 rounded-xl overflow-hidden"
               initial={false}
             >
-              <button
-                onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
-                className={`w-full flex items-center justify-between p-4 text-white font-semibold transition-all ${
-                  category.isCustom 
-                    ? "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700"
-                    : "bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
-                }`}
-              >
-                <div className="flex items-center">
-                  <span className="text-xl mr-3">{category.icon}</span>
-                  <span className="text-lg capitalize">{category.title}</span>
-                </div>
-                <span className="text-lg">
-                  {expandedCategory === category.id ? '−' : '+'}
-                </span>
-              </button>
+              <div className="flex items-center justify-between">
+                <button
+                  onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
+                  className={`flex-1 flex items-center justify-between p-4 text-white font-semibold transition-all ${
+                    category.isCustom 
+                      ? "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700"
+                      : "bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
+                  }`}
+                >
+                  <div className="flex items-center">
+                    <span className="text-xl mr-3">{category.icon}</span>
+                    <span className="text-lg capitalize">{category.title}</span>
+                    {category.isCustom && (
+                      <span className="ml-2 text-xs bg-yellow-500 px-2 py-1 rounded-full">Кастомная</span>
+                    )}
+                  </div>
+                  <span className="text-lg">
+                    {expandedCategory === category.id ? '−' : '+'}
+                  </span>
+                </button>
+                
+                {category.isCustom && (
+                  <button
+                    onClick={() => handleRemoveCategory(category.id)}
+                    className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors"
+                    title="Удалить категорию"
+                  >
+                    🗑️
+                  </button>
+                )}
+              </div>
 
               <AnimatePresence>
                 {expandedCategory === category.id && (

@@ -87,6 +87,28 @@ const exportJSON = (data) => {
   a.click();
 };
 
+// ФУНКЦИЯ: Экспорт услуг по категориям (ТВ/ноутбуки)
+const exportCategoryServices = (categoryServices) => {
+  try {
+const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
+  categoryServices,
+  null,
+  2
+)};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
+    
+    const blob = new Blob([content], { type: "application/javascript" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `category-services.js`;
+    a.click();
+    
+    return true;
+  } catch (error) {
+    console.error('Ошибка при экспорте категорий услуг:', error);
+    return false;
+  }
+};
+
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -112,16 +134,6 @@ const transformDataForExport = (data) => {
       });
     });
   });
-
-  // ДОБАВЛЕНО: Экспорт данных категорий услуг
-  try {
-    const categoryServices = localStorage.getItem("chipgadget_category_services");
-    if (categoryServices) {
-      transformed._categoryServices = JSON.parse(categoryServices);
-    }
-  } catch (e) {
-    console.error("Ошибка при экспорте категорий услуг:", e);
-  }
   
   return transformed;
 };
@@ -189,7 +201,7 @@ const mergeImportedData = (currentData, importedData) => {
   return merged;
 };
 
-// Функция для создания и скачивания ZIP архива
+// Функция для создания и скачивания ZIP архива (ТОЛЬКО БРЕНДЫ)
 const exportJSFilesAsZip = async (data) => {
   try {
     const transformedData = transformDataForExport(data);
@@ -200,8 +212,6 @@ const exportJSFilesAsZip = async (data) => {
     
     // Добавляем каждый бренд как отдельный JS файл в архив
     Object.keys(transformedData).forEach((key) => {
-      if (key === '_categoryServices') return; // Пропускаем категории услуг в основном экспорте
-      
       const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
         transformedData[key],
         null,
@@ -209,16 +219,6 @@ const exportJSFilesAsZip = async (data) => {
       )};`;
       zip.file(`${key}.js`, content);
     });
-
-    // Добавляем файл с категориями услуг
-    if (transformedData._categoryServices) {
-      const categoryContent = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
-        transformedData._categoryServices,
-        null,
-        2
-      )};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
-      zip.file(`category-services.js`, categoryContent);
-    }
 
     // Добавляем README файл с инструкциями
     const readmeContent = `# Chip&Gadget Price Files
@@ -230,12 +230,14 @@ const exportJSFilesAsZip = async (data) => {
 1. Распакуйте этот архив
 2. Скопируйте все .js файлы в папку: src/data/prices/
 3. Замените существующие файлы
-4. Файл category-services.js содержит услуги по категориям (телевизоры, ноутбуки)
 
 ## Содержимое архива:
 
-${Object.keys(transformedData).filter(key => key !== '_categoryServices').map(key => `- ${key}.js → ${transformedData[key].brand}`).join('\n')}
-${transformedData._categoryServices ? '- category-services.js → Услуги по категориям' : ''}
+${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key].brand}`).join('\n')}
+
+## Важно:
+- Этот архив содержит ТОЛЬКО бренды (телефоны, планшеты)
+- Услуги по категориям (ТВ, ноутбуки) экспортируются отдельно через кнопку "📺 Экспорт ТВ/ноутбуки"
 
 Сгенерировано: ${new Date().toLocaleString()}
 `;
@@ -245,7 +247,7 @@ ${transformedData._categoryServices ? '- category-services.js → Услуги �
     const blob = await zip.generateAsync({ type: "blob" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = `chipgadget-prices-${new Date().toISOString().split('T')[0]}.zip`;
+    a.download = `chipgadget-brands-${new Date().toISOString().split('T')[0]}.zip`;
     a.click();
     
     // Освобождаем память
@@ -259,8 +261,6 @@ ${transformedData._categoryServices ? '- category-services.js → Услуги �
     const transformedData = transformDataForExport(data);
     alert('Не удалось создать ZIP архив. Используем старый метод экспорта.');
     Object.keys(transformedData).forEach((key) => {
-      if (key === '_categoryServices') return;
-      
       const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
         transformedData[key],
         null,
@@ -273,6 +273,46 @@ ${transformedData._categoryServices ? '- category-services.js → Услуги �
       a.click();
     });
     return false;
+  }
+};
+
+// УПРОЩЕННАЯ ФУНКЦИЯ ДЛЯ ИМПОРТА JS ФАЙЛОВ
+const parseJSFile = (fileContent, fileName) => {
+  try {
+    // Для category-services.js - ищем SERVICES_BY_CATEGORY
+    if (fileName === 'category-services') {
+      const servicesMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*?\});/);
+      if (servicesMatch) {
+        const dataStr = servicesMatch[1];
+        // Простая замена для преобразования в валидный JSON
+        const jsonStr = dataStr
+          .replace(/(\w+):/g, '"$1":')  // Ключи в кавычки
+          .replace(/'/g, '"')           // Одинарные кавычки в двойные
+          .replace(/,\s*}/g, '}')       // Убираем лишние запятые
+          .replace(/,\s*]/g, ']');      // Убираем лишние запятые в массивах
+        
+        return JSON.parse(jsonStr);
+      }
+      throw new Error('Не найден SERVICES_BY_CATEGORY в файле');
+    }
+    
+    // Для файлов брендов - ищем export default
+    const defaultMatch = fileContent.match(/export default (\{[\s\S]*?\});/);
+    if (defaultMatch) {
+      const dataStr = defaultMatch[1];
+      const jsonStr = dataStr
+        .replace(/(\w+):/g, '"$1":')
+        .replace(/'/g, '"')
+        .replace(/,\s*}/g, '}')
+        .replace(/,\s*]/g, ']');
+      
+      return JSON.parse(jsonStr);
+    }
+    
+    throw new Error('Не найден export default в файле');
+  } catch (error) {
+    console.error('Ошибка парсинга JS файла:', error);
+    throw new Error(`Неверный формат JS файла: ${error.message}`);
   }
 };
 
@@ -379,61 +419,16 @@ export default function AdminPanel() {
     reader.onload = (e) => {
       try {
         const fileContent = e.target.result;
+        const fileName = file.name.replace('.js', '');
         
-        let importedData;
+        console.log('Импортируем файл:', fileName);
+        console.log('Содержимое:', fileContent.substring(0, 200) + '...');
         
-        // Пытаемся распарсить как export default
-        const defaultMatch = fileContent.match(/export default (\{[\s\S]*?\});?$/);
-        if (defaultMatch) {
-          const dataStr = defaultMatch[1];
-          const jsonStr = dataStr
-            .replace(/(\w+):/g, '"$1":')
-            .replace(/'/g, '"');
-          importedData = JSON.parse(jsonStr);
-        } 
-        // Пытаемся распарсить как export const SERVICES_BY_CATEGORY
-        else {
-          const constMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*?\});?$/);
-          if (constMatch) {
-            const dataStr = constMatch[1];
-            const jsonStr = dataStr
-              .replace(/(\w+):/g, '"$1":')
-              .replace(/'/g, '"');
-            importedData = JSON.parse(jsonStr);
-          } 
-          // Пытаемся распарсить как export const defaultPrices
-          else {
-            const defaultPricesMatch = fileContent.match(/export const defaultPrices = (\{[\s\S]*?\});?$/);
-            if (defaultPricesMatch) {
-              const dataStr = defaultPricesMatch[1];
-              const jsonStr = dataStr
-                .replace(/(\w+):/g, '"$1":')
-                .replace(/'/g, '"');
-              importedData = JSON.parse(jsonStr);
-              
-              // Преобразуем структуру defaultPrices в нужный формат
-              importedData = {
-                brand: importedData.brand || "default",
-                currency: importedData.currency || "₽",
-                discount: importedData.discount || { type: "none", value: 0 },
-                models: {
-                  "default-model": (importedData.defaults || []).map(item => ({
-                    name: item.title,
-                    price: item.basePrice,
-                    finalPrice: item.basePrice,
-                    active: item.active !== false
-                  }))
-                }
-              };
-            } else {
-              throw new Error('Неверный формат JS файла');
-            }
-          }
-        }
+        let importedData = parseJSFile(fileContent, fileName);
         
-        const brandKey = file.name.replace('.js', '');
+        console.log('Распарсенные данные:', importedData);
         
-        if (brandKey === 'category-services') {
+        if (fileName === 'category-services') {
           // Обработка импорта категорий услуг
           if (!confirm(`Импортировать данные категорий услуг?`)) {
             return;
@@ -449,15 +444,15 @@ export default function AdminPanel() {
           }
         } else {
           // Обработка импорта данных бренда
-          if (!confirm(`Импортировать данные для бренда ${brandKey}?`)) {
+          if (!confirm(`Импортировать данные для бренда ${fileName}?`)) {
             return;
           }
           
           const mergedData = { ...data };
-          if (mergedData[brandKey] && importedData.models) {
+          if (mergedData[fileName] && importedData.models) {
             Object.keys(importedData.models).forEach(modelKey => {
-              if (mergedData[brandKey].models[modelKey]) {
-                mergedData[brandKey].models[modelKey] = importedData.models[modelKey].map(service => ({
+              if (mergedData[fileName].models[modelKey]) {
+                mergedData[fileName].models[modelKey] = importedData.models[modelKey].map(service => ({
                   name: service.name || service.title || "Услуга",
                   price: service.price || service.basePrice || 0,
                   finalPrice: service.finalPrice || service.price || service.basePrice || 0,
@@ -470,7 +465,7 @@ export default function AdminPanel() {
             setData(mergedData);
             saveToLocal(mergedData);
             setUnsaved(false);
-            setMessage(`✅ Данные для ${brandKey} успешно импортированы!`);
+            setMessage(`✅ Данные для ${fileName} успешно импортированы!`);
           } else {
             setMessage('❌ Бренд не найден в текущей структуре');
           }
@@ -478,7 +473,7 @@ export default function AdminPanel() {
         
       } catch (error) {
         console.error('Ошибка импорта JS:', error);
-        setMessage('❌ Ошибка: неверный формат JS файла');
+        setMessage(`❌ Ошибка: ${error.message}`);
       }
     };
     reader.readAsText(file);
@@ -538,15 +533,27 @@ export default function AdminPanel() {
     const success = await exportJSFilesAsZip(data);
     
     if (success) {
-      setMessage("✅ JS-файлы упакованы в ZIP архив");
+      setMessage("✅ Бренды упакованы в ZIP архив");
     } else {
-      setMessage("✅ JS-файлы экспортированы по отдельности");
+      setMessage("✅ Бренды экспортированы по отдельности");
     }
     
     setTimeout(() => {
       setMessage("");
       setIsExporting(false);
     }, 4000);
+  };
+
+  // ФУНКЦИЯ: Экспорт услуг по категориям
+  const handleExportCategoryServices = () => {
+    const success = exportCategoryServices(categoryServices);
+    if (success) {
+      setMessage("✅ Услуги по категориям экспортированы в category-services.js");
+      setTimeout(() => setMessage(""), 3000);
+    } else {
+      setMessage("❌ Ошибка при экспорте услуг по категориям");
+      setTimeout(() => setMessage(""), 3000);
+    }
   };
 
   const getBrandStyle = (key) => {
@@ -625,6 +632,13 @@ export default function AdminPanel() {
           }`}
         >
           {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
+        </button>
+        {/* КНОПКА: Экспорт ТВ/ноутбуки */}
+        <button
+          onClick={handleExportCategoryServices}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
+        >
+          📺 Экспорт ТВ/ноутбуки
         </button>
         <button
           onClick={() => importJsonRef.current?.click()}
