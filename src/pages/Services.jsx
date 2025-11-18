@@ -77,20 +77,14 @@ export default function Services() {
                   key={index}
                   className="p-4 bg-gradient-to-br from-white to-blue-50 border border-blue-100 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
-                        {service.name}
-                      </h3>
-                      <p className="text-blue-600 font-medium text-base">
-                        {service.price}
-                      </p>
-                    </div>
-                    <div className="flex gap-2 ml-4">
-                      <button className="px-4 py-2 bg-blue-600 text-white text-sm rounded-lg hover:bg-blue-700 transition-colors whitespace-nowrap">
-                        Заказать
-                      </button>
-                    </div>
+                  {/* УБРАНЫ КНОПКИ "ЗАКАЗАТЬ" - оставлено только название и цена */}
+                  <div className="flex-1">
+                    <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                      {service.name}
+                    </h3>
+                    <p className="text-blue-600 font-medium text-base">
+                      {service.price}
+                    </p>
                   </div>
                 </div>
               ))}
