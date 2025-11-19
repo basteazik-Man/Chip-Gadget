@@ -1,163 +1,216 @@
-// === ModelEditor.jsx ===
-// Исправлена логика ввода цены: ноль убирается при фокусе, пустое поле допускается во время ввода,
-// при blur пустая строка приводится к 0 и пересчитывается finalPrice.
-// Сохранён прежний набор функций: добавить/удалить/вкл-выкл/скидка.
-
-import React from "react";
-import { calculateFinalPrice, safeParseFloat } from '../../utils/priceUtils';
+// ModelEditor.jsx (с рабочим перетаскиванием)
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { calculateFinalPrice } from "../../utils/priceUtils";
 
 export default function ModelEditor({ modelKey, services, onChange }) {
-  // Обновляем поле сервиса по индексу
-  const handleFieldChange = (index, field, value) => {
-    const updated = services.map((srv, i) =>
-      i === index ? { ...srv, [field]: value } : srv
-    );
+  const [localServices, setLocalServices] = useState(services || []);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
-    // пересчёт finalPrice для всех записей (используя числовые значения или 0)
-    updated.forEach((srv) => {
-      const discount = safeParseFloat(srv.discount);
-      const price = safeParseFloat(srv.price);
-      srv.finalPrice = calculateFinalPrice(price, discount);
-    });
-
-    onChange(updated);
-  };
-
-  const toggleActive = (index) => {
-    const updated = services.map((srv, i) =>
-      i === index ? { ...srv, active: !srv.active } : srv
-    );
-    onChange(updated);
-  };
-
-  const deleteService = (index) => {
-    if (!confirm("Удалить эту услугу?")) return;
-    const updated = services.filter((_, i) => i !== index);
+  const updateService = (index, updates) => {
+    const updated = [...localServices];
+    updated[index] = { ...updated[index], ...updates };
+    
+    if (updates.price !== undefined || updates.discount !== undefined) {
+      const price = updates.price !== undefined ? updates.price : updated[index].price;
+      const discount = updates.discount !== undefined ? updates.discount : updated[index].discount;
+      updated[index].finalPrice = calculateFinalPrice(price, discount);
+    }
+    
+    setLocalServices(updated);
     onChange(updated);
   };
 
   const addService = () => {
-    const name = prompt("Название новой услуги:");
-    if (!name) return;
-    const updated = [
-      ...services,
-      { name, price: 0, discount: 0, finalPrice: 0, active: true },
-    ];
+    const newService = {
+      name: "Новая услуга",
+      price: 0,
+      discount: 0,
+      finalPrice: 0,
+      active: true
+    };
+    const updated = [...localServices, newService];
+    setLocalServices(updated);
     onChange(updated);
   };
 
-  const getRowColor = (srv) => {
-    if (!srv.active) return "bg-gray-100 text-gray-400";
-    if (safeParseFloat(srv.discount) > 0) return "bg-green-50 text-green-800";
-    return "bg-white text-gray-800";
+  const removeService = (index) => {
+    const updated = localServices.filter((_, i) => i !== index);
+    setLocalServices(updated);
+    onChange(updated);
   };
 
-  // helpers for input events
-  const handlePriceFocus = (index) => {
-    const srv = services[index];
-    // если в поле ровно 0, временно ставим пустую строку, чтобы пользователь мог печатать
-    if (srv.price === 0 || srv.price === "0") {
-      handleFieldChange(index, "price", "");
-    }
+  // Функции для drag & drop
+  const handleDragStart = (index) => {
+    setDraggedIndex(index);
   };
 
-  const handlePriceBlur = (index) => {
-    const srv = services[index];
-    const value = safeParseFloat(srv.price);
-    handleFieldChange(index, "price", value);
+  const handleDragOver = (index) => {
+    if (draggedIndex === null || draggedIndex === index) return;
+    
+    const newServices = [...localServices];
+    const draggedItem = newServices[draggedIndex];
+    
+    // Удаляем элемент из старой позиции и вставляем в новую
+    newServices.splice(draggedIndex, 1);
+    newServices.splice(index, 0, draggedItem);
+    
+    setLocalServices(newServices);
+    setDraggedIndex(index);
+    onChange(newServices);
   };
 
-  const handleDiscountBlur = (index) => {
-    const srv = services[index];
-    let value = safeParseFloat(srv.discount);
-    // Ограничение скидки 0-100%
-    value = Math.max(0, Math.min(100, value));
-    handleFieldChange(index, "discount", value);
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
   };
 
   return (
-    <div className="bg-white border border-gray-300 rounded-2xl shadow-inner p-4">
-      <div className="flex justify-between items-center mb-3">
-        <h3 className="text-lg font-semibold text-gray-800">
-          {modelKey.replace(/-/g, " ").toUpperCase()}
-        </h3>
+    <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
+      <div className="flex justify-between items-center mb-6">
+        <h3 className="text-xl font-semibold text-gray-800">Услуги модели</h3>
         <button
           onClick={addService}
-          className="px-3 py-1 rounded bg-green-200 hover:bg-green-300 text-sm"
+          className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
         >
           ➕ Добавить услугу
         </button>
       </div>
 
-      <div className="grid grid-cols-6 gap-2 text-sm font-semibold text-gray-600 mb-2">
-        <div>Услуга</div>
-        <div>Цена</div>
-        <div>Скидка %</div>
-        <div>Итог</div>
-        <div>Активна</div>
-        <div>Удалить</div>
-      </div>
-
-      {services.map((srv, i) => (
-        <div
-          key={i}
-          className={`grid grid-cols-6 gap-2 items-center border-b border-gray-200 py-2 rounded-md ${getRowColor(
-            srv
-          )}`}
-        >
-          {/* название услуги */}
-          <div className="truncate">{srv.name}</div>
-
-          {/* цена: показываем пустую строку если значение 0, чтобы при вводе 0 удалялось */}
-          <input
-            type="number"
-            value={srv.price === 0 || srv.price === "0" ? "" : String(srv.price)}
-            onFocus={() => handlePriceFocus(i)}
-            onBlur={() => handlePriceBlur(i)}
-            onChange={(e) => {
-              // принимаем сырое значение (позволяем пустую строку в процессе ввода)
-              const raw = e.target.value;
-              // если пустая строка — передаём "" чтобы не принуждать к 0
-              handleFieldChange(i, "price", raw === "" ? "" : raw);
-            }}
-            className="border border-gray-300 rounded-lg p-1 text-center"
-          />
-
-          {/* скидка: аналогично обрабатываем пустую строку при blur */}
-          <input
-            type="number"
-            value={srv.discount === undefined || srv.discount === null ? "" : String(srv.discount)}
-            onChange={(e) => {
-              const raw = e.target.value;
-              handleFieldChange(i, "discount", raw === "" ? "" : raw);
-            }}
-            onBlur={() => handleDiscountBlur(i)}
-            className="border border-gray-300 rounded-lg p-1 text-center"
-          />
-
-          {/* итоговая цена */}
-          <div className="text-center font-medium">
-            {srv.finalPrice !== undefined ? srv.finalPrice : "-"}
-          </div>
-
-          {/* активность */}
-          <button
-            onClick={() => toggleActive(i)}
-            className={`rounded-full px-2 py-1 text-xs font-semibold ${
-              srv.active ? "bg-cyan-600 text-white" : "bg-gray-300 text-gray-700"
-            }`}
-          >
-            {srv.active ? "Да" : "Нет"}
-          </button>
-
-          <button
-            onClick={() => deleteService(i)}
-            className="text-red-500 hover:text-red-700 font-bold"
-          >
-            ✖
-          </button>
+      {localServices.length === 0 ? (
+        <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+          <div className="text-4xl mb-4">🔧</div>
+          <p className="text-lg font-medium">Нет услуг</p>
+          <p className="text-sm">Добавьте первую услугу для этой модели</p>
         </div>
-      ))}
+      ) : (
+        <div className="space-y-3">
+          {localServices.map((service, index) => (
+            <motion.div
+              key={index}
+              className={`p-3 border rounded-lg bg-white transition-all ${
+                draggedIndex === index 
+                  ? "border-blue-500 bg-blue-50 shadow-lg" 
+                  : "border-gray-200 hover:shadow-md"
+              }`}
+              draggable
+              onDragStart={() => handleDragStart(index)}
+              onDragOver={(e) => {
+                e.preventDefault();
+                handleDragOver(index);
+              }}
+              onDragEnd={handleDragEnd}
+              whileDrag={{ scale: 1.02 }}
+            >
+              <div className="flex items-center gap-3">
+                {/* Handle для перетаскивания */}
+                <div 
+                  className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 text-lg"
+                  draggable
+                >
+                  ≡
+                </div>
+
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
+                  {/* Название услуги */}
+                  <div className="md:col-span-4">
+                    <input
+                      type="text"
+                      value={service.name || ""}
+                      onChange={(e) => updateService(index, { name: e.target.value })}
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      placeholder="Название услуги"
+                    />
+                  </div>
+
+                  {/* Цена */}
+                  <div className="md:col-span-2">
+                    <input
+                      type="number"
+                      value={service.price || 0}
+                      onChange={(e) => updateService(index, { price: parseFloat(e.target.value) || 0 })}
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      min="0"
+                      step="100"
+                    />
+                  </div>
+
+                  {/* Скидка */}
+                  <div className="md:col-span-2">
+                    <input
+                      type="number"
+                      value={service.discount || 0}
+                      onChange={(e) => updateService(index, { discount: parseFloat(e.target.value) || 0 })}
+                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                      min="0"
+                      max="100"
+                      step="5"
+                    />
+                  </div>
+
+                  {/* Итоговая цена */}
+                  <div className="md:col-span-2">
+                    <input
+                      type="number"
+                      value={service.finalPrice || service.price || 0}
+                      readOnly
+                      className="w-full p-2 border border-gray-300 bg-gray-50 rounded text-sm"
+                    />
+                  </div>
+
+                  {/* Статус и удаление */}
+                  <div className="md:col-span-2 flex gap-1">
+                    <button
+                      onClick={() => updateService(index, { active: !service.active })}
+                      className={`flex-1 px-2 py-1 rounded text-sm font-medium ${
+                        service.active
+                          ? "bg-green-100 text-green-700 hover:bg-green-200"
+                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      }`}
+                    >
+                      {service.active ? "Вкл" : "Выкл"}
+                    </button>
+                    <button
+                      onClick={() => removeService(index)}
+                      className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium"
+                    >
+                      🗑️
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
+
+      {localServices.length > 0 && (
+        <div className="mt-4 p-3 bg-gray-50 rounded-lg border border-gray-200">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-xs">
+            <div className="text-center">
+              <div className="font-semibold text-gray-700">Всего услуг</div>
+              <div className="text-lg font-bold text-blue-600">{localServices.length}</div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-gray-700">Активных</div>
+              <div className="text-lg font-bold text-green-600">
+                {localServices.filter(s => s.active).length}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-gray-700">Неактивных</div>
+              <div className="text-lg font-bold text-red-600">
+                {localServices.filter(s => !s.active).length}
+              </div>
+            </div>
+            <div className="text-center">
+              <div className="font-semibold text-gray-700">Со скидкой</div>
+              <div className="text-lg font-bold text-orange-600">
+                {localServices.filter(s => s.discount > 0).length}
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

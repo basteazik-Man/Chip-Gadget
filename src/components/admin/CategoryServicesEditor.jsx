@@ -1,9 +1,10 @@
-// CategoryServicesEditor.jsx
+// CategoryServicesEditor.jsx (с рабочим перетаскиванием)
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 const CategoryServicesEditor = ({ data, onChange }) => {
   const [expandedCategory, setExpandedCategory] = useState(null);
+  const [draggedIndex, setDraggedIndex] = useState(null);
 
   const predefinedCategories = [
     { id: 'laptops', title: 'Ноутбуки', icon: '💻' },
@@ -41,6 +42,34 @@ const CategoryServicesEditor = ({ data, onChange }) => {
     }
   };
 
+  // Функции для drag & drop
+  const handleDragStart = (categoryId, index) => {
+    setDraggedIndex({ categoryId, index });
+  };
+
+  const handleDragOver = (categoryId, index, e) => {
+    e.preventDefault();
+    
+    if (!draggedIndex || draggedIndex.categoryId !== categoryId) return;
+    if (draggedIndex.index === index) return;
+    
+    const newData = { ...data };
+    const services = [...newData[categoryId]];
+    const draggedItem = services[draggedIndex.index];
+    
+    // Удаляем элемент из старой позиции и вставляем в новую
+    services.splice(draggedIndex.index, 1);
+    services.splice(index, 0, draggedItem);
+    
+    newData[categoryId] = services;
+    setDraggedIndex({ categoryId, index });
+    onChange(newData);
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+  };
+
   const handleAddCategory = () => {
     const categoryName = prompt('Введите название новой категории:');
     if (!categoryName) return;
@@ -70,7 +99,6 @@ const CategoryServicesEditor = ({ data, onChange }) => {
     }
   };
 
-  // Объединяем предопределенные и пользовательские категории
   const allCategories = [
     ...predefinedCategories,
     ...Object.keys(data || {})
@@ -96,35 +124,34 @@ const CategoryServicesEditor = ({ data, onChange }) => {
           </button>
         </div>
         
-        <p className="text-gray-600 mb-6">
-          Здесь вы можете редактировать услуги, которые отображаются при нажатии на кнопки "Ноутбуки" и "Телевизоры" на главной странице.
-          <strong> Все категории (включая созданные вручную) будут экспортированы при нажатии кнопки "📺 Экспорт ТВ/ноутбуки".</strong>
+        <p className="text-gray-600 mb-6 text-sm">
+          Редактирование услуг для категорий "Ноутбуки" и "Телевизоры" на главной странице.
         </p>
 
-        <div className="space-y-4">
+        <div className="space-y-3">
           {allCategories.map((category) => (
             <motion.div
               key={category.id}
-              className="border border-gray-200 rounded-xl overflow-hidden"
+              className="border border-gray-200 rounded-lg overflow-hidden"
               initial={false}
             >
               <div className="flex items-center justify-between">
                 <button
                   onClick={() => setExpandedCategory(expandedCategory === category.id ? null : category.id)}
-                  className={`flex-1 flex items-center justify-between p-4 text-white font-semibold transition-all ${
+                  className={`flex-1 flex items-center justify-between p-3 text-white font-semibold transition-all ${
                     category.isCustom 
                       ? "bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700"
                       : "bg-gradient-to-r from-purple-500 to-blue-600 hover:from-purple-600 hover:to-blue-700"
                   }`}
                 >
                   <div className="flex items-center">
-                    <span className="text-xl mr-3">{category.icon}</span>
-                    <span className="text-lg capitalize">{category.title}</span>
+                    <span className="text-lg mr-2">{category.icon}</span>
+                    <span className="text-base capitalize">{category.title}</span>
                     {category.isCustom && (
-                      <span className="ml-2 text-xs bg-yellow-500 px-2 py-1 rounded-full">Кастомная</span>
+                      <span className="ml-2 text-xs bg-yellow-500 px-1 py-0.5 rounded">Кастомная</span>
                     )}
                   </div>
-                  <span className="text-lg">
+                  <span className="text-base">
                     {expandedCategory === category.id ? '−' : '+'}
                   </span>
                 </button>
@@ -132,7 +159,7 @@ const CategoryServicesEditor = ({ data, onChange }) => {
                 {category.isCustom && (
                   <button
                     onClick={() => handleRemoveCategory(category.id)}
-                    className="px-4 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors"
+                    className="px-3 py-2 bg-red-500 text-white hover:bg-red-600 transition-colors"
                     title="Удалить категорию"
                   >
                     🗑️
@@ -140,82 +167,83 @@ const CategoryServicesEditor = ({ data, onChange }) => {
                 )}
               </div>
 
-              <AnimatePresence>
-                {expandedCategory === category.id && (
-                  <motion.div
-                    initial={{ opacity: 0, height: 0 }}
-                    animate={{ opacity: 1, height: 'auto' }}
-                    exit={{ opacity: 0, height: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <div className="p-4 bg-gray-50">
-                      <div className="flex justify-between items-center mb-4">
-                        <h3 className="text-lg font-semibold text-gray-800">
-                          Услуги для {category.title}
-                        </h3>
-                        <button
-                          onClick={() => handleAddService(category.id)}
-                          className="px-3 py-1 bg-blue-600 text-white rounded-lg text-sm hover:bg-blue-700"
-                        >
-                          ➕ Добавить услугу
-                        </button>
-                      </div>
-
-                      {(!data || !data[category.id] || data[category.id].length === 0) ? (
-                        <div className="text-center py-8 text-gray-500">
-                          Услуги пока не добавлены
-                        </div>
-                      ) : (
-                        <div className="space-y-3">
-                          {data[category.id].map((service, index) => (
-                            <motion.div
-                              key={index}
-                              className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: index * 0.1 }}
-                            >
-                              <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3">
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Название услуги
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={service.name || ''}
-                                    onChange={(e) => handleServiceChange(category.id, index, 'name', e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Например: Замена экрана"
-                                  />
-                                </div>
-                                <div>
-                                  <label className="block text-sm font-medium text-gray-700 mb-1">
-                                    Цена
-                                  </label>
-                                  <input
-                                    type="text"
-                                    value={service.price || ''}
-                                    onChange={(e) => handleServiceChange(category.id, index, 'price', e.target.value)}
-                                    className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                                    placeholder="Например: от 3500₽"
-                                  />
-                                </div>
-                              </div>
-                              <button
-                                onClick={() => handleRemoveService(category.id, index)}
-                                className="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
-                                title="Удалить услугу"
-                              >
-                                🗑️
-                              </button>
-                            </motion.div>
-                          ))}
-                        </div>
-                      )}
+              {expandedCategory === category.id && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: 'auto' }}
+                  exit={{ opacity: 0, height: 0 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="p-3 bg-gray-50">
+                    <div className="flex justify-between items-center mb-3">
+                      <h3 className="text-base font-semibold text-gray-800">
+                        Услуги для {category.title}
+                      </h3>
+                      <button
+                        onClick={() => handleAddService(category.id)}
+                        className="px-2 py-1 bg-blue-600 text-white rounded text-xs hover:bg-blue-700"
+                      >
+                        ➕ Добавить услугу
+                      </button>
                     </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+
+                    {(!data || !data[category.id] || data[category.id].length === 0) ? (
+                      <div className="text-center py-4 text-gray-500 text-sm">
+                        Услуги пока не добавлены
+                      </div>
+                    ) : (
+                      <div className="space-y-2">
+                        {data[category.id].map((service, index) => (
+                          <motion.div
+                            key={index}
+                            className={`flex items-center gap-2 p-2 bg-white rounded border transition-all ${
+                              draggedIndex?.categoryId === category.id && draggedIndex?.index === index
+                                ? "border-blue-500 bg-blue-50 shadow-md"
+                                : "border-gray-200 hover:shadow-sm"
+                            }`}
+                            draggable
+                            onDragStart={() => handleDragStart(category.id, index)}
+                            onDragOver={(e) => handleDragOver(category.id, index, e)}
+                            onDragEnd={handleDragEnd}
+                            whileDrag={{ scale: 1.02 }}
+                          >
+                            <div 
+                              className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 text-lg"
+                              draggable
+                            >
+                              ≡
+                            </div>
+
+                            <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-2">
+                              <input
+                                type="text"
+                                value={service.name || ''}
+                                onChange={(e) => handleServiceChange(category.id, index, 'name', e.target.value)}
+                                className="w-full p-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                placeholder="Название услуги"
+                              />
+                              <input
+                                type="text"
+                                value={service.price || ''}
+                                onChange={(e) => handleServiceChange(category.id, index, 'price', e.target.value)}
+                                className="w-full p-1 border border-gray-300 rounded focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                placeholder="Цена (от 1000₽)"
+                              />
+                            </div>
+                            <button
+                              onClick={() => handleRemoveService(category.id, index)}
+                              className="px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition-colors text-sm"
+                              title="Удалить услугу"
+                            >
+                              🗑️
+                            </button>
+                          </motion.div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           ))}
         </div>
