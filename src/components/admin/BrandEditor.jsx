@@ -1,4 +1,4 @@
-// BrandEditor.jsx (исправленная версия)
+// BrandEditor.jsx (с исправленным удалением моделей)
 import React, { useState, useMemo } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
@@ -70,12 +70,24 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     updateBrand({ models: updatedModels });
   };
 
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Полное удаление модели
   const deleteModel = (modelKey) => {
-    if (!confirm(`Удалить модель "${getModelDisplayName(modelKey)}"?`)) return;
+    const modelName = getModelDisplayName(modelKey);
+    if (!confirm(`Удалить модель "${modelName}"? Это действие нельзя отменить.`)) return;
+    
     const newModels = { ...brand.models };
     delete newModels[modelKey];
+    
+    // Полностью обновляем данные бренда
     updateBrand({ models: newModels });
-    if (selectedModel === modelKey) setSelectedModel("");
+    
+    // Сбрасываем выбранную модель, если она была удалена
+    if (selectedModel === modelKey) {
+      setSelectedModel("");
+    }
+    
+    // Показываем подтверждение
+    alert(`Модель "${modelName}" успешно удалена!`);
   };
 
   const handleModelChange = (modelKey, updated) => {
