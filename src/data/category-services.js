@@ -27,7 +27,7 @@ export const SERVICES_BY_CATEGORY = {
     },
     {
       "name": "Ремонт материнской платы",
-      "price": "от 3000₽"
+      "price": "от 3500₽"
     }
   ],
   "tv": [
