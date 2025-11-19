@@ -633,6 +633,45 @@ export default function AdminPanel() {
     }
   };
 
+// ФУНКЦИЯ: Восстановить все бренды
+const restoreAllBrands = () => {
+  if (!confirm("Восстановить все бренды? Это добавит отсутствующие бренды в текущие данные.")) return;
+  
+  const updatedData = { ...data };
+  let addedCount = 0;
+  
+  BRANDS.forEach((brand) => {
+    const key = brand.id;
+    if (!updatedData[key]) {
+      const modelsObj = {};
+      const allModels = getAllModelsFromBrandData(key);
+      
+      allModels.forEach((model) => {
+        const modelKey = typeof model === 'string' ? model : (model.id || "unknown-model");
+        modelsObj[modelKey] = [];
+      });
+
+      updatedData[key] = {
+        brand: brand.title,
+        currency: "₽",
+        discount: { type: "none", value: 0 },
+        models: modelsObj,
+      };
+      addedCount++;
+    }
+  });
+  
+  if (addedCount > 0) {
+    setData(updatedData);
+    saveToLocal(updatedData);
+    setMessage(`✅ Добавлено ${addedCount} отсутствующих брендов`);
+  } else {
+    setMessage("✅ Все бренды уже присутствуют");
+  }
+  
+  setTimeout(() => setMessage(""), 3000);
+};
+
   const getBrandStyle = (key) => {
     const { status } = getBrandStatus(data[key]);
     if (status === "empty")
@@ -758,7 +797,14 @@ export default function AdminPanel() {
         >
           🗑️ Удалить бренд
         </button>
-      </div>
+     <button
+  onClick={restoreAllBrands}
+  className="px-4 py-2 rounded-lg text-white font-medium bg-amber-600 hover:bg-amber-700"
+>
+  🔄 Восстановить бренды
+</button>
+
+	 </div>
 
       {/* Скрытые input'ы для импорта */}
       <input
