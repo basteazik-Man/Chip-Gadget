@@ -1,7 +1,7 @@
-// ModelEditor.jsx (с рабочим перетаскиванием)
+// ModelEditor.jsx (с рабочим перетаскиванием, улучшенной логикой цен и подписями)
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { calculateFinalPrice } from "../../utils/priceUtils";
+import { calculateFinalPrice, safeParseFloat } from "../../utils/priceUtils";
 
 export default function ModelEditor({ modelKey, services, onChange }) {
   const [localServices, setLocalServices] = useState(services || []);
@@ -64,6 +64,27 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     setDraggedIndex(null);
   };
 
+  // Улучшенная логика ввода цен
+  const handlePriceFocus = (index) => {
+    const service = localServices[index];
+    if (service.price === 0 || service.price === "0") {
+      updateService(index, { price: "" });
+    }
+  };
+
+  const handlePriceBlur = (index) => {
+    const service = localServices[index];
+    const value = safeParseFloat(service.price);
+    updateService(index, { price: value });
+  };
+
+  const handleDiscountBlur = (index) => {
+    const service = localServices[index];
+    let value = safeParseFloat(service.discount);
+    value = Math.max(0, Math.min(100, value));
+    updateService(index, { discount: value });
+  };
+
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
       <div className="flex justify-between items-center mb-6">
@@ -83,104 +104,130 @@ export default function ModelEditor({ modelKey, services, onChange }) {
           <p className="text-sm">Добавьте первую услугу для этой модели</p>
         </div>
       ) : (
-        <div className="space-y-3">
-          {localServices.map((service, index) => (
-            <motion.div
-              key={index}
-              className={`p-3 border rounded-lg bg-white transition-all ${
-                draggedIndex === index 
-                  ? "border-blue-500 bg-blue-50 shadow-lg" 
-                  : "border-gray-200 hover:shadow-md"
-              }`}
-              draggable
-              onDragStart={() => handleDragStart(index)}
-              onDragOver={(e) => {
-                e.preventDefault();
-                handleDragOver(index);
-              }}
-              onDragEnd={handleDragEnd}
-              whileDrag={{ scale: 1.02 }}
-            >
-              <div className="flex items-center gap-3">
-                {/* Handle для перетаскивания */}
-                <div 
-                  className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 text-lg"
-                  draggable
-                >
-                  ≡
+        <>
+          {/* Заголовки колонок */}
+          <div className="grid grid-cols-12 gap-2 text-sm font-semibold text-gray-600 mb-3 px-3">
+            <div className="col-span-4">Услуга</div>
+            <div className="col-span-2 text-center">Цена</div>
+            <div className="col-span-2 text-center">Скидка %</div>
+            <div className="col-span-2 text-center">Итог</div>
+            <div className="col-span-2 text-center">Активна</div>
+          </div>
+
+          <div className="space-y-3">
+            {localServices.map((service, index) => (
+              <motion.div
+                key={index}
+                className={`p-3 border rounded-lg bg-white transition-all ${
+                  draggedIndex === index 
+                    ? "border-blue-500 bg-blue-50 shadow-lg" 
+                    : "border-gray-200 hover:shadow-md"
+                } ${
+                  !service.active 
+                    ? "bg-gray-100 text-gray-400" 
+                    : service.discount > 0 
+                      ? "bg-green-50 text-green-800" 
+                      : "bg-white text-gray-800"
+                }`}
+                draggable
+                onDragStart={() => handleDragStart(index)}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  handleDragOver(index);
+                }}
+                onDragEnd={handleDragEnd}
+                whileDrag={{ scale: 1.02 }}
+              >
+                <div className="flex items-center gap-3">
+                  {/* Handle для перетаскивания */}
+                  <div 
+                    className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 text-lg"
+                    draggable
+                  >
+                    ≡
+                  </div>
+
+                  <div className="flex-1 grid grid-cols-12 gap-2 items-center">
+                    {/* Название услуги */}
+                    <div className="col-span-4">
+                      <input
+                        type="text"
+                        value={service.name || ""}
+                        onChange={(e) => updateService(index, { name: e.target.value })}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
+                        placeholder="Название услуги"
+                      />
+                    </div>
+
+                    {/* Цена с улучшенной логикой */}
+                    <div className="col-span-2">
+                      <input
+                        type="number"
+                        value={service.price === 0 || service.price === "0" ? "" : String(service.price)}
+                        onFocus={() => handlePriceFocus(index)}
+                        onBlur={() => handlePriceBlur(index)}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          updateService(index, { price: raw === "" ? "" : raw });
+                        }}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        min="0"
+                        step="100"
+                      />
+                    </div>
+
+                    {/* Скидка с улучшенной логикой */}
+                    <div className="col-span-2">
+                      <input
+                        type="number"
+                        value={service.discount === undefined || service.discount === null ? "" : String(service.discount)}
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          updateService(index, { discount: raw === "" ? "" : raw });
+                        }}
+                        onBlur={() => handleDiscountBlur(index)}
+                        className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        min="0"
+                        max="100"
+                        step="5"
+                      />
+                    </div>
+
+                    {/* Итоговая цена */}
+                    <div className="col-span-2">
+                      <input
+                        type="number"
+                        value={service.finalPrice || service.price || 0}
+                        readOnly
+                        className="w-full p-2 border border-gray-300 bg-gray-50 rounded text-sm text-center"
+                      />
+                    </div>
+
+                    {/* Статус и удаление */}
+                    <div className="col-span-2 flex gap-1 justify-center">
+                      <button
+                        onClick={() => updateService(index, { active: !service.active })}
+                        className={`flex-1 px-2 py-1 rounded text-sm font-medium ${
+                          service.active
+                            ? "bg-green-100 text-green-700 hover:bg-green-200"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                        }`}
+                      >
+                        {service.active ? "Вкл" : "Выкл"}
+                      </button>
+                      <button
+                        onClick={() => removeService(index)}
+                        className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium"
+                      >
+                        🗑️
+                      </button>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="flex-1 grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
-                  {/* Название услуги */}
-                  <div className="md:col-span-4">
-                    <input
-                      type="text"
-                      value={service.name || ""}
-                      onChange={(e) => updateService(index, { name: e.target.value })}
-                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                      placeholder="Название услуги"
-                    />
-                  </div>
-
-                  {/* Цена */}
-                  <div className="md:col-span-2">
-                    <input
-                      type="number"
-                      value={service.price || 0}
-                      onChange={(e) => updateService(index, { price: parseFloat(e.target.value) || 0 })}
-                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                      min="0"
-                      step="100"
-                    />
-                  </div>
-
-                  {/* Скидка */}
-                  <div className="md:col-span-2">
-                    <input
-                      type="number"
-                      value={service.discount || 0}
-                      onChange={(e) => updateService(index, { discount: parseFloat(e.target.value) || 0 })}
-                      className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                      min="0"
-                      max="100"
-                      step="5"
-                    />
-                  </div>
-
-                  {/* Итоговая цена */}
-                  <div className="md:col-span-2">
-                    <input
-                      type="number"
-                      value={service.finalPrice || service.price || 0}
-                      readOnly
-                      className="w-full p-2 border border-gray-300 bg-gray-50 rounded text-sm"
-                    />
-                  </div>
-
-                  {/* Статус и удаление */}
-                  <div className="md:col-span-2 flex gap-1">
-                    <button
-                      onClick={() => updateService(index, { active: !service.active })}
-                      className={`flex-1 px-2 py-1 rounded text-sm font-medium ${
-                        service.active
-                          ? "bg-green-100 text-green-700 hover:bg-green-200"
-                          : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      }`}
-                    >
-                      {service.active ? "Вкл" : "Выкл"}
-                    </button>
-                    <button
-                      onClick={() => removeService(index)}
-                      className="px-2 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-medium"
-                    >
-                      🗑️
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
-        </div>
+              </motion.div>
+            ))}
+          </div>
+        </>
       )}
 
       {localServices.length > 0 && (
