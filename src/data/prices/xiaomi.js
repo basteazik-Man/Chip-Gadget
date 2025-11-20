@@ -159,6 +159,7 @@ export default {
         "active": true
       }
     ],
+    "17": [],
     "note-9": [
       {
         "name": "Замена дисплейного модуля",
@@ -273,6 +274,7 @@ export default {
         "active": true
       }
     ],
+    "note-9-pro-max": [],
     "note-10": [
       {
         "name": "Замена дисплейного модуля",
@@ -294,8 +296,8 @@ export default {
       },
       {
         "name": "Замена микрофона",
-        "price": 2499,
-        "finalPrice": 2499,
+        "price": 2500,
+        "finalPrice": 2500,
         "active": true
       },
       {
@@ -1483,6 +1485,7 @@ export default {
         "active": true
       }
     ],
+    "mi-10-pro": [],
     "mi-note-10-lite": [
       {
         "name": "Замена дисплейного модуля",
@@ -1521,6 +1524,7 @@ export default {
         "active": true
       }
     ],
+    "mi-10-lite-5g": [],
     "mi-10t-pro": [
       {
         "name": "Замена дисплейного модуля",
@@ -1635,6 +1639,7 @@ export default {
         "active": true
       }
     ],
+    "mi-11-lite-5g": [],
     "mi-11-ultra": [
       {
         "name": "Замена дисплейного модуля",
@@ -1749,6 +1754,7 @@ export default {
         "active": true
       }
     ],
+    "mi-10s": [],
     "mi-11i": [
       {
         "name": "Замена дисплейного модуля",
@@ -1787,6 +1793,7 @@ export default {
         "active": true
       }
     ],
+    "mi-11": [],
     "11t-pro": [
       {
         "name": "Замена дисплейного модуля",
@@ -2015,6 +2022,7 @@ export default {
         "active": true
       }
     ],
+    "12s-ultra": [],
     "12t-pro": [
       {
         "name": "Замена дисплейного модуля",
@@ -2091,6 +2099,8 @@ export default {
         "active": true
       }
     ],
+    "12s": [],
+    "12s-pro": [],
     "13-pro": [
       {
         "name": "Замена дисплейного модуля",
@@ -2471,6 +2481,7 @@ export default {
         "active": true
       }
     ],
+    "mix-4": [],
     "mix-fold-2": [],
     "mix-fold-3": [],
     "mix-flip": [],

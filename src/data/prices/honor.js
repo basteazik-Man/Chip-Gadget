@@ -16,26 +16,26 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -72,8 +72,8 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -92,26 +92,26 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -130,26 +130,26 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1499,
-        "finalPrice": 1499,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -168,26 +168,26 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -200,32 +200,32 @@ export default {
     "honor-20": [
       {
         "name": "Замена дисплейного модуля",
-        "price": 2999,
-        "finalPrice": 2999,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -244,32 +244,32 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
       },
       {
-        "name": "Замена разъема питания",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -300,8 +300,8 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1999,
-        "finalPrice": 1999,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -338,8 +338,8 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -425,6 +425,7 @@ export default {
         "active": true
       }
     ],
+    "honor-60": [],
     "honor-70": [
       {
         "name": "Замена дисплейного модуля",
@@ -463,6 +464,7 @@ export default {
         "active": true
       }
     ],
+    "honor-80": [],
     "honor-90": [
       {
         "name": "Замена дисплейного модуля",
@@ -501,6 +503,7 @@ export default {
         "active": true
       }
     ],
+    "honor-90-lite": [],
     "x7b": [
       {
         "name": "Замена дисплейного модуля",
