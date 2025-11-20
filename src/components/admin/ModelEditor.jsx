@@ -21,9 +21,10 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     onChange(updated);
   };
 
+  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Добавление услуги с пустым названием
   const addService = () => {
     const newService = {
-      name: "Новая услуга",
+      name: "", // ← ИЗМЕНЕНО: пустая строка вместо "Новая услуга"
       price: 0,
       discount: 0,
       finalPrice: 0,
@@ -155,7 +156,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                         value={service.name || ""}
                         onChange={(e) => updateService(index, { name: e.target.value })}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        placeholder="Название услуги"
+                        placeholder="Введите название услуги" // ← ДОБАВЛЕН placeholder
                       />
                     </div>
 

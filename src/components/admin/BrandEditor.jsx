@@ -90,12 +90,40 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     alert(`Модель "${modelName}" успешно удалена!`);
   };
 
-  const handleModelChange = (modelKey, updated) => {
-    const newBrand = {
-      ...brand,
-      models: { ...brand.models, [modelKey]: updated },
+  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Обновление услуг для конкретной модели
+  const handleModelChange = (modelKey, updatedServices) => {
+    console.log(`🔄 Обновление модели ${modelKey}:`, updatedServices);
+    
+    // Получаем текущие данные модели
+    const currentModelData = brand.models[modelKey];
+    let updatedModelData;
+
+    // Сохраняем структуру данных модели (кастомное имя если есть)
+    if (currentModelData && typeof currentModelData === 'object' && !Array.isArray(currentModelData)) {
+      // Это модель с кастомным именем
+      updatedModelData = {
+        ...currentModelData,
+        services: updatedServices
+      };
+    } else {
+      // Это обычная модель или массив услуг
+      updatedModelData = updatedServices;
+    }
+
+    // Создаем новый объект моделей с обновленной моделью
+    const updatedModels = {
+      ...brand.models,
+      [modelKey]: updatedModelData
     };
-    onChange(brandKey, newBrand);
+
+    // Обновляем бренд
+    const updatedBrand = {
+      ...brand,
+      models: updatedModels
+    };
+
+    console.log(`✅ Модель ${modelKey} обновлена, услуг: ${updatedServices.length}`);
+    onChange(brandKey, updatedBrand);
   };
 
   // Изменение валюты через выпадающий список
@@ -166,14 +194,24 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     return modelKey.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   };
 
-  // Получаем услуги для модели (универсальный метод)
+  // 🔄 УЛУЧШЕННАЯ ФУНКЦИЯ: Получаем услуги для модели
   const getModelServices = (modelKey) => {
     const modelData = brand.models[modelKey];
+    
+    if (!modelData) {
+      console.warn(`❌ Нет данных для модели: ${modelKey}`);
+      return [];
+    }
+    
     if (Array.isArray(modelData)) {
       return modelData;
     } else if (modelData && modelData.services) {
       return modelData.services;
+    } else if (modelData && Array.isArray(modelData)) {
+      return modelData;
     }
+    
+    console.warn(`❌ Неизвестный формат данных для модели ${modelKey}:`, modelData);
     return [];
   };
 
@@ -197,6 +235,15 @@ export default function BrandEditor({ brandKey, data, onChange }) {
       .map(model => model.id)
       .filter(modelKey => brand.models[modelKey]);
   };
+
+  // ДОБАВЛЕНО: Отладочный вывод для проверки структуры данных
+  React.useEffect(() => {
+    console.log(`🔍 BrandEditor: ${brandKey}, моделей: ${Object.keys(brand.models).length}`);
+    Object.keys(brand.models).forEach(modelKey => {
+      const services = getModelServices(modelKey);
+      console.log(`  Модель ${modelKey}: ${services.length} услуг`);
+    });
+  }, [brandKey, brand.models]);
 
   const modelsToShow = getModelsForCategory();
 
