@@ -1,5 +1,5 @@
-// BrandEditor.jsx (с исправленным удалением моделей)
-import React, { useState, useMemo } from "react";
+// BrandEditor.jsx (с исправленным переключением моделей)
+import React, { useState, useMemo, useEffect } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
 import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
@@ -23,6 +23,12 @@ export default function BrandEditor({ brandKey, data, onChange }) {
 
   // Список доступных валют
   const currencies = ["₽", "$", "€", "¥", "£", "₹"];
+
+  // 🔄 ИСПРАВЛЕНИЕ: Сбрасываем выбранную модель при смене бренда
+  useEffect(() => {
+    setSelectedModel("");
+    setSelectedCategory("");
+  }, [brandKey]);
 
   // --- Управление изменениями бренда ---
   const updateBrand = (changes) => {
@@ -247,6 +253,12 @@ export default function BrandEditor({ brandKey, data, onChange }) {
 
   const modelsToShow = getModelsForCategory();
 
+  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Выбор модели
+  const handleModelSelect = (modelKey) => {
+    console.log(`🎯 Выбрана модель: ${modelKey}`);
+    setSelectedModel(modelKey);
+  };
+
   return (
     <div className={`p-6 rounded-2xl border shadow-md mb-8 ${colorMap[brandStatus]}`}>
       {/* Заголовок бренда с кнопками управления */}
@@ -362,7 +374,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
                         ? 'border-blue-500 bg-blue-50 shadow-md' 
                         : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
                     }`}
-                    onClick={() => setSelectedModel(modelKey)}
+                    onClick={() => handleModelSelect(modelKey)}
                   >
                     <div className="flex justify-between items-start mb-3">
                       <div className="flex items-center gap-2 flex-1">
@@ -436,6 +448,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
             </button>
           </div>
           <ModelEditor
+            key={selectedModel} {/* 🔄 ДОБАВЛЕНО: Ключ для принудительного пересоздания компонента */}
             modelKey={selectedModel}
             services={getModelServices(selectedModel)}
             onChange={(updated) => handleModelChange(selectedModel, updated)}
