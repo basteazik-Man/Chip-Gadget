@@ -447,8 +447,9 @@ export default function BrandEditor({ brandKey, data, onChange }) {
               ✕ Закрыть
             </button>
           </div>
+          {/* 🔄 Ключ для принудительного пересоздания компонента при смене модели */}
           <ModelEditor
-            key={selectedModel} {/* 🔄 ДОБАВЛЕНО: Ключ для принудительного пересоздания компонента */}
+            key={selectedModel}
             modelKey={selectedModel}
             services={getModelServices(selectedModel)}
             onChange={(updated) => handleModelChange(selectedModel, updated)}
