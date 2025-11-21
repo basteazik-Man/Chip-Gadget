@@ -713,8 +713,8 @@ export default {
       },
       {
         "name": "Замена микрофона",
-        "price": 1999,
-        "finalPrice": 1999,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
@@ -757,8 +757,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -795,8 +795,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -833,8 +833,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -871,8 +871,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -903,14 +903,14 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       },
       {
@@ -947,14 +947,14 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 200,
+        "finalPrice": 200,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       },
       {
@@ -997,8 +997,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -1029,14 +1029,14 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -1067,14 +1067,14 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -1309,8 +1309,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -1342,8 +1342,8 @@ export default {
       },
       {
         "name": "Замена слухового динамика",
-        "price": 2000,
-        "finalPrice": 2000,
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
