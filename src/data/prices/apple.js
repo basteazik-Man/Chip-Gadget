@@ -9,13 +9,13 @@ export default {
   "models": {
     "iphone-8": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана от",
         "price": 2500,
         "finalPrice": 2500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 2000,
         "finalPrice": 2000,
         "active": true
@@ -53,13 +53,13 @@ export default {
     ],
     "iphone-8-plus": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана от      ",
         "price": 3000,
         "finalPrice": 3000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 2500,
         "finalPrice": 2500,
         "active": true
@@ -97,13 +97,13 @@ export default {
     ],
     "iphone-x": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 5000,
         "finalPrice": 5000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
@@ -147,13 +147,13 @@ export default {
     ],
     "iphone-xr": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
@@ -197,13 +197,13 @@ export default {
     ],
     "iphone-xs": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 5500,
         "finalPrice": 5500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
@@ -247,13 +247,13 @@ export default {
     ],
     "iphone-xs-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 6000,
         "finalPrice": 6000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
@@ -297,7 +297,7 @@ export default {
     ],
     "iphone-11": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана от",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
@@ -347,7 +347,7 @@ export default {
     ],
     "iphone-11-pro": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 5000,
         "finalPrice": 5000,
         "active": true
@@ -397,13 +397,13 @@ export default {
     ],
     "iphone-11-pro-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 6000,
         "finalPrice": 6000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -447,13 +447,13 @@ export default {
     ],
     "iphone-12": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 6500,
         "finalPrice": 6500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -497,13 +497,13 @@ export default {
     ],
     "iphone-12-mini": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -547,13 +547,13 @@ export default {
     ],
     "iphone-12-pro": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 6500,
         "finalPrice": 6500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -597,13 +597,13 @@ export default {
     ],
     "iphone-12-pro-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 8000,
         "finalPrice": 8000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4500,
         "finalPrice": 4500,
         "active": true
@@ -647,13 +647,13 @@ export default {
     ],
     "iphone-13": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 5000,
         "finalPrice": 5000,
         "active": true
@@ -697,13 +697,13 @@ export default {
     ],
     "iphone-13-mini": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -733,12 +733,6 @@ export default {
         "active": true
       },
       {
-        "name": "Замена основной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
         "price": 6000,
         "finalPrice": 6000,
@@ -747,13 +741,13 @@ export default {
     ],
     "iphone-13-pro": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 10000,
         "finalPrice": 10000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 6000,
         "finalPrice": 6000,
         "active": true
@@ -797,13 +791,13 @@ export default {
     ],
     "iphone-13-pro-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 10000,
         "finalPrice": 10000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 6500,
         "finalPrice": 6500,
         "active": true
@@ -847,13 +841,13 @@ export default {
     ],
     "iphone-14": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 11000,
         "finalPrice": 11000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
@@ -897,13 +891,13 @@ export default {
     ],
     "iphone-14-plus": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 15000,
         "finalPrice": 15000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
@@ -933,12 +927,6 @@ export default {
         "active": true
       },
       {
-        "name": "Замена основной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
         "name": "Замена микрофона",
         "price": 8000,
         "finalPrice": 8000,
@@ -947,13 +935,13 @@ export default {
     ],
     "iphone-14-pro": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 18000,
         "finalPrice": 18000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 9000,
         "finalPrice": 9000,
         "active": true
@@ -997,13 +985,13 @@ export default {
     ],
     "iphone-14-pro-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 18000,
         "finalPrice": 18000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 10000,
         "finalPrice": 10000,
         "active": true
@@ -1047,13 +1035,13 @@ export default {
     ],
     "iphone-15": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 14000,
         "finalPrice": 14000,
         "active": true
@@ -1097,13 +1085,13 @@ export default {
     ],
     "iphone-15-plus": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 12000,
         "finalPrice": 12000,
         "active": true
@@ -1135,13 +1123,13 @@ export default {
     ],
     "iphone-15-pro": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 15000,
         "finalPrice": 15000,
         "active": true
@@ -1173,13 +1161,13 @@ export default {
     ],
     "iphone-15-pro-max": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED от",
         "price": 22000,
         "finalPrice": 22000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 18000,
         "finalPrice": 18000,
         "active": true
@@ -1205,13 +1193,13 @@ export default {
     ],
     "iphone-16": [
       {
-        "name": "Замена экрана",
+        "name": "Замена экрана AMOLED AMOLED от",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
+        "name": "Замена аккумулятора от",
         "price": 17000,
         "finalPrice": 17000,
         "active": true
@@ -1223,156 +1211,9 @@ export default {
         "active": true
       }
     ],
-    "iphone-16-plus": [
-      {
-        "name": "Замена экрана",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена разъема",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена фронтальной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена основной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      }
-    ],
-    "iphone-16-pro": [
-      {
-        "name": "Замена экрана",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена разъема",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена фронтальной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена основной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      }
-    ],
-    "iphone-16-pro-max": [
-      {
-        "name": "Замена экрана",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена разъема",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена фронтальной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена основной камеры",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      }
-    ],
+    "iphone-16-plus": [],
+    "iphone-16-pro": [],
+    "iphone-16-pro-max": [],
     "ipad-2017": [
       {
         "name": "Замена тачскрина(стекла)",
