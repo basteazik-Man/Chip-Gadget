@@ -1,9 +1,11 @@
-// Home.jsx (убрана кнопка доставки)
+// Home.jsx
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { BRANDS } from "../data/brands";
+// Импортируем нашу новую панель
+import DynamicHeroPanel from "../components/DynamicHeroPanel";
 
 const FALLBACK_BRANDS = [
   { id: "apple", title: "Apple", logo: "/logos/apple.svg" },
@@ -163,18 +165,8 @@ export default function Home() {
         </AnimatePresence>
       </motion.div>
 
-      {/* === Приветствие === */}
-      <motion.section
-        className="w-full max-w-5xl mb-6 rounded-2xl bg-gradient-to-r from-blue-500 to-blue-600 p-6 shadow-lg"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3 }}
-      >
-        <h1 className="text-3xl md:text-4xl font-extrabold text-white">
-          Добро пожаловать в <span className="text-white/90">Чип&Гаджет</span>
-        </h1>
-        <p className="text-white/90 mt-2 text-lg">Ремонт смартфонов, планшетов и ноутбуков всех брендов</p>
-      </motion.section>
+      {/* === НОВАЯ ДИНАМИЧЕСКАЯ ПАНЕЛЬ === */}
+      <DynamicHeroPanel />
 
       {/* === Кнопки брендов === */}
       {brandsToShow && brandsToShow.length > 0 ? (
