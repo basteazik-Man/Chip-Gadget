@@ -1,4 +1,3 @@
-// AdminPanel.jsx
 import React, { useState, useEffect, useRef } from "react";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
@@ -8,7 +7,37 @@ import { getBrandStatus } from "../utils/priceUtils";
 import { BRANDS } from "../data/brands";
 import { brandData } from "../data/brandData";
 
-// Вспомогательная функция для получения всех моделей из brandData
+const validateSession = () => {
+  try {
+    let sessionData = sessionStorage.getItem('admin_session') || localStorage.getItem('admin_session');
+    
+    if (!sessionData) return false;
+
+    const session = JSON.parse(sessionData);
+    
+    if (Date.now() > session.expires) {
+      localStorage.removeItem('admin_session');
+      sessionStorage.removeItem('admin_session');
+      localStorage.removeItem('admin_authenticated');
+      return false;
+    }
+    
+    if (session.userAgent !== navigator.userAgent) {
+      localStorage.removeItem('admin_session');
+      sessionStorage.removeItem('admin_session');
+      localStorage.removeItem('admin_authenticated');
+      return false;
+    }
+    
+    return true;
+  } catch {
+    localStorage.removeItem('admin_session');
+    sessionStorage.removeItem('admin_session');
+    localStorage.removeItem('admin_authenticated');
+    return false;
+  }
+};
+
 const getAllModelsFromBrandData = (brandKey) => {
   const brandInfo = brandData[brandKey];
   if (!brandInfo || !brandInfo.categories) return [];
@@ -27,13 +56,10 @@ const getAllModelsFromBrandData = (brandKey) => {
 const buildInitialData = () => {
   const data = {};
   
-  // Пробуем загрузить из localStorage
   const saved = localStorage.getItem("chipgadget_prices");
   if (saved) {
     try {
       const parsed = JSON.parse(saved);
-      
-      // Валидация структуры данных
       if (typeof parsed !== 'object' || parsed === null) {
         throw new Error('Invalid data structure in localStorage');
       }
@@ -44,7 +70,6 @@ const buildInitialData = () => {
     }
   }
 
-  // Используем все бренды из BRANDS вместо фиксированного списка
   BRANDS.forEach((brand) => {
     const key = brand.id;
     const modelsObj = {};
@@ -56,7 +81,7 @@ const buildInitialData = () => {
     });
 
     data[key] = {
-      brand: brand.title, // Используем title из BRANDS
+      brand: brand.title,
       currency: "₽",
       discount: { type: "none", value: 0 },
       models: modelsObj,
@@ -88,7 +113,6 @@ const exportJSON = (data) => {
   a.click();
 };
 
-// ФУНКЦИЯ: Экспорт услуг по категориям (ТВ/ноутбуки)
 const exportCategoryServices = (categoryServices) => {
   try {
 const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
@@ -110,7 +134,6 @@ const content = `// Автоматически сгенерировано Chip&G
   }
 };
 
-// ФУНКЦИЯ: Экспорт данных доставки
 const exportDeliveryData = () => {
   try {
     const deliveryData = localStorage.getItem("chipgadget_delivery");
@@ -213,7 +236,6 @@ const mergeImportedData = (currentData, importedData) => {
     }
   });
 
-  // ДОБАВЛЕНО: Импорт данных категорий услуг
   if (importedData._categoryServices) {
     try {
       localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData._categoryServices));
@@ -223,7 +245,6 @@ const mergeImportedData = (currentData, importedData) => {
     }
   }
 
-  // ДОБАВЛЕНО: Импорт данных доставки
   if (importedData._deliveryData) {
     try {
       localStorage.setItem("chipgadget_delivery", JSON.stringify(importedData._deliveryData));
@@ -236,16 +257,13 @@ const mergeImportedData = (currentData, importedData) => {
   return merged;
 };
 
-// Функция для создания и скачивания ZIP архива (ТОЛЬКО БРЕНДЫ)
 const exportJSFilesAsZip = async (data) => {
   try {
     const transformedData = transformDataForExport(data);
     
-    // Динамически импортируем JSZip
     const JSZip = await import('jszip');
     const zip = new JSZip.default();
     
-    // Добавляем каждый бренд как отдельный JS файл в архив
     Object.keys(transformedData).forEach((key) => {
       const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport default ${JSON.stringify(
         transformedData[key],
@@ -255,7 +273,6 @@ const exportJSFilesAsZip = async (data) => {
       zip.file(`${key}.js`, content);
     });
 
-    // Добавляем README файл с инструкциями
     const readmeContent = `# Chip&Gadget Price Files
 
 Этот архив содержит файлы с ценами для сайта Chip&Gadget.
@@ -279,21 +296,18 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
 `;
     zip.file("README.txt", readmeContent);
 
-    // Генерируем и скачиваем ZIP
     const blob = await zip.generateAsync({ type: "blob" });
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
     a.download = `chipgadget-brands-${new Date().toISOString().split('T')[0]}.zip`;
     a.click();
     
-    // Освобождаем память
     URL.revokeObjectURL(a.href);
     
     return true;
   } catch (error) {
     console.error('Ошибка при создании ZIP архива:', error);
     
-    // Fallback: старый способ экспорта с преобразованием данных
     const transformedData = transformDataForExport(data);
     alert('Не удалось создать ZIP архив. Используем старый метод экспорта.');
     Object.keys(transformedData).forEach((key) => {
@@ -312,27 +326,23 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
   }
 };
 
-// УПРОЩЕННАЯ ФУНКЦИЯ ДЛЯ ИМПОРТА JS ФАЙЛОВ
 const parseJSFile = (fileContent, fileName) => {
   try {
-    // Для category-services.js - ищем SERVICES_BY_CATEGORY
     if (fileName === 'category-services') {
       const servicesMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*?\});/);
       if (servicesMatch) {
         const dataStr = servicesMatch[1];
-        // Простая замена для преобразования в валидный JSON
         const jsonStr = dataStr
-          .replace(/(\w+):/g, '"$1":')  // Ключи в кавычки
-          .replace(/'/g, '"')           // Одинарные кавычки в двойные
-          .replace(/,\s*}/g, '}')       // Убираем лишние запятые
-          .replace(/,\s*]/g, ']');      // Убираем лишние запятые в массивах
+          .replace(/(\w+):/g, '"$1":')
+          .replace(/'/g, '"')
+          .replace(/,\s*}/g, '}')
+          .replace(/,\s*]/g, ']');
         
         return JSON.parse(jsonStr);
       }
       throw new Error('Не найден SERVICES_BY_CATEGORY в файле');
     }
     
-    // Для delivery-data.js - ищем DELIVERY_DATA
     if (fileName === 'delivery-data') {
       const deliveryMatch = fileContent.match(/export const DELIVERY_DATA = (\{[\s\S]*?\});/);
       if (deliveryMatch) {
@@ -348,7 +358,6 @@ const parseJSFile = (fileContent, fileName) => {
       throw new Error('Не найден DELIVERY_DATA в файле');
     }
     
-    // Для файлов брендов - ищем export default
     const defaultMatch = fileContent.match(/export default (\{[\s\S]*?\});/);
     if (defaultMatch) {
       const dataStr = defaultMatch[1];
@@ -370,7 +379,7 @@ const parseJSFile = (fileContent, fileName) => {
 
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(() => {
-    return localStorage.getItem('admin_authenticated') === 'true';
+    return validateSession();
   });
   const [data, setData] = useState(() => buildInitialData());
   const [categoryServices, setCategoryServices] = useState(() => {
@@ -386,12 +395,24 @@ export default function AdminPanel() {
   const importJsonRef = useRef(null);
   const importJsRef = useRef(null);
 
-  if (!authenticated) {
-    return <AdminAuth onAuthenticate={setAuthenticated} />;
-  }
+  const handleLogout = () => {
+    if (confirm("Вы уверены, что хотите выйти из админ-панели?")) {
+      localStorage.removeItem('admin_session');
+      sessionStorage.removeItem('admin_session');
+      localStorage.removeItem('admin_authenticated');
+      localStorage.removeItem('admin_auth_attempts');
+      localStorage.removeItem('admin_last_attempt_time');
+      
+      setAuthenticated(false);
+      setMessage("✅ Вы успешно вышли из системы");
+      
+      setTimeout(() => {
+        setMessage("");
+      }, 2000);
+    }
+  };
 
-  const brands = Object.keys(data);
-
+  // ВСЕ ХУКИ useEffect ВЫЗЫВАЮТСЯ БЕЗУСЛОВНО
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
@@ -481,7 +502,6 @@ export default function AdminPanel() {
         console.log('Распарсенные данные:', importedData);
         
         if (fileName === 'category-services') {
-          // Обработка импорта категорий услуг
           if (!confirm(`Импортировать данные категорий услуг?`)) {
             return;
           }
@@ -495,7 +515,6 @@ export default function AdminPanel() {
             setMessage('❌ Ошибка при импорте категорий услуг');
           }
         } else if (fileName === 'delivery-data') {
-          // Обработка импорта данных доставки
           if (!confirm(`Импортировать данные доставки?`)) {
             return;
           }
@@ -508,7 +527,6 @@ export default function AdminPanel() {
             setMessage('❌ Ошибка при импорте данных доставки');
           }
         } else {
-          // Обработка импорта данных бренда
           if (!confirm(`Импортировать данные для бренда ${fileName}?`)) {
             return;
           }
@@ -609,7 +627,6 @@ export default function AdminPanel() {
     }, 4000);
   };
 
-  // ФУНКЦИЯ: Экспорт услуг по категориям
   const handleExportCategoryServices = () => {
     const success = exportCategoryServices(categoryServices);
     if (success) {
@@ -621,7 +638,6 @@ export default function AdminPanel() {
     }
   };
 
-  // ФУНКЦИЯ: Экспорт данных доставки
   const handleExportDeliveryData = () => {
     const success = exportDeliveryData();
     if (success) {
@@ -633,7 +649,6 @@ export default function AdminPanel() {
     }
   };
 
-// ФУНКЦИЯ: Восстановить все бренды
 const restoreAllBrands = () => {
   if (!confirm("Восстановить все бренды? Это добавит отсутствующие бренды в текущие данные.")) return;
   
@@ -694,13 +709,26 @@ const restoreAllBrands = () => {
 
   const currentBrand = brandKey ? data[brandKey] : null;
 
+  // УСЛОВНЫЙ РЕНДЕРИНГ КОМПОНЕНТОВ - ПОСЛЕ ВСЕХ ХУКОВ
+  if (!authenticated) {
+    return <AdminAuth onAuthenticate={setAuthenticated} />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-4 py-8">
-      <div className="bg-gradient-to-r from-cyan-700 to-purple-700 text-white text-sm py-2 px-4 rounded-b-lg shadow-md mb-6 text-center">
-        ⚙️ Админка Chip&Gadget — редактирование брендов, моделей и услуг
+      <div className="bg-gradient-to-r from-cyan-700 to-purple-700 text-white text-sm py-2 px-4 rounded-b-lg shadow-md mb-6 relative">
+        <div className="text-center">
+          ⚙️ Админка Chip&Gadget — редактирование брендов, моделей и услуг
+        </div>
+        <button
+          onClick={handleLogout}
+          className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded text-xs font-medium transition-colors"
+          title="Выйти из админ-панели"
+        >
+          🚪 Выйти
+        </button>
       </div>
 
-      {/* Переключение вкладок */}
       <div className="flex justify-center mb-6">
         <div className="bg-white rounded-lg p-1 shadow-md">
           <button
@@ -736,7 +764,6 @@ const restoreAllBrands = () => {
         </div>
       </div>
 
-      {/* Кнопки управления */}
       <div className="flex flex-wrap gap-2 mb-6 justify-center">
         <button
           onClick={handleSave}
@@ -759,14 +786,12 @@ const restoreAllBrands = () => {
         >
           {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
         </button>
-        {/* КНОПКА: Экспорт ТВ/ноутбуки */}
         <button
           onClick={handleExportCategoryServices}
           className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
         >
           📺 Экспорт ТВ/ноутбуки
         </button>
-        {/* КНОПКА: Экспорт доставки */}
         <button
           onClick={handleExportDeliveryData}
           className="px-4 py-2 rounded-lg text-white font-medium bg-red-600 hover:bg-red-700"
@@ -806,7 +831,6 @@ const restoreAllBrands = () => {
 
 	 </div>
 
-      {/* Скрытые input'ы для импорта */}
       <input
         type="file"
         accept=".json"
@@ -836,10 +860,8 @@ const restoreAllBrands = () => {
         </div>
       )}
 
-      {/* Контент в зависимости от активной вкладки */}
       {activeTab === "brands" ? (
         <>
-          {/* Выбор бренда */}
           <div className="max-w-md mx-auto bg-white/90 rounded-2xl shadow p-6 border border-gray-200 mb-8">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Выберите бренд:
@@ -850,7 +872,7 @@ const restoreAllBrands = () => {
               onChange={(e) => setBrandKey(e.target.value)}
             >
               <option value="">— Не выбран —</option>
-              {brands.map((key) => (
+              {Object.keys(data).map((key) => (
                 <option key={key} value={key} style={getBrandStyle(key)}>
                   {getBrandLabel(key)}
                 </option>
@@ -858,7 +880,6 @@ const restoreAllBrands = () => {
             </select>
           </div>
 
-          {/* Редактор брендов */}
           {currentBrand ? (
             <BrandEditor
               brandKey={brandKey}
@@ -881,13 +902,11 @@ const restoreAllBrands = () => {
           )}
         </>
       ) : activeTab === "categories" ? (
-        /* Редактор услуг по категориям */
         <CategoryServicesEditor 
           data={categoryServices} 
           onChange={setCategoryServices} 
         />
       ) : (
-        /* Редактор доставки */
         <DeliveryEditor />
       )}
     </div>
