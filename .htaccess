@@ -1,30 +1,27 @@
 RewriteEngine On
 
-# Правильные MIME types для Beget
-<FilesMatch "\.(js|mjs)$">
+# ЯВНО УКАЗЫВАЕМ MIME TYPES ДЛЯ ВСЕХ ФАЙЛОВ
+<FilesMatch "\.js$">
+    ForceType application/javascript
     Header set Content-Type "application/javascript"
 </FilesMatch>
 
 <FilesMatch "\.css$">
+    ForceType text/css
     Header set Content-Type "text/css"
 </FilesMatch>
 
-<FilesMatch "\.(ico|png|jpg|jpeg|gif|svg)$">
+<FilesMatch "\.ico$">
+    ForceType image/x-icon
+    Header set Content-Type "image/x-icon"
+</FilesMatch>
+
+<FilesMatch "\.(png|jpg|jpeg|gif|svg)$">
+    ForceType image/%{REQUEST_URI:e}
     Header set Content-Type "image/%{REQUEST_URI:e}"
 </FilesMatch>
 
-<FilesMatch "\.(woff|woff2|ttf|eot)$">
-    Header set Content-Type "font/%{REQUEST_URI:e}"
-</FilesMatch>
-
-# Основные rewrite правила
+# ОСНОВНЫЕ ПРАВИЛА REWRITE
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_FILENAME} !-l
 RewriteRule . /index.html [L]
-
-# Кэширование для статических файлов
-<FilesMatch "\.(css|js|png|jpg|jpeg|gif|ico|svg)$">
-    ExpiresActive On
-    ExpiresDefault "access plus 1 month"
-</FilesMatch>
