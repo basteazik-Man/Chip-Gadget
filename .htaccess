@@ -1,12 +1,7 @@
-# Включение rewrite движка
 RewriteEngine On
 
-# УСТАНОВКА ПРАВИЛЬНЫХ MIME TYPES ДЛЯ BEGET
-<FilesMatch "\.js$">
-    Header set Content-Type "application/javascript"
-</FilesMatch>
-
-<FilesMatch "\.mjs$">
+# УСТАНОВКА ПРАВИЛЬНЫХ MIME TYPES
+<FilesMatch "\.(js|mjs)$">
     Header set Content-Type "application/javascript"
 </FilesMatch>
 
@@ -18,35 +13,11 @@ RewriteEngine On
     Header set Content-Type "image/x-icon"
 </FilesMatch>
 
-<FilesMatch "\.(png|jpg|jpeg|gif)$">
+<FilesMatch "\.(png|jpg|jpeg|gif|svg|webp)$">
     Header set Content-Type "image/%{REQUEST_URI:e}"
 </FilesMatch>
 
-<FilesMatch "\.svg$">
-    Header set Content-Type "image/svg+xml"
-</FilesMatch>
-
-<FilesMatch "\.(woff|woff2|ttf|eot)$">
-    Header set Content-Type "font/%{REQUEST_URI:e}"
-</FilesMatch>
-
 # ОСНОВНЫЕ ПРАВИЛА ДЛЯ SPA
-# Если файл существует - отдаем его
-RewriteCond %{REQUEST_FILENAME} -f
-RewriteRule ^ - [L]
-
-# Если директория существует - отдаем ее
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# Все остальные запросы перенаправляем на index.html
-RewriteRule ^ index.html [L]
-
-# КЭШИРОВАНИЕ ДЛЯ СТАТИЧЕСКИХ ФАЙЛОВ
-<IfModule mod_expires.c>
-    ExpiresActive On
-    ExpiresByType application/javascript "access plus 1 year"
-    ExpiresByType text/css "access plus 1 year"
-    ExpiresByType image/svg+xml "access plus 1 year"
-    ExpiresByType image/x-icon "access plus 1 year"
-</IfModule>
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.html [L]

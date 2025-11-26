@@ -6,7 +6,7 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    // Минимизируем проблемы с путями
+    // Отключаем хэши для простоты отладки
     rollupOptions: {
       output: {
         entryFileNames: 'assets/[name].js',
@@ -15,6 +15,5 @@ export default defineConfig({
       }
     }
   },
-  // Используем относительные пути
   base: './',
 });
