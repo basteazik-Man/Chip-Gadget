@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { brandData } from "../data/brandData";
+import { BRANDS } from "../data/brands";
 
 export default function BrandPage() {
   const { brand } = useParams();
@@ -17,6 +18,7 @@ export default function BrandPage() {
   const [selectedCategory, setSelectedCategory] = useState(getInitialCategory);
 
   const data = brandData[brand?.toLowerCase()];
+  const brandInfo = BRANDS.find(b => b.id === brand?.toLowerCase());
 
   // Обработка ошибок
   if (!brand) {
@@ -39,13 +41,42 @@ export default function BrandPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-10 px-4">
         <div className="max-w-6xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-gray-800 mb-4">Бренд "{brand}" не поддерживается</h1>
-          <button
-            onClick={() => navigate("/")}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all"
-          >
-            На главную
-          </button>
+          <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 mb-6 border border-blue-200">
+            <div className="text-6xl mb-4">🚀</div>
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Отличный выбор! {brandInfo?.title || brand}
+            </h1>
+            <p className="text-lg text-gray-600 mb-2">
+              Мы уже работаем над добавлением моделей этого бренда!
+            </p>
+            <p className="text-gray-500 mb-6">
+              Следите за обновлениями - скоро здесь появятся все устройства {brandInfo?.title || brand}
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <button
+                onClick={() => navigate("/")}
+                className="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-all shadow-lg"
+              >
+                Вернуться на главную
+              </button>
+              <button
+                onClick={() => navigate("/delivery-order", { 
+                  state: { 
+                    brand: brand,
+                    deviceType: 'smartphone'
+                  }
+                })}
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all shadow-lg"
+              >
+                💬 Уже есть устройство? Заказать ремонт
+              </button>
+            </div>
+          </div>
+          
+          <div className="text-sm text-gray-400 mt-8">
+            Хотите ускорить добавление моделей? Напишите нам!
+          </div>
         </div>
       </div>
     );
