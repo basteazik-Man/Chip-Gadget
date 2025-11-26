@@ -1,7 +1,7 @@
 // src/components/admin/BrandEditor.jsx
 // ВЕРСИЯ С "ЧИСТИЛЬЩИКОМ" (показывает зависшие модели)
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
 import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
@@ -10,6 +10,12 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   const brand = data[brandKey];
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
+
+  // СБРАСЫВАЕМ СОСТОЯНИЕ ПРИ СМЕНЕ БРЕНДА
+  useEffect(() => {
+    setSelectedModel("");
+    setSelectedCategory("");
+  }, [brandKey]);
 
   // Получаем категории из brandData
   const brandCategories = useMemo(() => {
@@ -304,7 +310,11 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           {modelsToShow.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {modelsToShow.map(modelKey => (
-                <div key={modelKey} className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedModel === modelKey ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'}`} onClick={() => setSelectedModel(modelKey)}>
+                <div 
+                  key={modelKey} 
+                  className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedModel === modelKey ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'}`} 
+                  onClick={() => setSelectedModel(modelKey)}
+                >
                   <div className="flex justify-between items-start mb-3">
                     <div className="flex items-center gap-2 flex-1">
                       <span className="text-sm">{getModelStatusIcon(modelKey)}</span>
@@ -361,7 +371,12 @@ export default function BrandEditor({ brandKey, data, onChange }) {
             <h3 className="text-lg font-semibold text-gray-800">Редактирование: {getModelDisplayName(selectedModel)}</h3>
             <button onClick={() => setSelectedModel("")} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm">✕ Закрыть</button>
           </div>
-          <ModelEditor modelKey={selectedModel} services={getModelServices(selectedModel)} onChange={(updated) => handleModelChange(selectedModel, updated)} />
+          <ModelEditor 
+            key={selectedModel} // ВАЖНО: Добавляем key для принудительного пересоздания компонента
+            modelKey={selectedModel} 
+            services={getModelServices(selectedModel)} 
+            onChange={(updated) => handleModelChange(selectedModel, updated)} 
+          />
         </div>
       )}
     </div>
