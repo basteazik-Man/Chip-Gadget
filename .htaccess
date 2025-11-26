@@ -1,10 +1,27 @@
-RewriteEngine On
-RewriteBase /
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Handle client-side routing
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteCond %{REQUEST_URI} !\.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json)$
+  RewriteRule . /index.html [L]
+</IfModule>
 
-# Serve existing files and directories
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
+# Proper MIME types
+<IfModule mod_mime.c>
+  AddType application/javascript js
+  AddType text/css css
+  AddType application/json json
+  AddType image/svg+xml svg
+  AddType application/manifest+json webmanifest
+</IfModule>
 
-# Redirect everything else to index.html
-RewriteRule ^ index.html [L]
+# Cache control
+<IfModule mod_expires.c>
+  ExpiresActive on
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType image/svg+xml "access plus 1 year"
+</IfModule>
