@@ -4,7 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { BRANDS } from "../data/brands";
-// Импортируем нашу новую панель
+import { FaShieldAlt, FaRocket, FaWallet, FaSearch } from "react-icons/fa";
+
+// Импортируем панель
 import DynamicHeroPanel from "../components/DynamicHeroPanel";
 
 const FALLBACK_BRANDS = [
@@ -12,6 +14,10 @@ const FALLBACK_BRANDS = [
   { id: "samsung", title: "Samsung", logo: "/logos/samsung.svg" },
   { id: "xiaomi", title: "Xiaomi", logo: "/logos/xiaomi.svg" },
   { id: "honor", title: "Honor", logo: "/logos/honor.svg" },
+  { id: "oneplus", title: "OnePlus", logo: "/logos/oneplus.svg" },
+  { id: "blackview", title: "Blackview", logo: "/logos/blackview.svg" },
+  { id: "doogee", title: "Doogee", logo: "/logos/doogee.svg" },
+  { id: "oukitel", title: "Oukitel", logo: "/logos/oukitel.svg" },
 ];
 
 export default function Home() {
@@ -30,7 +36,6 @@ export default function Home() {
         setShowSuggestions(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -54,181 +59,208 @@ export default function Home() {
     setShowSuggestions(value.trim().length > 0);
   };
 
-  const handleInputFocus = () => {
-    if (query.trim().length > 0) {
-      setShowSuggestions(true);
-    }
-  };
-
-  const hasQuery = query.trim().length > 0;
-  const hasResults = results.length > 0;
-
   const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
 
   const categories = [
     { 
       id: "laptops", 
-      title: "Ноутбуки", 
+      title: "Ноутбуки и ПК", 
+      desc: "Чистка, апгрейд, ремонт плат",
       icon: "💻", 
-      gradient: "from-purple-500 to-blue-600",
-      hoverGradient: "from-purple-600 to-blue-700"
+      gradient: "from-indigo-500 to-purple-600",
+      shadow: "shadow-indigo-500/30"
     },
     { 
       id: "tv", 
       title: "Телевизоры", 
+      desc: "Замена подсветки, матриц, БП",
       icon: "📺", 
-      gradient: "from-green-500 to-teal-600",
-      hoverGradient: "from-green-600 to-teal-700"
+      gradient: "from-emerald-500 to-teal-600",
+      shadow: "shadow-emerald-500/30"
     },
   ];
 
-  const handleCategoryClick = (categoryId) => {
-    navigate(`/services?category=${categoryId}`);
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+  };
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0 }
   };
 
   return (
-    <div className="flex flex-col items-center text-center px-4 sm:px-6 relative z-10 pt-16">
-      {/* === Поиск === */}
-      <motion.div
-        ref={searchRef}
-        className="w-full max-w-4xl mb-8 relative"
-        initial={{ opacity: 0, y: 5 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.2 }}
-      >
-        <div className="flex">
-          <input
-            type="text"
-            placeholder="🔍 Поиск модели или бренда..."
-            value={query}
-            onChange={handleInputChange}
-            onFocus={handleInputFocus}
-            onKeyDown={(e) => e.key === "Enter" && handleSearchAll()}
-            className="w-full p-4 rounded-l-2xl border border-gray-300 shadow-md focus:ring-2 focus:ring-blue-400 focus:border-blue-400 outline-none text-gray-800 text-lg"
-          />
-          <button
-            onClick={handleSearchAll}
-            disabled={!query.trim()}
-            className={`px-6 py-4 font-semibold rounded-r-2xl ${
-              query.trim()
-                ? "bg-blue-600 text-white hover:bg-blue-700"
-                : "bg-gray-300 text-gray-500 cursor-not-allowed"
-            }`}
-          >
-            Поиск
-          </button>
+    <div className="relative w-full min-h-screen overflow-hidden bg-slate-50 text-gray-800">
+      
+      {/* === ФОНОВЫЕ ДЕКОРАЦИИ === */}
+      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-300/30 rounded-full blur-[100px] pointer-events-none" />
+      <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-300/30 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-20 flex flex-col items-center">
+        
+        {/* === ЗАГОЛОВОК И ПОИСК === */}
+        <motion.div 
+          className="text-center max-w-3xl mb-10"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-4 tracking-tight">
+            Ремонт <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">будущего</span>
+          </h1>
+          <p className="text-lg text-gray-500 mb-8">
+            Вернем жизнь вашим гаджетам. Быстро. Честно. Профессионально.
+          </p>
+        
+          <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
+            <div className="relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+              <div className="relative flex bg-white rounded-2xl shadow-xl">
+                <input
+                  type="text"
+                  placeholder="Найти модель (например: iPhone 13)..."
+                  value={query}
+                  onChange={handleInputChange}
+                  onFocus={() => query.trim().length > 0 && setShowSuggestions(true)}
+                  onKeyDown={(e) => e.key === "Enter" && handleSearchAll()}
+                  className="w-full p-4 pl-6 rounded-l-2xl outline-none text-gray-700 text-lg placeholder-gray-400"
+                />
+                <button
+                  onClick={handleSearchAll}
+                  className="px-6 sm:px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-r-2xl transition-colors flex items-center gap-2"
+                >
+                  <FaSearch />
+                  <span className="hidden sm:inline">Найти</span>
+                </button>
+              </div>
+            </div>
+
+            <AnimatePresence>
+              {showSuggestions && query.trim().length > 0 && (
+                <motion.ul
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  className="absolute left-0 right-0 mt-3 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
+                >
+                  {results.length > 0 ? (
+                    <>
+                      {results.slice(0, 8).map((item, idx) => (
+                        <li
+                          key={idx}
+                          onClick={() => handleSelect(item.brandKey, item.model)}
+                          className="px-6 py-3 hover:bg-blue-50 cursor-pointer flex justify-between items-center transition-colors border-b border-gray-100 last:border-none"
+                        >
+                          <span className="font-medium text-gray-700">{item.model}</span>
+                          <span className="text-xs font-bold text-blue-500 bg-blue-100 px-2 py-1 rounded-full">{item.brand}</span>
+                        </li>
+                      ))}
+                    </>
+                  ) : (
+                    <li className="px-6 py-4 text-center text-gray-500">Ничего не найдено 😔</li>
+                  )}
+                </motion.ul>
+              )}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        {/* === БЛОК ПРЕИМУЩЕСТВ (СКРЫТ НА МОБИЛЬНЫХ) === */}
+        {/* hidden md:grid — скрывает блок на экранах меньше 768px */}
+        <motion.div 
+          className="hidden md:grid grid-cols-3 gap-6 w-full max-w-5xl mb-16"
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true }}
+          variants={containerVariants}
+        >
+          {[
+            { icon: FaRocket, title: "Экспресс ремонт", text: "От 30 минут на типовые поломки", color: "text-blue-500" },
+            { icon: FaShieldAlt, title: "Гарантия до 1 года", text: "Официальный договор и чек", color: "text-green-500" },
+            { icon: FaWallet, title: "Честные цены", text: "Оплата только за результат", color: "text-purple-500" },
+          ].map((item, index) => (
+            <motion.div 
+              key={index} 
+              variants={itemVariants}
+              className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50 flex flex-col items-center text-center hover:translate-y-[-5px] transition-transform duration-300 border border-gray-100"
+            >
+              <item.icon className={`text-4xl mb-4 ${item.color}`} />
+              <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+              <p className="text-gray-500 text-sm">{item.text}</p>
+            </motion.div>
+          ))}
+        </motion.div>
+
+        {/* === HERO PANEL (Центрирован) === */}
+        <div className="w-full flex justify-center mb-12 md:mb-16">
+           <DynamicHeroPanel />
         </div>
 
-        <AnimatePresence>
-          {showSuggestions && hasQuery && (
-            <motion.ul
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -5 }}
-              transition={{ duration: 0.15 }}
-              className="absolute left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 max-h-80 overflow-auto"
-            >
-              {hasResults ? (
-                <>
-                  {results.slice(0, 10).map((item, index) => (
-                    <motion.li
-                      key={index}
-                      onClick={() => handleSelect(item.brandKey, item.model)}
-                      className="px-4 py-3 text-left text-gray-800 hover:bg-blue-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                    >
-                      <div className="flex justify-between items-center">
-                        <div>
-                          <span className="font-semibold">{item.model}</span>
-                          <span className="text-gray-500 text-sm ml-2">({item.brand})</span>
-                        </div>
-                        <span className="text-xs text-gray-400">→</span>
-                      </div>
-                    </motion.li>
-                  ))}
-
-                  {results.length > 10 && (
-                    <li
-                      onClick={handleSearchAll}
-                      className="px-4 py-3 text-center font-semibold text-blue-600 hover:bg-blue-50 cursor-pointer border-t border-gray-200"
-                    >
-                      Показать все {results.length} результатов →
-                    </li>
-                  )}
-                </>
-              ) : (
-                <li className="px-4 py-3 text-center text-gray-600">
-                  Не найдено результатов для "{query}"
-                </li>
-              )}
-            </motion.ul>
-          )}
-        </AnimatePresence>
-      </motion.div>
-
-      {/* === НОВАЯ ДИНАМИЧЕСКАЯ ПАНЕЛЬ === */}
-      <DynamicHeroPanel />
-
-      {/* === Кнопки брендов === */}
-      {brandsToShow && brandsToShow.length > 0 ? (
-        <motion.section
-          className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl mb-6"
+        {/* === БРЕНДЫ (ЦВЕТНЫЕ) === */}
+        <motion.section 
+          className="w-full max-w-6xl mb-16"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.3, delay: 0.2 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
         >
-          <h2 className="text-2xl font-semibold mb-6 md:mb-8 text-gray-800">Выберите бренд</h2>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 md:gap-6">
-            {brandsToShow.map((brand) => (
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Популярные бренды</h2>
+          </div>
+          
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+            {brandsToShow.slice(0, 12).map((brand) => (
               <motion.button
                 key={brand.id}
                 onClick={() => navigate(`/brand/${brand.id}`)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="flex flex-col items-center p-4 md:p-6 rounded-2xl bg-white shadow-2xl hover:shadow-3xl cursor-pointer transition-all duration-300 border border-gray-100"
+                whileHover={{ scale: 1.05, y: -5 }}
+                whileTap={{ scale: 0.95 }}
+                className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:bg-blue-50 transition-all duration-300"
               >
+                {/* Убран grayscale, логотипы всегда цветные */}
                 <img
                   src={brand.logo}
                   alt={brand.title}
-                  className="w-14 h-14 md:w-20 md:h-20 mb-3 object-contain"
+                  className="w-12 h-12 object-contain mb-3"
                 />
-                <p className="font-medium text-gray-700 text-sm md:text-base">{brand.title}</p>
+                <span className="font-semibold text-gray-700 text-sm">{brand.title}</span>
               </motion.button>
             ))}
           </div>
         </motion.section>
-      ) : (
-        <div className="w-full max-w-5xl bg-yellow-50 p-6 rounded-3xl border border-yellow-200">
-          <h2 className="text-xl font-semibold text-yellow-800">Бренды не загружены</h2>
-          <p className="text-yellow-700 mt-2">Проверьте файл с данными брендов</p>
-        </div>
-      )}
 
-      {/* === КАТЕГОРИИ (TV / LAPTOPS) === */}
-      <motion.section
-        className="w-full max-w-5xl bg-white p-6 md:p-8 rounded-3xl shadow-xl"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.3 }}
-      >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-          {categories.map((cat) => (
-            <motion.button
-              key={cat.id}
-              onClick={() => handleCategoryClick(cat.id)}
-              whileHover={{ scale: 1.02, y: -2 }}
-              whileTap={{ scale: 0.98 }}
-              className={`w-full flex flex-col items-center justify-center p-6 md:p-8 rounded-2xl bg-gradient-to-r ${cat.gradient} shadow-2xl hover:shadow-3xl text-white min-h-[140px] transition-all duration-300 hover:bg-gradient-to-r ${cat.hoverGradient}`}
-            >
-              <span className="text-3xl md:text-4xl mb-3">
-                {cat.icon}
-              </span>
-              <span className="text-xl font-bold">{cat.title}</span>
-              <span className="text-white/80 text-sm mt-2">Посмотреть услуги и цены</span>
-            </motion.button>
-          ))}
-        </div>
-      </motion.section>
+        {/* === УСЛУГИ (КРУПНЫЕ КАРТОЧКИ) === */}
+        <motion.section className="w-full max-w-6xl">
+           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">Другие услуги</h2>
+           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {categories.map((cat) => (
+              <motion.div
+                key={cat.id}
+                onClick={() => navigate(`/services?category=${cat.id}`)}
+                whileHover={{ scale: 1.01 }}
+                whileTap={{ scale: 0.98 }}
+                className={`relative overflow-hidden cursor-pointer rounded-3xl p-6 md:p-8 text-white shadow-2xl ${cat.shadow} bg-gradient-to-br ${cat.gradient} group`}
+              >
+                <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+                
+                <div className="relative z-10 flex items-center justify-between">
+                  <div>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{cat.title}</h3>
+                    <p className="text-white/80 font-medium text-sm md:text-base">{cat.desc}</p>
+                    <div className="mt-6 inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-blue-600 transition-colors">
+                      Рассчитать стоимость →
+                    </div>
+                  </div>
+                  <span className="text-5xl md:text-6xl drop-shadow-lg transform group-hover:rotate-12 transition-transform duration-300">
+                    {cat.icon}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+           </div>
+        </motion.section>
+
+      </div>
     </div>
   );
 }
