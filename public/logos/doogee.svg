@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <!-- значок D -->
-  <rect x="18" y="18" width="40" height="40" rx="10" fill="#1A73E8"></rect>
-  <path d="M30 28 h12 a10 10 0 0 1 0 20 h-12 z" fill="#fff"></path>
-
-  <text x="50" y="80" font-family="Arial, sans-serif" font-size="20" font-weight="800" fill="#111" text-anchor="middle">
-    DOOGEE
-  </text>
-</svg>
