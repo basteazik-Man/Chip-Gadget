@@ -1,6 +1,4 @@
 // src/pages/AdminPanel.jsx
-// ПОЛНАЯ ВЕРСИЯ: Исправлен экспорт ZIP и добавлен экспорт BrandData
-
 import React, { useState, useEffect, useRef } from "react";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
@@ -9,7 +7,6 @@ import AdminAuth from "../components/AdminAuth";
 import { getBrandStatus } from "../utils/priceUtils";
 import { BRANDS } from "../data/brands";
 import { brandData } from "../data/brandData";
-import { syncData, saveToCloud, loadFromCloud } from '../utils/syncUtils';
 
 // Вспомогательная функция для получения всех моделей из brandData
 const getAllModelsFromBrandData = (brandKey) => {
@@ -133,8 +130,7 @@ const exportDeliveryData = () => {
   }
 };
 
-// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ТРАНСФОРМАЦИИ (fix ZIP export) ===
-// Теперь она корректно обрабатывает структуру объектов
+// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ТРАНСФОРМАЦИИ (для ZIP экспорта) ===
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -183,7 +179,7 @@ const exportJSFilesAsZip = async (data) => {
   try {
     const transformedData = transformDataForExport(data);
     
-    // Динамический импорт jszip (нужен npm install jszip)
+    // Динамический импорт jszip (убедитесь, что выполнен npm install jszip)
     const JSZip = await import('jszip');
     const zip = new JSZip.default();
     
@@ -250,25 +246,6 @@ const exportBrandData = async (data) => {
   }
 };
 
-// Вспомогательные функции импорта
-const mergeImportedData = (currentData, importedData) => {
-    // Упрощенная логика слияния для сохранения целостности ответа
-    // В реальном проекте используйте полную версию из предыдущего файла, если она была сложнее
-    return { ...currentData, ...importedData };
-};
-
-const parseJSFile = (fileContent, fileName) => {
-    // Упрощенный парсер для JS файлов
-    try {
-       const match = fileContent.match(/export default (\{[\s\S]*?\});/);
-       if (match) {
-         const jsonStr = match[1].replace(/(\w+):/g, '"$1":').replace(/'/g, '"').replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
-         return JSON.parse(jsonStr);
-       }
-    } catch(e) { console.error(e); }
-    return {};
-};
-
 export default function AdminPanel() {
   const [authenticated, setAuthenticated] = useState(() => {
     return localStorage.getItem('admin_authenticated') === 'true';
@@ -283,11 +260,7 @@ export default function AdminPanel() {
   const [unsaved, setUnsaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
   const [activeTab, setActiveTab] = useState("brands");
-  const [syncStatus, setSyncStatus] = useState('');
-  const [isSyncing, setIsSyncing] = useState(false);
   const saveTimer = useRef(null);
-  const importJsonRef = useRef(null);
-  const importJsRef = useRef(null);
 
   if (!authenticated) {
     return <AdminAuth onAuthenticate={setAuthenticated} />;
@@ -318,70 +291,6 @@ export default function AdminPanel() {
       setTimeout(() => setMessage(""), 3000);
     }
   }, []);
-
-  // Синхронизация
-  const handleSync = async () => {
-    setIsSyncing(true);
-    setSyncStatus('Синхронизация...');
-    try {
-      const result = await syncData();
-      setSyncStatus(`✅ ${result.action === 'upload' ? 'Данные загружены в облако' : 'Данные загружены из облака'}`);
-    } catch (error) {
-      setSyncStatus('❌ Ошибка синхронизации');
-    } finally {
-      setIsSyncing(false);
-      setTimeout(() => setSyncStatus(''), 3000);
-    }
-  };
-
-  const handleForceUpload = async () => {
-    if (!confirm('Вы уверены? Это перезапишет данные в облаке текущими локальными данными.')) return;
-    setIsSyncing(true);
-    setSyncStatus('Загрузка в облако...');
-    try {
-      const data = {
-        prices: JSON.parse(localStorage.getItem('chipgadget_prices') || '{}'),
-        categoryServices: JSON.parse(localStorage.getItem('chipgadget_category_services') || '{}'),
-        delivery: JSON.parse(localStorage.getItem('chipgadget_delivery') || '{}'),
-        lastSync: new Date().toISOString(),
-      };
-      await saveToCloud(data);
-      setSyncStatus('✅ Данные загружены в облако');
-    } catch (error) {
-      setSyncStatus('❌ Ошибка загрузки в облако');
-    } finally {
-      setIsSyncing(false);
-      setTimeout(() => setSyncStatus(''), 3000);
-    }
-  };
-
-  const handleForceDownload = async () => {
-    if (!confirm('Вы уверены? Это перезапишет локальные данные данными из облака.')) return;
-    setIsSyncing(true);
-    setSyncStatus('Загрузка из облака...');
-    try {
-      const cloudData = await loadFromCloud();
-      localStorage.setItem('chipgadget_prices', JSON.stringify(cloudData.prices));
-      localStorage.setItem('chipgadget_category_services', JSON.stringify(cloudData.categoryServices));
-      localStorage.setItem('chipgadget_delivery', JSON.stringify(cloudData.delivery));
-      
-      setData(buildInitialData());
-      setCategoryServices(cloudData.categoryServices || {});
-      setBrandKey("");
-      
-      setSyncStatus('✅ Данные загружены из облака! Интерфейс обновлен.');
-      setTimeout(() => {
-        if (window.confirm('Данные успешно загружены из облака! Хотите перезагрузить страницу для полного обновления?')) {
-          window.location.reload();
-        }
-      }, 1000);
-    } catch (error) {
-      setSyncStatus('❌ Ошибка загрузки из облака');
-    } finally {
-      setIsSyncing(false);
-      setTimeout(() => setSyncStatus(''), 3000);
-    }
-  };
 
   const addBrand = () => {
     const name = prompt("Введите название нового бренда:");
@@ -503,15 +412,11 @@ export default function AdminPanel() {
         <button onClick={handleExportBrandData} disabled={isExporting} className={`px-4 py-2 rounded-lg text-white font-medium ${isExporting ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"}`}>📝 Экспорт BrandData</button>
         <button onClick={handleExportCategoryServices} className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700">📺 Экспорт ТВ</button>
         <button onClick={handleExportDeliveryData} className="px-4 py-2 rounded-lg text-white font-medium bg-red-600 hover:bg-red-700">🚚 Экспорт доставки</button>
-        <button onClick={handleSync} disabled={isSyncing} className={`px-4 py-2 rounded-lg text-white font-medium ${isSyncing ? 'bg-gray-400' : 'bg-blue-600 hover:bg-blue-700'}`}>🔄 Синхронизация</button>
-        <button onClick={handleForceUpload} disabled={isSyncing} className={`px-4 py-2 rounded-lg text-white font-medium ${isSyncing ? 'bg-gray-400' : 'bg-green-600 hover:bg-green-700'}`}>☁️ В облако</button>
-        <button onClick={handleForceDownload} disabled={isSyncing} className={`px-4 py-2 rounded-lg text-white font-medium ${isSyncing ? 'bg-gray-400' : 'bg-orange-600 hover:bg-orange-700'}`}>📥 Из облака</button>
         <button onClick={addBrand} className="px-4 py-2 rounded-lg text-white font-medium bg-emerald-600 hover:bg-emerald-700">➕ Бренд</button>
         <button onClick={deleteBrand} className="px-4 py-2 rounded-lg text-white font-medium bg-rose-600 hover:bg-rose-700">🗑️ Бренд</button>
       </div>
 
       {message && <div className={`text-center font-medium mb-4 ${message.includes('❌') ? 'text-red-700' : 'text-green-700'}`}>{message}</div>}
-      {syncStatus && <div className={`text-center font-medium mb-4 ${syncStatus.includes('❌') ? 'text-red-700' : 'text-green-700'}`}>{syncStatus}</div>}
       {unsaved && <div className="text-center text-orange-600 font-medium mb-4">⚠️ Есть несохраненные изменения</div>}
 
       {activeTab === "brands" ? (
