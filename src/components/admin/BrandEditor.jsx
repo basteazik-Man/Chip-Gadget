@@ -1,7 +1,5 @@
-// src/components/admin/BrandEditor.jsx
-// ПОЛНАЯ ВЕРСИЯ: Улучшено создание моделей и отображение потерянных
-
-import React, { useState, useMemo } from "react";
+// BrandEditor.jsx (с исправленным переключением моделей)
+import React, { useState, useMemo, useEffect } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
 import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
@@ -11,7 +9,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   const [selectedModel, setSelectedModel] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
 
-  // Получаем категории из brandData
+  // Получаем категории и модели из brandData
   const brandCategories = useMemo(() => {
     const brandInfo = brandData[brandKey];
     return brandInfo?.categories || {};
@@ -23,114 +21,118 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     green: "border-green-400 bg-green-50",
   };
 
+  // Список доступных валют
   const currencies = ["₽", "$", "€", "¥", "£", "₹"];
 
+  // 🔄 ИСПРАВЛЕНИЕ: Сбрасываем выбранную модель при смене бренда
+  useEffect(() => {
+    setSelectedModel("");
+    setSelectedCategory("");
+  }, [brandKey]);
+
+  // --- Управление изменениями бренда ---
   const updateBrand = (changes) => {
     const updated = { ...brand, ...changes };
     onChange(brandKey, updated);
   };
 
-  // ФУНКЦИЯ: Добавление модели в выбранную категорию
-  const addModelToCategory = () => {
-    if (!selectedCategory) {
-      alert("❌ Сначала выберите категорию!");
+  // Добавление кастомной модели
+  const addCustomModel = () => {
+    const name = prompt("Введите название модели:");
+    if (!name) return;
+    const key = name.toLowerCase().replace(/\s+/g, "-");
+    
+    if (brand.models[key]) {
+      alert("Такая модель уже существует!");
       return;
     }
 
-    const modelName = prompt("Введите название новой модели:");
-    if (!modelName) return;
-
-    const modelId = modelName.toLowerCase().replace(/\s+/g, '-');
-    
-    // Проверяем уникальность
-    if (brand.models[modelId]) {
-      alert("❌ Модель с таким ID уже существует!");
-      return;
-    }
-
-    // Создаем новую модель с явным указанием категории
-    const newModel = {
-      _customName: modelName,
-      _category: selectedCategory, // ВАЖНО: Эта метка нужна для экспорта в BrandData
-      services: []
-    };
-
-    const newModels = {
-      ...brand.models,
-      [modelId]: newModel
-    };
-
+    const servicesArray = [];
+    const newModels = { ...brand.models, [key]: servicesArray };
     updateBrand({ models: newModels });
-    setSelectedModel(modelId);
-    
-    alert(`✅ Модель "${modelName}" создана!\n\nТеперь заполните услуги и цены.`);
+    setSelectedModel(key);
+    setSelectedCategory("custom");
   };
 
-  // ФУНКЦИЯ: Удаление модели
-  const deleteModel = (modelKey, e) => {
-    if (e) e.stopPropagation();
-    
-    const modelName = getModelDisplayName(modelKey);
-    
-    if (!confirm(`❌ УДАЛИТЬ МОДЕЛЬ "${modelName}"?\n\nПосле удаления нужно:\n1. Сделать "📝 Экспорт BrandData"\n2. Сделать "📁 Экспорт ZIP"`)) return;
-    
-    const newModels = { ...brand.models };
-    delete newModels[modelKey];
-    
-    updateBrand({ models: newModels });
-    
-    if (selectedModel === modelKey) {
-      setSelectedModel("");
-    }
-  };
-
-  // ФУНКЦИЯ: Редактирование названия
+  // Редактирование названия модели
   const editModelName = (modelKey, e) => {
     e.stopPropagation();
     const currentName = getModelDisplayName(modelKey);
     const newName = prompt("Введите новое название модели:", currentName);
     if (!newName || newName === currentName) return;
 
-    const modelData = brand.models[modelKey];
-    let updatedModel;
-
-    if (Array.isArray(modelData)) {
-        updatedModel = {
-            services: modelData,
-            _customName: newName
-        };
-    } else {
-        updatedModel = {
-            ...modelData,
-            _customName: newName
-        };
+    // Обновляем кастомное имя в данных модели
+    const updatedModels = { ...brand.models };
+    if (Array.isArray(updatedModels[modelKey])) {
+      // Если это массив услуг, преобразуем в объект с кастомным именем
+      updatedModels[modelKey] = {
+        services: updatedModels[modelKey],
+        _customName: newName
+      };
+    } else if (typeof updatedModels[modelKey] === 'object') {
+      updatedModels[modelKey]._customName = newName;
     }
     
-    const updatedModels = { ...brand.models, [modelKey]: updatedModel };
     updateBrand({ models: updatedModels });
   };
 
-  // ВАЖНОЕ ИСПРАВЛЕНИЕ: Сохраняем метаданные (_category) при обновлении услуг
-  const handleModelChange = (modelKey, updatedServices) => {
-    const currentModelData = brand.models[modelKey];
-    let newModelData;
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Полное удаление модели
+  const deleteModel = (modelKey) => {
+    const modelName = getModelDisplayName(modelKey);
+    if (!confirm(`Удалить модель "${modelName}"? Это действие нельзя отменить.`)) return;
+    
+    const newModels = { ...brand.models };
+    delete newModels[modelKey];
+    
+    // Полностью обновляем данные бренда
+    updateBrand({ models: newModels });
+    
+    // Сбрасываем выбранную модель, если она была удалена
+    if (selectedModel === modelKey) {
+      setSelectedModel("");
+    }
+    
+    // Показываем подтверждение
+    alert(`Модель "${modelName}" успешно удалена!`);
+  };
 
-    if (currentModelData && !Array.isArray(currentModelData) && typeof currentModelData === 'object') {
-      newModelData = {
+  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Обновление услуг для конкретной модели
+  const handleModelChange = (modelKey, updatedServices) => {
+    console.log(`🔄 Обновление модели ${modelKey}:`, updatedServices);
+    
+    // Получаем текущие данные модели
+    const currentModelData = brand.models[modelKey];
+    let updatedModelData;
+
+    // Сохраняем структуру данных модели (кастомное имя если есть)
+    if (currentModelData && typeof currentModelData === 'object' && !Array.isArray(currentModelData)) {
+      // Это модель с кастомным именем
+      updatedModelData = {
         ...currentModelData,
         services: updatedServices
       };
     } else {
-      newModelData = updatedServices;
+      // Это обычная модель или массив услуг
+      updatedModelData = updatedServices;
     }
 
-    const newBrand = {
-      ...brand,
-      models: { ...brand.models, [modelKey]: newModelData },
+    // Создаем новый объект моделей с обновленной моделью
+    const updatedModels = {
+      ...brand.models,
+      [modelKey]: updatedModelData
     };
-    onChange(brandKey, newBrand);
+
+    // Обновляем бренд
+    const updatedBrand = {
+      ...brand,
+      models: updatedModels
+    };
+
+    console.log(`✅ Модель ${modelKey} обновлена, услуг: ${updatedServices.length}`);
+    onChange(brandKey, updatedBrand);
   };
 
+  // Изменение валюты через выпадающий список
   const handleCurrencyChange = (e) => {
     const newCurrency = e.target.value;
     if (newCurrency) updateBrand({ currency: newCurrency });
@@ -141,7 +143,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     if (newName) updateBrand({ brand: newName });
   };
 
-  // Статус бренда
+  // Получаем статус бренда
   const brandStatusObj = getBrandStatus(brand);
   const statusMap = {
     full: "green",
@@ -150,7 +152,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   };
   const brandStatus = statusMap[brandStatusObj.status] || "red";
 
-  // Получить статус модели
+  // Функция для получения статуса модели
   const getModelStatusInfo = (modelKey) => {
     const modelData = brand.models[modelKey];
     let services = [];
@@ -164,7 +166,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     return getModelStatus(services);
   };
 
-  // Получить цвет статуса
+  // Функция для получения цвета статуса модели
   const getModelStatusColor = (modelKey) => {
     const { status } = getModelStatusInfo(modelKey);
     return status === "full" ? "text-green-600 bg-green-100" :
@@ -172,6 +174,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
            "text-red-600 bg-red-100";
   };
 
+  // Функция для получения иконки статуса модели
   const getModelStatusIcon = (modelKey) => {
     const { status } = getModelStatusInfo(modelKey);
     return status === "full" ? "🟢" :
@@ -179,75 +182,86 @@ export default function BrandEditor({ brandKey, data, onChange }) {
            "🔴";
   };
 
+  // Функция для получения человеко-читаемого имени модели
   const getModelDisplayName = (modelKey) => {
+    // Проверяем есть ли кастомное имя
     const modelData = brand.models[modelKey];
     if (modelData && typeof modelData === 'object' && modelData._customName) {
       return modelData._customName;
     }
+    
+    // Ищем модель в brandData для получения красивого имени
     for (const category of Object.values(brandCategories)) {
       const model = category.find(m => m.id === modelKey);
       if (model) return model.name;
     }
+    
+    // Если не нашли, преобразуем ключ
     return modelKey.replace(/-/g, " ").replace(/\b\w/g, l => l.toUpperCase());
   };
 
+  // 🔄 УЛУЧШЕННАЯ ФУНКЦИЯ: Получаем услуги для модели
   const getModelServices = (modelKey) => {
     const modelData = brand.models[modelKey];
+    
+    if (!modelData) {
+      console.warn(`❌ Нет данных для модели: ${modelKey}`);
+      return [];
+    }
+    
     if (Array.isArray(modelData)) {
       return modelData;
     } else if (modelData && modelData.services) {
       return modelData.services;
+    } else if (modelData && Array.isArray(modelData)) {
+      return modelData;
     }
+    
+    console.warn(`❌ Неизвестный формат данных для модели ${modelKey}:`, modelData);
     return [];
   };
 
-  // Получить модели для выбранной категории
+  // Получаем модели для выбранной категории
   const getModelsForCategory = () => {
     if (!selectedCategory) return [];
 
-    const modelsFromBrandData = (brandCategories[selectedCategory] || [])
+    if (selectedCategory === "custom") {
+      // Кастомные модели (не из категорий)
+      return Object.keys(brand.models || {}).filter(modelKey => {
+        for (const category of Object.values(brandCategories)) {
+          if (category.find(m => m.id === modelKey)) return false;
+        }
+        return true;
+      });
+    }
+
+    // Модели из выбранной категории
+    const modelsInCategory = brandCategories[selectedCategory] || [];
+    return modelsInCategory
       .map(model => model.id)
       .filter(modelKey => brand.models[modelKey]);
-
-    const customModels = Object.keys(brand.models || {}).filter(modelKey => {
-      const modelData = brand.models[modelKey];
-      return modelData && 
-             typeof modelData === 'object' && 
-             modelData._category === selectedCategory;
-    });
-
-    return [...new Set([...modelsFromBrandData, ...customModels])];
   };
 
-  // === ПОИСК ПОТЕРЯННЫХ МОДЕЛЕЙ ===
-  const getOrphanedModels = () => {
-    return Object.keys(brand.models || {}).filter(modelKey => {
-        const modelData = brand.models[modelKey];
-        
-        // 1. Проверяем, есть ли модель в стандартном brandData
-        const existsInBrandData = Object.values(brandCategories).some(cat => 
-            cat.some(m => m.id === modelKey)
-        );
-        if (existsInBrandData) return false;
-
-        // 2. Проверяем, есть ли у модели метка категории
-        const hasCategoryTag = modelData && typeof modelData === 'object' && modelData._category;
-        if (hasCategoryTag) return false;
-
-        // Если нет ни в файле, ни метки -> это потерянная модель
-        return true;
+  // ДОБАВЛЕНО: Отладочный вывод для проверки структуры данных
+  React.useEffect(() => {
+    console.log(`🔍 BrandEditor: ${brandKey}, моделей: ${Object.keys(brand.models).length}`);
+    Object.keys(brand.models).forEach(modelKey => {
+      const services = getModelServices(modelKey);
+      console.log(`  Модель ${modelKey}: ${services.length} услуг`);
     });
-  };
+  }, [brandKey, brand.models]);
 
   const modelsToShow = getModelsForCategory();
-  const orphanedModels = getOrphanedModels();
 
-  const getCategoryDisplayName = (category) => {
-    return category.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Выбор модели
+  const handleModelSelect = (modelKey) => {
+    console.log(`🎯 Выбрана модель: ${modelKey}`);
+    setSelectedModel(modelKey);
   };
 
   return (
     <div className={`p-6 rounded-2xl border shadow-md mb-8 ${colorMap[brandStatus]}`}>
+      {/* Заголовок бренда с кнопками управления */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold text-gray-800 flex items-center gap-3">
           {brand.brand}
@@ -258,13 +272,44 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           </span>
         </h2>
         <div className="flex gap-2 items-center">
-          <button onClick={handleRenameBrand} className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm font-medium transition-colors">✏️ Переименовать</button>
-          <select value={brand.currency || "₽"} onChange={handleCurrencyChange} className="px-3 py-2 rounded-lg bg-blue-200 hover:bg-blue-300 text-sm font-medium transition-colors focus:ring-2 focus:ring-blue-500">
-            {currencies.map(currency => <option key={currency} value={currency}>💱 {currency}</option>)}
+          <button
+            onClick={handleRenameBrand}
+            className="px-3 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-sm font-medium transition-colors"
+          >
+            ✏️ Переименовать бренд
+          </button>
+          
+          <select
+            value={brand.currency || "₽"}
+            onChange={handleCurrencyChange}
+            className="px-3 py-2 rounded-lg bg-blue-200 hover:bg-blue-300 text-sm font-medium transition-colors focus:ring-2 focus:ring-blue-500"
+          >
+            {currencies.map(currency => (
+              <option key={currency} value={currency}>
+                💱 {currency}
+              </option>
+            ))}
           </select>
         </div>
       </div>
 
+      {/* Блок добавления моделей */}
+      <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
+        <h3 className="font-semibold text-gray-700 mb-3">Добавить модель:</h3>
+        <div className="flex flex-wrap gap-2 items-center">
+          <button
+            onClick={addCustomModel}
+            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors"
+          >
+            ➕ Создать свою модель
+          </button>
+          <span className="text-sm text-gray-500">
+            Модели из каталога добавляются автоматически при сохранении
+          </span>
+        </div>
+      </div>
+
+      {/* Выбор категории */}
       <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
         <h3 className="font-semibold text-gray-700 mb-3">Выберите категорию:</h3>
         <select
@@ -278,56 +323,108 @@ export default function BrandEditor({ brandKey, data, onChange }) {
           <option value="">— Выберите категорию —</option>
           {Object.keys(brandCategories).map(category => (
             <option key={category} value={category}>
-              {getCategoryDisplayName(category)} ({getModelsForCategoryCount(category)})
+              {category.replace(/_/g, ' ').toUpperCase()} ({brandCategories[category].filter(model => brand.models[model.id]).length})
             </option>
           ))}
+          {/* Опция для кастомных моделей */}
+          {Object.keys(brand.models || {}).filter(modelKey => {
+            for (const category of Object.values(brandCategories)) {
+              if (category.find(m => m.id === modelKey)) return false;
+            }
+            return true;
+          }).length > 0 && (
+            <option value="custom">
+              Другие модели ({Object.keys(brand.models || {}).filter(modelKey => {
+                for (const category of Object.values(brandCategories)) {
+                  if (category.find(m => m.id === modelKey)) return false;
+                }
+                return true;
+              }).length})
+            </option>
+          )}
         </select>
       </div>
 
-      {selectedCategory && (
-        <div className="bg-white p-4 rounded-lg border border-gray-200 mb-6">
-          <h3 className="font-semibold text-gray-700 mb-3">
-            Добавить модель в: <span className="text-blue-600">{getCategoryDisplayName(selectedCategory)}</span>
-          </h3>
-          <button onClick={addModelToCategory} className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium transition-colors">
-            ➕ Добавить модель в {getCategoryDisplayName(selectedCategory)}
-          </button>
-        </div>
-      )}
-
+      {/* Список моделей выбранной категории */}
       {selectedCategory && (
         <div className="mb-6">
-          <h3 className="font-semibold text-gray-700 text-lg mb-4">
-            {getCategoryDisplayName(selectedCategory)} ({modelsToShow.length})
-          </h3>
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="font-semibold text-gray-700 text-lg">
+              {selectedCategory === "custom" 
+                ? "Другие модели" 
+                : selectedCategory.replace(/_/g, ' ').toUpperCase()
+              } 
+              ({modelsToShow.length})
+            </h3>
+          </div>
+          
           {modelsToShow.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {modelsToShow.map(modelKey => (
-                <div key={modelKey} className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${selectedModel === modelKey ? 'border-blue-500 bg-blue-50 shadow-md' : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'}`} onClick={() => setSelectedModel(modelKey)}>
-                  <div className="flex justify-between items-start mb-3">
-                    <div className="flex items-center gap-2 flex-1">
-                      <span className="text-sm">{getModelStatusIcon(modelKey)}</span>
-                      <h5 className="font-medium text-gray-800 text-sm leading-tight">{getModelDisplayName(modelKey)}</h5>
+              {modelsToShow.map(modelKey => {
+                const isSelected = selectedModel === modelKey;
+                const statusColor = getModelStatusColor(modelKey);
+                const statusIcon = getModelStatusIcon(modelKey);
+                const modelStatus = getModelStatusInfo(modelKey);
+
+                return (
+                  <div
+                    key={modelKey}
+                    className={`p-4 rounded-lg border-2 cursor-pointer transition-all ${
+                      isSelected 
+                        ? 'border-blue-500 bg-blue-50 shadow-md' 
+                        : 'border-gray-200 bg-white hover:border-gray-300 hover:shadow-sm'
+                    }`}
+                    onClick={() => handleModelSelect(modelKey)}
+                  >
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2 flex-1">
+                        <span className="text-sm">{statusIcon}</span>
+                        <h5 className="font-medium text-gray-800 text-sm leading-tight">
+                          {getModelDisplayName(modelKey)}
+                        </h5>
+                      </div>
+                      <div className="flex gap-1">
+                        <button
+                          onClick={(e) => editModelName(modelKey, e)}
+                          className="text-blue-400 hover:text-blue-600 text-sm"
+                          title="Редактировать название"
+                        >
+                          ✏️
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteModel(modelKey);
+                          }}
+                          className="text-red-400 hover:text-red-600 text-sm"
+                          title="Удалить модель"
+                        >
+                          ✖
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex gap-1">
-                      <button onClick={(e) => editModelName(modelKey, e)} className="text-blue-400 hover:text-blue-600 text-sm" title="Редактировать название">✏️</button>
-                      <button onClick={(e) => deleteModel(modelKey, e)} className="text-red-400 hover:text-red-600 text-sm" title="Удалить модель">✖</button>
+                    
+                    <div className={`text-xs px-2 py-1 rounded-full ${statusColor} text-center`}>
+                      {modelStatus.status === "full" && "✓ Все услуги заполнены"}
+                      {modelStatus.status === "partial" && `⚠ ${modelStatus.emptyCount} незаполненных`}
+                      {modelStatus.status === "empty" && "✗ Нет данных"}
                     </div>
                   </div>
-                  <div className={`text-xs px-2 py-1 rounded-full ${getModelStatusColor(modelKey)} text-center`}>
-                    {getModelStatusInfo(modelKey).status === "full" && "✓ Все услуги заполнены"}
-                    {getModelStatusInfo(modelKey).status === "partial" && `⚠ ${getModelStatusInfo(modelKey).emptyCount} незаполненных`}
-                    {getModelStatusInfo(modelKey).status === "empty" && "✗ Нет данных"}
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">Нет моделей в этой категории</div>
+            <div className="text-center py-8 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
+              {selectedCategory === "custom" 
+                ? "Нет кастомных моделей" 
+                : "В этой категории нет моделей с данными"
+              }
+            </div>
           )}
         </div>
       )}
 
+      {/* Сообщение когда категория не выбрана */}
       {!selectedCategory && (
         <div className="text-center py-12 text-gray-500 border-2 border-dashed border-gray-300 rounded-lg">
           <div className="text-4xl mb-4">📱</div>
@@ -336,43 +433,29 @@ export default function BrandEditor({ brandKey, data, onChange }) {
         </div>
       )}
 
-      {/* БЛОК: ПОТЕРЯННЫЕ МОДЕЛИ */}
-      {orphanedModels.length > 0 && (
-        <div className="mt-8 p-4 bg-red-50 border-2 border-red-200 rounded-xl">
-          <h3 className="text-red-700 font-bold text-lg mb-2">🧹 Потерянные модели (без категории)</h3>
-          <p className="text-red-600 text-sm mb-4">Этих моделей нет в `brandData.js` и у них нет метки категории. Удалите их или переименуйте.</p>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {orphanedModels.map(modelKey => (
-                <div key={modelKey} className="p-3 rounded-lg border border-red-200 bg-white flex justify-between items-center">
-                    <span className="font-mono text-sm text-gray-600">{modelKey}</span>
-                    <button onClick={(e) => deleteModel(modelKey, e)} className="px-3 py-1 bg-red-100 text-red-700 rounded hover:bg-red-200 text-sm font-bold">
-                        Удалить 🗑️
-                    </button>
-                </div>
-            ))}
-          </div>
-        </div>
-      )}
-
+      {/* Редактор выбранной модели */}
       {selectedModel && (
         <div className="mt-6">
           <div className="flex justify-between items-center mb-4">
-            <h3 className="text-lg font-semibold text-gray-800">Редактирование: {getModelDisplayName(selectedModel)}</h3>
-            <button onClick={() => setSelectedModel("")} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm">✕ Закрыть</button>
+            <h3 className="text-lg font-semibold text-gray-800">
+              Редактирование: {getModelDisplayName(selectedModel)}
+            </h3>
+            <button
+              onClick={() => setSelectedModel("")}
+              className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm"
+            >
+              ✕ Закрыть
+            </button>
           </div>
-          <ModelEditor modelKey={selectedModel} services={getModelServices(selectedModel)} onChange={(updated) => handleModelChange(selectedModel, updated)} />
+          {/* 🔄 Ключ для принудительного пересоздания компонента при смене модели */}
+          <ModelEditor
+            key={selectedModel}
+            modelKey={selectedModel}
+            services={getModelServices(selectedModel)}
+            onChange={(updated) => handleModelChange(selectedModel, updated)}
+          />
         </div>
       )}
     </div>
   );
-
-  function getModelsForCategoryCount(category) {
-    if (!category) return 0;
-    const modelsFromBrandData = (brandCategories[category] || []).map(model => model.id).filter(modelKey => brand.models[modelKey]).length;
-    const customModels = Object.keys(brand.models || {}).filter(modelKey => {
-      const modelData = brand.models[modelKey];
-      return modelData && typeof modelData === 'object' && modelData._category === category;
-    }).length;
-    return modelsFromBrandData + customModels;
-  }
 }
