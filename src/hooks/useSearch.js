@@ -14,6 +14,7 @@ export const useSearch = (query) => {
               models.push({
                 brand: brandInfo.brand || brandKey,
                 model: model.name,
+                modelId: model.id, // Добавлено modelId
                 brandKey,
                 searchString: `${brandInfo.brand || brandKey} ${model.name}`.toLowerCase()
               });

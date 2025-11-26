@@ -40,10 +40,10 @@ export default function Home() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelect = (brand, model) => {
+  const handleSelect = (brand, modelId) => {
     setQuery("");
     setShowSuggestions(false);
-    navigate(`/brand/${brand}/model/${encodeURIComponent(model)}`);
+    navigate(`/brand/${brand}/model/${encodeURIComponent(modelId)}`);
   };
 
   const handleSearchAll = () => {
@@ -149,7 +149,7 @@ export default function Home() {
                       {results.slice(0, 8).map((item, idx) => (
                         <li
                           key={idx}
-                          onClick={() => handleSelect(item.brandKey, item.model)}
+                          onClick={() => handleSelect(item.brandKey, item.modelId)}
                           className="px-6 py-3 hover:bg-blue-50 cursor-pointer flex justify-between items-center transition-colors border-b border-gray-100 last:border-none"
                         >
                           <span className="font-medium text-gray-700">{item.model}</span>
