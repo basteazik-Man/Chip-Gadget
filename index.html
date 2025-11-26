@@ -6,9 +6,29 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Чип&Гаджет</title>
     <meta name="description" content="Ремонт смартфонов, планшетов, ноутбуков и телевизоров. Профессиональный сервис Чип&Гаджет.">
+    
+    <!-- УДАЛЯЕМ PWA МАНИФЕСТ -->
+    <!-- <link rel="manifest" href="/manifest.webmanifest"> -->
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+        <h2>Чип&Гаджет</h2>
+        <p>Загрузка приложения...</p>
+      </div>
+    </div>
+    
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- СКРИПТ ДЛЯ УДАЛЕНИЯ СТАРЫХ SERVICE WORKERS -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(function(registrations) {
+          for(let registration of registrations) {
+            registration.unregister();
+          }
+        });
+      }
+    </script>
   </body>
 </html>
