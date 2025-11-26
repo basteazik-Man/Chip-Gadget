@@ -1,17 +1,13 @@
-// ModelEditor.jsx (с исправленным переключением между моделями)
-import React, { useState, useEffect } from "react";
+// src/components/admin/ModelEditor.jsx
+// ПОЛНАЯ ВЕРСИЯ: С Drag & Drop и исправленным вводом цен
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { calculateFinalPrice, safeParseFloat } from "../../utils/priceUtils";
 
 export default function ModelEditor({ modelKey, services, onChange }) {
   const [localServices, setLocalServices] = useState(services || []);
   const [draggedIndex, setDraggedIndex] = useState(null);
-
-  // 🔄 ИСПРАВЛЕНИЕ: Синхронизируем локальное состояние с входящими услугами
-  useEffect(() => {
-    console.log(`🔄 ModelEditor: получены новые услуги для модели ${modelKey}`, services);
-    setLocalServices(services || []);
-  }, [services, modelKey]);
 
   const updateService = (index, updates) => {
     const updated = [...localServices];
@@ -27,12 +23,11 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     onChange(updated);
   };
 
-  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Добавление услуги с пустым названием
   const addService = () => {
     const newService = {
-      name: "", // ← ИЗМЕНЕНО: пустая строка вместо "Новая услуга"
-      price: 0,
-      discount: 0,
+      name: "",
+      price: "",
+      discount: "",
       finalPrice: 0,
       active: true
     };
@@ -58,7 +53,6 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     const newServices = [...localServices];
     const draggedItem = newServices[draggedIndex];
     
-    // Удаляем элемент из старой позиции и вставляем в новую
     newServices.splice(draggedIndex, 1);
     newServices.splice(index, 0, draggedItem);
     
@@ -71,10 +65,10 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     setDraggedIndex(null);
   };
 
-  // Улучшенная логика ввода цен
+  // Логика фокуса (чтобы не сбрасывалось в 0 при вводе)
   const handlePriceFocus = (index) => {
     const service = localServices[index];
-    if (service.price === 0 || service.price === "0") {
+    if (service.price === 0 || service.price === "0" || service.price === "") {
       updateService(index, { price: "" });
     }
   };
@@ -85,17 +79,10 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     updateService(index, { price: value });
   };
 
-  const handleDiscountBlur = (index) => {
-    const service = localServices[index];
-    let value = safeParseFloat(service.discount);
-    value = Math.max(0, Math.min(100, value));
-    updateService(index, { discount: value });
-  };
-
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-800">Услуги модели: {modelKey}</h3>
+        <h3 className="text-xl font-semibold text-gray-800">Услуги модели</h3>
         <button
           onClick={addService}
           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
@@ -112,7 +99,6 @@ export default function ModelEditor({ modelKey, services, onChange }) {
         </div>
       ) : (
         <>
-          {/* Заголовки колонок */}
           <div className="grid grid-cols-12 gap-2 text-sm font-semibold text-gray-600 mb-3 px-3">
             <div className="col-span-4">Услуга</div>
             <div className="col-span-2 text-center">Цена</div>
@@ -146,7 +132,6 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                 whileDrag={{ scale: 1.02 }}
               >
                 <div className="flex items-center gap-3">
-                  {/* Handle для перетаскивания */}
                   <div 
                     className="cursor-grab active:cursor-grabbing text-gray-400 hover:text-gray-600 text-lg"
                     draggable
@@ -155,18 +140,16 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                   </div>
 
                   <div className="flex-1 grid grid-cols-12 gap-2 items-center">
-                    {/* Название услуги */}
                     <div className="col-span-4">
                       <input
                         type="text"
                         value={service.name || ""}
                         onChange={(e) => updateService(index, { name: e.target.value })}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        placeholder="Введите название услуги"
+                        placeholder="Название услуги"
                       />
                     </div>
 
-                    {/* Цена с улучшенной логикой */}
                     <div className="col-span-2">
                       <input
                         type="number"
@@ -178,12 +161,12 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                           updateService(index, { price: raw === "" ? "" : raw });
                         }}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        placeholder="0"
                         min="0"
                         step="100"
                       />
                     </div>
 
-                    {/* Скидка с улучшенной логикой */}
                     <div className="col-span-2">
                       <input
                         type="number"
@@ -192,15 +175,14 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                           const raw = e.target.value;
                           updateService(index, { discount: raw === "" ? "" : raw });
                         }}
-                        onBlur={() => handleDiscountBlur(index)}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        placeholder="0"
                         min="0"
                         max="100"
                         step="5"
                       />
                     </div>
 
-                    {/* Итоговая цена */}
                     <div className="col-span-2">
                       <input
                         type="number"
@@ -210,7 +192,6 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                       />
                     </div>
 
-                    {/* Статус и удаление */}
                     <div className="col-span-2 flex gap-1 justify-center">
                       <button
                         onClick={() => updateService(index, { active: !service.active })}
