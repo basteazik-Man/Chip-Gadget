@@ -115,11 +115,11 @@ const exportJSON = (data) => {
 
 const exportCategoryServices = (categoryServices) => {
   try {
-const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
-  categoryServices,
-  null,
-  2
-)};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
+    const content = `// Автоматически сгенерировано Chip&Gadget Admin\nexport const SERVICES_BY_CATEGORY = ${JSON.stringify(
+      categoryServices,
+      null,
+      2
+    )};\n\nexport const SERVICES = Object.values(SERVICES_BY_CATEGORY).flat();`;
     
     const blob = new Blob([content], { type: "application/javascript" });
     const a = document.createElement("a");
@@ -157,6 +157,8 @@ const exportDeliveryData = () => {
   }
 };
 
+// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ТРАНСФОРМАЦИИ ===
+// Теперь она умеет работать и с массивами (старые модели), и с объектами (новые модели)
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -164,9 +166,23 @@ const transformDataForExport = (data) => {
     const brand = transformed[brandKey];
     
     Object.keys(brand.models).forEach(modelKey => {
-      const services = brand.models[modelKey];
+      const modelData = brand.models[modelKey];
+      let servicesList = [];
+
+      // 1. Извлекаем массив услуг в зависимости от структуры
+      if (Array.isArray(modelData)) {
+        servicesList = modelData;
+      } else if (modelData && typeof modelData === 'object' && modelData.services) {
+        servicesList = modelData.services;
+      }
       
-      brand.models[modelKey] = services.map(service => {
+      // 2. Если услуг нет или структура неверная, ставим пустой массив
+      if (!Array.isArray(servicesList)) {
+        servicesList = [];
+      }
+
+      // 3. Трансформируем услуги
+      brand.models[modelKey] = servicesList.map(service => {
         const transformedService = {
           name: service.name || service.title || "Услуга",
           price: service.price || service.basePrice || 0,
@@ -186,6 +202,7 @@ const transformDataForExport = (data) => {
   return transformed;
 };
 
+// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ИМПОРТА ===
 const mergeImportedData = (currentData, importedData) => {
   const merged = { ...currentData };
   
@@ -193,29 +210,33 @@ const mergeImportedData = (currentData, importedData) => {
     const importedBrand = importedData[brandKey];
     
     if (merged[brandKey]) {
-      if (importedBrand.currency) {
-        merged[brandKey].currency = importedBrand.currency;
-      }
-      
-      if (importedBrand.discount) {
-        merged[brandKey].discount = importedBrand.discount;
-      }
+      if (importedBrand.currency) merged[brandKey].currency = importedBrand.currency;
+      if (importedBrand.discount) merged[brandKey].discount = importedBrand.discount;
       
       if (importedBrand.models) {
         Object.keys(importedBrand.models).forEach(modelKey => {
           if (merged[brandKey].models[modelKey]) {
+            // Получаем текущий массив услуг (даже если он внутри объекта)
+            let currentServices = [];
+            let isObjectStructure = false;
+            
+            if (Array.isArray(merged[brandKey].models[modelKey])) {
+              currentServices = merged[brandKey].models[modelKey];
+            } else {
+              currentServices = merged[brandKey].models[modelKey].services || [];
+              isObjectStructure = true;
+            }
+
             const importedServices = importedBrand.models[modelKey];
             
             if (Array.isArray(importedServices) && importedServices.length > 0) {
               const serviceMap = {};
               importedServices.forEach(service => {
                 const serviceName = service.name || service.title;
-                if (serviceName) {
-                  serviceMap[serviceName] = service;
-                }
+                if (serviceName) serviceMap[serviceName] = service;
               });
               
-              merged[brandKey].models[modelKey] = merged[brandKey].models[modelKey].map(currentService => {
+              const updatedServices = currentServices.map(currentService => {
                 const currentServiceName = currentService.name || currentService.title;
                 const importedService = serviceMap[currentServiceName];
                 if (importedService) {
@@ -229,6 +250,13 @@ const mergeImportedData = (currentData, importedData) => {
                 }
                 return currentService;
               });
+
+              // Сохраняем обновленные услуги обратно в правильную структуру
+              if (isObjectStructure) {
+                merged[brandKey].models[modelKey].services = updatedServices;
+              } else {
+                merged[brandKey].models[modelKey] = updatedServices;
+              }
             }
           }
         });
@@ -240,18 +268,14 @@ const mergeImportedData = (currentData, importedData) => {
     try {
       localStorage.setItem("chipgadget_category_services", JSON.stringify(importedData._categoryServices));
       console.log("✅ Категории услуг импортированы");
-    } catch (e) {
-      console.error("❌ Ошибка импорта категорий услуг:", e);
-    }
+    } catch (e) { console.error("❌ Ошибка импорта категорий услуг:", e); }
   }
 
   if (importedData._deliveryData) {
     try {
       localStorage.setItem("chipgadget_delivery", JSON.stringify(importedData._deliveryData));
       console.log("✅ Данные доставки импортированы");
-    } catch (e) {
-      console.error("❌ Ошибка импорта данных доставки:", e);
-    }
+    } catch (e) { console.error("❌ Ошибка импорта данных доставки:", e); }
   }
   
   return merged;
@@ -326,19 +350,15 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
   }
 };
 
+// УПРОЩЕННАЯ ФУНКЦИЯ ДЛЯ ИМПОРТА JS ФАЙЛОВ
 const parseJSFile = (fileContent, fileName) => {
   try {
     if (fileName === 'category-services') {
       const servicesMatch = fileContent.match(/export const SERVICES_BY_CATEGORY = (\{[\s\S]*?\});/);
       if (servicesMatch) {
-        const dataStr = servicesMatch[1];
-        const jsonStr = dataStr
-          .replace(/(\w+):/g, '"$1":')
-          .replace(/'/g, '"')
-          .replace(/,\s*}/g, '}')
-          .replace(/,\s*]/g, ']');
-        
-        return JSON.parse(jsonStr);
+        const dataStr = servicesMatch[1]
+          .replace(/(\w+):/g, '"$1":').replace(/'/g, '"').replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+        return JSON.parse(dataStr);
       }
       throw new Error('Не найден SERVICES_BY_CATEGORY в файле');
     }
@@ -346,34 +366,62 @@ const parseJSFile = (fileContent, fileName) => {
     if (fileName === 'delivery-data') {
       const deliveryMatch = fileContent.match(/export const DELIVERY_DATA = (\{[\s\S]*?\});/);
       if (deliveryMatch) {
-        const dataStr = deliveryMatch[1];
-        const jsonStr = dataStr
-          .replace(/(\w+):/g, '"$1":')
-          .replace(/'/g, '"')
-          .replace(/,\s*}/g, '}')
-          .replace(/,\s*]/g, ']');
-        
-        return JSON.parse(jsonStr);
+        const dataStr = deliveryMatch[1]
+          .replace(/(\w+):/g, '"$1":').replace(/'/g, '"').replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+        return JSON.parse(dataStr);
       }
       throw new Error('Не найден DELIVERY_DATA в файле');
     }
     
     const defaultMatch = fileContent.match(/export default (\{[\s\S]*?\});/);
     if (defaultMatch) {
-      const dataStr = defaultMatch[1];
-      const jsonStr = dataStr
-        .replace(/(\w+):/g, '"$1":')
-        .replace(/'/g, '"')
-        .replace(/,\s*}/g, '}')
-        .replace(/,\s*]/g, ']');
-      
-      return JSON.parse(jsonStr);
+      const dataStr = defaultMatch[1]
+        .replace(/(\w+):/g, '"$1":').replace(/'/g, '"').replace(/,\s*}/g, '}').replace(/,\s*]/g, ']');
+      return JSON.parse(dataStr);
     }
     
     throw new Error('Не найден export default в файле');
   } catch (error) {
     console.error('Ошибка парсинга JS файла:', error);
     throw new Error(`Неверный формат JS файла: ${error.message}`);
+  }
+};
+
+// ФУНКЦИЯ ЭКСПОРТА BRANDDATA
+const exportBrandData = async (data) => {
+  try {
+    const { generateUpdatedBrandData } = await import('../utils/updateBrandData');
+    const result = generateUpdatedBrandData(data);
+    
+    if (!result.hasChanges) {
+      alert("ℹ️ Нет изменений для добавления в brandData");
+      return false;
+    }
+
+    const blob = new Blob([result.content], { type: "application/javascript" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `brandData.js`;
+    a.click();
+    URL.revokeObjectURL(a.href);
+    
+    let reportMessage = `✅ BrandData обновлен!\n\n`;
+    if (result.addedModels.length > 0) {
+      const addedList = result.addedModels.map(item => `• ${item.brand} - ${item.name} (${item.category})`).join('\n');
+      reportMessage += `Добавлено моделей: ${result.addedModels.length}\n${addedList}\n\n`;
+    }
+    if (result.removedModels && result.removedModels.length > 0) {
+      const removedList = result.removedModels.map(item => `• ${item.brand} - ${item.name} (${item.category})`).join('\n');
+      reportMessage += `Удалено моделей: ${result.removedModels.length}\n${removedList}\n\n`;
+    }
+    reportMessage += `Файл "brandData.js" готов для замены существующего файла!`;
+    
+    alert(reportMessage);
+    return true;
+  } catch (error) {
+    console.error('Ошибка при экспорте BrandData:', error);
+    alert('❌ Ошибка при обновлении brandData: ' + error.message);
+    return false;
   }
 };
 
@@ -535,13 +583,23 @@ export default function AdminPanel() {
           if (mergedData[fileName] && importedData.models) {
             Object.keys(importedData.models).forEach(modelKey => {
               if (mergedData[fileName].models[modelKey]) {
-                mergedData[fileName].models[modelKey] = importedData.models[modelKey].map(service => ({
+                const modelData = mergedData[fileName].models[modelKey];
+                const importedModels = importedData.models[modelKey];
+                
+                // Поддержка новой структуры
+                const newServices = importedModels.map(service => ({
                   name: service.name || service.title || "Услуга",
                   price: service.price || service.basePrice || 0,
                   finalPrice: service.finalPrice || service.price || service.basePrice || 0,
                   active: service.active !== undefined ? service.active : true,
                   discount: service.discount || 0
                 }));
+
+                if (Array.isArray(modelData)) {
+                  mergedData[fileName].models[modelKey] = newServices;
+                } else if (typeof modelData === 'object') {
+                  mergedData[fileName].models[modelKey].services = newServices;
+                }
               }
             });
             
@@ -649,43 +707,57 @@ export default function AdminPanel() {
     }
   };
 
-const restoreAllBrands = () => {
-  if (!confirm("Восстановить все бренды? Это добавит отсутствующие бренды в текущие данные.")) return;
-  
-  const updatedData = { ...data };
-  let addedCount = 0;
-  
-  BRANDS.forEach((brand) => {
-    const key = brand.id;
-    if (!updatedData[key]) {
-      const modelsObj = {};
-      const allModels = getAllModelsFromBrandData(key);
-      
-      allModels.forEach((model) => {
-        const modelKey = typeof model === 'string' ? model : (model.id || "unknown-model");
-        modelsObj[modelKey] = [];
-      });
-
-      updatedData[key] = {
-        brand: brand.title,
-        currency: "₽",
-        discount: { type: "none", value: 0 },
-        models: modelsObj,
-      };
-      addedCount++;
+  // ФУНКЦИЯ ЭКСПОРТА BRANDDATA
+  const handleExportBrandData = async () => {
+    setIsExporting(true);
+    setMessage("🔄 Генерация обновленного BrandData...");
+    try {
+      await exportBrandData(data);
+    } catch (error) {
+      setMessage("❌ Ошибка при обновлении BrandData");
+    } finally {
+      setIsExporting(false);
+      setTimeout(() => setMessage(""), 5000);
     }
-  });
-  
-  if (addedCount > 0) {
-    setData(updatedData);
-    saveToLocal(updatedData);
-    setMessage(`✅ Добавлено ${addedCount} отсутствующих брендов`);
-  } else {
-    setMessage("✅ Все бренды уже присутствуют");
-  }
-  
-  setTimeout(() => setMessage(""), 3000);
-};
+  };
+
+  const restoreAllBrands = () => {
+    if (!confirm("Восстановить все бренды? Это добавит отсутствующие бренды в текущие данные.")) return;
+    
+    const updatedData = { ...data };
+    let addedCount = 0;
+    
+    BRANDS.forEach((brand) => {
+      const key = brand.id;
+      if (!updatedData[key]) {
+        const modelsObj = {};
+        const allModels = getAllModelsFromBrandData(key);
+        
+        allModels.forEach((model) => {
+          const modelKey = typeof model === 'string' ? model : (model.id || "unknown-model");
+          modelsObj[modelKey] = [];
+        });
+
+        updatedData[key] = {
+          brand: brand.title,
+          currency: "₽",
+          discount: { type: "none", value: 0 },
+          models: modelsObj,
+        };
+        addedCount++;
+      }
+    });
+    
+    if (addedCount > 0) {
+      setData(updatedData);
+      saveToLocal(updatedData);
+      setMessage(`✅ Добавлено ${addedCount} отсутствующих брендов`);
+    } else {
+      setMessage("✅ Все бренды уже присутствуют");
+    }
+    
+    setTimeout(() => setMessage(""), 3000);
+  };
 
   const getBrandStyle = (key) => {
     const { status } = getBrandStatus(data[key]);
@@ -787,6 +859,15 @@ const restoreAllBrands = () => {
           {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
         </button>
         <button
+          onClick={handleExportBrandData}
+          disabled={isExporting}
+          className={`px-4 py-2 rounded-lg text-white font-medium ${
+            isExporting ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"
+          }`}
+        >
+          📝 Экспорт BrandData
+        </button>
+        <button
           onClick={handleExportCategoryServices}
           className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
         >
@@ -822,14 +903,13 @@ const restoreAllBrands = () => {
         >
           🗑️ Удалить бренд
         </button>
-     <button
-  onClick={restoreAllBrands}
-  className="px-4 py-2 rounded-lg text-white font-medium bg-amber-600 hover:bg-amber-700"
->
-  🔄 Восстановить бренды
-</button>
-
-	 </div>
+        <button
+          onClick={restoreAllBrands}
+          className="px-4 py-2 rounded-lg text-white font-medium bg-amber-600 hover:bg-amber-700"
+        >
+          🔄 Восстановить бренды
+        </button>
+      </div>
 
       <input
         type="file"

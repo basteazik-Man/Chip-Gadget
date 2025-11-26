@@ -1,17 +1,13 @@
-// ModelEditor.jsx (с исправленным переключением между моделями)
-import React, { useState, useEffect } from "react";
+// src/components/admin/ModelEditor.jsx
+// ИСПРАВЛЕН ПУТЬ К priceUtils
+
+import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { calculateFinalPrice, safeParseFloat } from "../../utils/priceUtils";
+import { calculateFinalPrice, safeParseFloat } from "../../utils/priceUtils"; // ИСПРАВЛЕН ПУТЬ!
 
 export default function ModelEditor({ modelKey, services, onChange }) {
   const [localServices, setLocalServices] = useState(services || []);
   const [draggedIndex, setDraggedIndex] = useState(null);
-
-  // 🔄 ИСПРАВЛЕНИЕ: Синхронизируем локальное состояние с входящими услугами
-  useEffect(() => {
-    console.log(`🔄 ModelEditor: получены новые услуги для модели ${modelKey}`, services);
-    setLocalServices(services || []);
-  }, [services, modelKey]);
 
   const updateService = (index, updates) => {
     const updated = [...localServices];
@@ -27,12 +23,12 @@ export default function ModelEditor({ modelKey, services, onChange }) {
     onChange(updated);
   };
 
-  // 🔄 ИСПРАВЛЕННАЯ ФУНКЦИЯ: Добавление услуги с пустым названием
+  // ИСПРАВЛЕНО: Новая услуга с пустыми полями
   const addService = () => {
     const newService = {
-      name: "", // ← ИЗМЕНЕНО: пустая строка вместо "Новая услуга"
-      price: 0,
-      discount: 0,
+      name: "", // ПУСТОЕ поле вместо "Новая услуга"
+      price: "",
+      discount: "",
       finalPrice: 0,
       active: true
     };
@@ -74,7 +70,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
   // Улучшенная логика ввода цен
   const handlePriceFocus = (index) => {
     const service = localServices[index];
-    if (service.price === 0 || service.price === "0") {
+    if (service.price === 0 || service.price === "0" || service.price === "") {
       updateService(index, { price: "" });
     }
   };
@@ -95,7 +91,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
   return (
     <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-gray-800">Услуги модели: {modelKey}</h3>
+        <h3 className="text-xl font-semibold text-gray-800">Услуги модели</h3>
         <button
           onClick={addService}
           className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
@@ -162,7 +158,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                         value={service.name || ""}
                         onChange={(e) => updateService(index, { name: e.target.value })}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm"
-                        placeholder="Введите название услуги"
+                        placeholder="Название услуги"
                       />
                     </div>
 
@@ -178,6 +174,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                           updateService(index, { price: raw === "" ? "" : raw });
                         }}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        placeholder="0"
                         min="0"
                         step="100"
                       />
@@ -194,6 +191,7 @@ export default function ModelEditor({ modelKey, services, onChange }) {
                         }}
                         onBlur={() => handleDiscountBlur(index)}
                         className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-sm text-center"
+                        placeholder="0"
                         min="0"
                         max="100"
                         step="5"
