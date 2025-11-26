@@ -1,0 +1,18 @@
+# React / Vite SPA routing fix
+RewriteEngine On
+
+# Отдаём реальные файлы, если они существуют
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# Весь остальной трафик на index.html
+RewriteRule ^ index.html [L]
+
+# MIME для Vite
+AddType application/javascript .js
+AddType application/wasm       .wasm
+AddType application/json       .json
+AddType text/css               .css
+AddType image/svg+xml          .svg
+AddType application/manifest+json .webmanifest
