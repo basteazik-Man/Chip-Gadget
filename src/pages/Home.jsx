@@ -9,6 +9,24 @@ import { FaShieldAlt, FaRocket, FaWallet, FaSearch } from "react-icons/fa";
 // Импортируем панель
 import DynamicHeroPanel from "../components/DynamicHeroPanel";
 
+// Хук для определения мобильного устройства
+const useIsMobile = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  return isMobile;
+};
+
 const FALLBACK_BRANDS = [
   { id: "apple", title: "Apple", logo: "/logos/apple.svg" },
   { id: "samsung", title: "Samsung", logo: "/logos/samsung.svg" },
@@ -24,6 +42,7 @@ export default function Home() {
   const [query, setQuery] = useState("");
   const [showSuggestions, setShowSuggestions] = useState(false);
   const navigate = useNavigate();
+  const isMobile = useIsMobile();
 
   const searchHook = useSearch || (() => ({ searchResults: [] }));
   const { searchResults: results = [] } = searchHook(query);
@@ -80,31 +99,58 @@ export default function Home() {
     },
   ];
 
+  // Упрощенные варианты анимации для мобильных
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } }
+    visible: { 
+      opacity: 1, 
+      transition: { 
+        staggerChildren: isMobile ? 0 : 0.1,
+        duration: isMobile ? 0.3 : 0.6
+      } 
+    }
   };
 
   const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0 }
+    hidden: { opacity: 0, y: isMobile ? 0 : 20 },
+    visible: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: isMobile ? 0.2 : 0.4 }
+    }
+  };
+
+  // Упрощенная анимация для брендов на мобильных
+  const brandHoverAnimation = isMobile ? {} : {
+    whileHover: { scale: 1.05, y: -5 },
+    whileTap: { scale: 0.95 }
+  };
+
+  // Упрощенная анимация для категорий на мобильных
+  const categoryAnimation = isMobile ? {} : {
+    whileHover: { scale: 1.01 },
+    whileTap: { scale: 0.98 }
   };
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-slate-50 text-gray-800">
       
-      {/* === ФОНОВЫЕ ДЕКОРАЦИИ === */}
-      <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-300/30 rounded-full blur-[100px] pointer-events-none" />
-      <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-300/30 rounded-full blur-[100px] pointer-events-none" />
+      {/* === ФОНОВЫЕ ДЕКОРАЦИИ (упрощены на мобильных) === */}
+      {!isMobile && (
+        <>
+          <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-300/30 rounded-full blur-[100px] pointer-events-none" />
+          <div className="absolute top-[20%] right-[-10%] w-96 h-96 bg-purple-300/30 rounded-full blur-[100px] pointer-events-none" />
+        </>
+      )}
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-20 flex flex-col items-center">
         
         {/* === ЗАГОЛОВОК И ПОИСК === */}
         <motion.div 
           className="text-center max-w-3xl mb-10"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: isMobile ? 0 : -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
+          transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
           <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-4 tracking-tight">
             Ремонт <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">будущего</span>
@@ -114,8 +160,10 @@ export default function Home() {
           </p>
         
           <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
-            <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+            <div className={`relative ${isMobile ? '' : 'group'}`}>
+              {!isMobile && (
+                <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
+              )}
               <div className="relative flex bg-white rounded-2xl shadow-xl">
                 <input
                   type="text"
@@ -139,9 +187,10 @@ export default function Home() {
             <AnimatePresence>
               {showSuggestions && query.trim().length > 0 && (
                 <motion.ul
-                  initial={{ opacity: 0, y: -10 }}
+                  initial={{ opacity: 0, y: isMobile ? 0 : -10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -10 }}
+                  exit={{ opacity: 0, y: isMobile ? 0 : -10 }}
+                  transition={{ duration: isMobile ? 0.1 : 0.2 }}
                   className="absolute left-0 right-0 mt-3 bg-white/95 backdrop-blur-md rounded-xl shadow-2xl border border-gray-100 z-50 overflow-hidden"
                 >
                   {results.length > 0 ? (
@@ -167,42 +216,44 @@ export default function Home() {
         </motion.div>
 
         {/* === БЛОК ПРЕИМУЩЕСТВ (СКРЫТ НА МОБИЛЬНЫХ) === */}
-        {/* hidden md:grid — скрывает блок на экранах меньше 768px */}
-        <motion.div 
-          className="hidden md:grid grid-cols-3 gap-6 w-full max-w-5xl mb-16"
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          variants={containerVariants}
-        >
-          {[
-            { icon: FaRocket, title: "Экспресс ремонт", text: "От 30 минут на типовые поломки", color: "text-blue-500" },
-            { icon: FaShieldAlt, title: "Гарантия до 1 года", text: "Официальный договор и чек", color: "text-green-500" },
-            { icon: FaWallet, title: "Честные цены", text: "Оплата только за результат", color: "text-purple-500" },
-          ].map((item, index) => (
-            <motion.div 
-              key={index} 
-              variants={itemVariants}
-              className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50 flex flex-col items-center text-center hover:translate-y-[-5px] transition-transform duration-300 border border-gray-100"
-            >
-              <item.icon className={`text-4xl mb-4 ${item.color}`} />
-              <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-              <p className="text-gray-500 text-sm">{item.text}</p>
-            </motion.div>
-          ))}
-        </motion.div>
+        {!isMobile && (
+          <motion.div 
+            className="hidden md:grid grid-cols-3 gap-6 w-full max-w-5xl mb-16"
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            variants={containerVariants}
+          >
+            {[
+              { icon: FaRocket, title: "Экспресс ремонт", text: "От 30 минут на типовые поломки", color: "text-blue-500" },
+              { icon: FaShieldAlt, title: "Гарантия до 1 года", text: "Официальный договор и чек", color: "text-green-500" },
+              { icon: FaWallet, title: "Честные цены", text: "Оплата только за результат", color: "text-purple-500" },
+            ].map((item, index) => (
+              <motion.div 
+                key={index} 
+                variants={itemVariants}
+                className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50 flex flex-col items-center text-center hover:translate-y-[-5px] transition-transform duration-300 border border-gray-100"
+              >
+                <item.icon className={`text-4xl mb-4 ${item.color}`} />
+                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
+                <p className="text-gray-500 text-sm">{item.text}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
 
         {/* === HERO PANEL (Центрирован) === */}
         <div className="w-full flex justify-center mb-12 md:mb-16">
            <DynamicHeroPanel />
         </div>
 
-        {/* === БРЕНДЫ (ЦВЕТНЫЕ) === */}
+        {/* === БРЕНДЫ === */}
         <motion.section 
           className="w-full max-w-6xl mb-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
+          transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
           <div className="text-center mb-8">
             <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Популярные бренды</h2>
@@ -213,11 +264,9 @@ export default function Home() {
               <motion.button
                 key={brand.id}
                 onClick={() => navigate(`/brand/${brand.id}`)}
-                whileHover={{ scale: 1.05, y: -5 }}
-                whileTap={{ scale: 0.95 }}
+                {...brandHoverAnimation}
                 className="flex flex-col items-center justify-center p-6 rounded-2xl bg-white shadow-md hover:shadow-xl hover:bg-blue-50 transition-all duration-300"
               >
-                {/* Убран grayscale, логотипы всегда цветные */}
                 <img
                   src={brand.logo}
                   alt={brand.title}
@@ -230,18 +279,25 @@ export default function Home() {
         </motion.section>
 
         {/* === УСЛУГИ (КРУПНЫЕ КАРТОЧКИ) === */}
-        <motion.section className="w-full max-w-6xl">
+        <motion.section 
+          className="w-full max-w-6xl"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: isMobile ? 0.3 : 0.6 }}
+        >
            <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">Другие услуги</h2>
            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.map((cat) => (
               <motion.div
                 key={cat.id}
                 onClick={() => navigate(`/services?category=${cat.id}`)}
-                whileHover={{ scale: 1.01 }}
-                whileTap={{ scale: 0.98 }}
+                {...categoryAnimation}
                 className={`relative overflow-hidden cursor-pointer rounded-3xl p-6 md:p-8 text-white shadow-2xl ${cat.shadow} bg-gradient-to-br ${cat.gradient} group`}
               >
-                <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+                {!isMobile && (
+                  <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
+                )}
                 
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
@@ -251,7 +307,7 @@ export default function Home() {
                       Рассчитать стоимость →
                     </div>
                   </div>
-                  <span className="text-5xl md:text-6xl drop-shadow-lg transform group-hover:rotate-12 transition-transform duration-300">
+                  <span className={`text-5xl md:text-6xl drop-shadow-lg ${isMobile ? '' : 'transform group-hover:rotate-12 transition-transform duration-300'}`}>
                     {cat.icon}
                   </span>
                 </div>
