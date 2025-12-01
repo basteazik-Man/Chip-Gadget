@@ -15,6 +15,7 @@ import DeliveryButton from "./components/DeliveryButton";
 import AdminPanel from "./pages/AdminPanel";
 import AdminLayout from "./components/AdminLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
+import Store from "./pages/Store"; // ← ДОБАВЛЕНО ИМПОРТ STORE
 
 function MainLayout() {
   return (
@@ -31,6 +32,7 @@ function MainLayout() {
             <Route path="/services" element={<Services />} />
             <Route path="/delivery" element={<DeliveryPage />} />
             <Route path="/delivery-order" element={<DeliveryOrderPage />} /> {/* ДОБАВЛЕНО */}
+            <Route path="/store" element={<Store />} /> {/* ← ДОБАВЛЕНО МАРШРУТ STORE */}
           </Routes>
           <ShareButton />
           <DeliveryButton />

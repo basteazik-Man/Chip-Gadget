@@ -145,19 +145,27 @@ export default function Home() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-20 flex flex-col items-center">
         
-        {/* === ЗАГОЛОВОК И ПОИСК === */}
+        {/* === ЗАГОЛОВОК И КНОПКА МАГАЗИНА === */}
         <motion.div 
           className="text-center max-w-3xl mb-10"
           initial={{ opacity: 0, y: isMobile ? 0 : -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
-          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-4 tracking-tight">
+          <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight">
             Ремонт <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">будущего</span>
           </h1>
-          <p className="text-lg text-gray-500 mb-8">
-            Вернем жизнь вашим гаджетам. Быстро. Честно. Профессионально.
-          </p>
+          
+          {/* Кнопка "Перейти в магазин" с тем же градиентом */}
+          <div className="mb-8">
+            <button
+              onClick={() => navigate('/store')}
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
+            >
+              <span className="text-2xl">🛒</span>
+              <span>Перейти в магазин</span>
+            </button>
+          </div>
         
           <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
             <div className={`relative ${isMobile ? '' : 'group'}`}>
