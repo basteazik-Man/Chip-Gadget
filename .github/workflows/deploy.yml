@@ -15,42 +15,20 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-        cache: 'npm'
     
-    - name: Clean install
-      run: |
-        rm -rf node_modules
-        rm -f package-lock.json
-        npm install --legacy-peer-deps
+    - name: Install dependencies
+      run: npm install
     
-    - name: Check Vite installation
-      run: |
-        echo "Checking Vite..."
-        npx vite --version
-        ls node_modules/.bin/ | grep vite
-    
-    - name: Build project
+    - name: Build project (Vite)
       run: npm run build
-    
-    - name: Add .htaccess to build
+      
+    - name: Create .htaccess file
       run: |
         cd dist
         echo 'RewriteEngine On
         RewriteCond %{REQUEST_FILENAME} !-f
         RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule . /index.html [L]
-        
-        AddType application/javascript .js
-        AddType application/javascript .mjs
-        AddType application/wasm .wasm
-        AddType text/css .css
-        AddType application/json .json
-        AddType image/svg+xml .svg' > .htaccess
-        
-        echo '/*    /index.html   200' > _redirects
-    
-    - name: List build files
-      run: ls -la dist/
+        RewriteRule . /index.html [L]' > .htaccess
     
     - name: Deploy to Beget via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.0
