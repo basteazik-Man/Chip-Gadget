@@ -22,13 +22,51 @@ jobs:
     - name: Build project (Vite)
       run: npm run build
       
-    - name: Create .htaccess file
+    - name: Create CORRECT .htaccess file
       run: |
         cd dist
-        echo 'RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule . /index.html [L]' > .htaccess
+        echo '# Правила для React Vite на Beget
+        RewriteEngine On
+        RewriteBase /
+        
+        # Существующие файлы отдаем как есть
+        RewriteCond %{REQUEST_FILENAME} -f [OR]
+        RewriteCond %{REQUEST_FILENAME} -d
+        RewriteRule ^ - [L]
+        
+        # Все остальное на index.html
+        RewriteRule ^ index.html [L]
+        
+        # КРИТИЧНО: Правильные MIME-типы для Vite
+        AddType application/javascript          .js
+        AddType application/javascript          .mjs
+        AddType application/wasm                .wasm
+        AddType text/css                        .css
+        AddType application/json                .json
+        AddType image/svg+xml                   .svg
+        AddType application/manifest+json       .webmanifest
+        
+        # Кэширование для производительности
+        <IfModule mod_expires.c>
+          ExpiresActive On
+          ExpiresByType image/jpg "access plus 1 year"
+          ExpiresByType image/jpeg "access plus 1 year"
+          ExpiresByType image/gif "access plus 1 year"
+          ExpiresByType image/png "access plus 1 year"
+          ExpiresByType image/svg+xml "access plus 1 year"
+          ExpiresByType text/css "access plus 1 month"
+          ExpiresByType application/javascript "access plus 1 month"
+        </IfModule>' > .htaccess
+        
+        # Создаем _redirects для надежности
+        echo '/*    /index.html   200' > _redirects
+    
+    - name: Check files in dist
+      run: |
+        cd dist
+        ls -la
+        echo "=== .htaccess content ==="
+        cat .htaccess
     
     - name: Deploy to Beget via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.0
