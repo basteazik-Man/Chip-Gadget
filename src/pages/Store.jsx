@@ -268,35 +268,31 @@ export default function Store() {
             <p className="text-gray-600 max-w-2xl mx-auto mb-8">
               {searchQuery
                 ? "Попробуйте изменить поисковый запрос или очистить фильтры"
-                : "Администратор добавляет товары через панель управления. Загляните сюда позже!"}
+                : "Мы активно работаем над наполнением каталога. Загляните сюда позже!"}
             </p>
             
-            {productsArray.length === 0 ? (
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 max-w-2xl mx-auto">
-                <h4 className="text-lg font-semibold text-blue-800 mb-3">Как добавить товары?</h4>
-                <ol className="text-blue-700 space-y-2 text-left max-w-md mx-auto list-decimal pl-5">
-                  <li>Войдите в админ-панель (через меню или /admin)</li>
-                  <li>Перейдите на вкладку "🛒 Товары магазина"</li>
-                  <li>Нажмите "➕ Добавить новый товар" и заполните форму</li>
-                  <li>Сохраните товар - он сразу появится здесь</li>
-                </ol>
-                <div className="mt-4">
-                  <button
-                    onClick={() => navigate("/admin")}
-                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700"
-                  >
-                    Перейти в админ-панель
-                  </button>
-                </div>
-              </div>
-            ) : (
-              <button
-                onClick={clearFilters}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-lg font-semibold hover:from-blue-700 hover:to-purple-700"
-              >
-                Показать все товары
-              </button>
-            )}
+            {/* Только клиентская информация - что будет в магазине */}
+            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-200 rounded-2xl p-6 max-w-2xl mx-auto">
+              <h4 className="text-lg font-semibold text-blue-800 mb-3">Что будет в магазине:</h4>
+              <ul className="text-blue-700 space-y-2 text-left max-w-md mx-auto">
+                <li className="flex items-start">
+                  <span className="mr-2">📱</span>
+                  <span>Смартфоны различных брендов (новая и б/у техника)</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">💻</span>
+                  <span>Ноутбуки для работы и игр</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">🎧</span>
+                  <span>Аксессуары и периферия</span>
+                </li>
+                <li className="flex items-start">
+                  <span className="mr-2">🔧</span>
+                  <span>Восстановленная техника по выгодным ценам</span>
+                </li>
+              </ul>
+            </div>
           </div>
         ) : (
           <>
