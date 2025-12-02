@@ -1,4 +1,3 @@
-// App.jsx
 import { Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import BrandPage from "./components/BrandPage";
@@ -6,7 +5,7 @@ import ModelPage from "./pages/ModelPage";
 import SearchResults from "./pages/SearchResults";
 import Services from "./pages/Services";
 import DeliveryPage from "./pages/DeliveryPage";
-import DeliveryOrderPage from "./pages/DeliveryOrderPage"; // ДОБАВЛЕНО
+import DeliveryOrderPage from "./pages/DeliveryOrderPage";
 import ScrollToTop from "./components/ScrollToTop";
 import HeaderMain from "./components/HeaderMain";
 import FooterMain from "./components/FooterMain";
@@ -15,7 +14,9 @@ import DeliveryButton from "./components/DeliveryButton";
 import AdminPanel from "./pages/AdminPanel";
 import AdminLayout from "./components/AdminLayout";
 import ErrorBoundary from "./components/ErrorBoundary";
-import Store from "./pages/Store"; // ← ДОБАВЛЕНО ИМПОРТ STORE
+import Store from "./pages/Store";
+import PWAInstallPrompt from "./components/PWAInstallPrompt";
+import OfflineIndicator from "./components/OfflineIndicator";
 
 function MainLayout() {
   return (
@@ -31,11 +32,13 @@ function MainLayout() {
             <Route path="/search" element={<SearchResults />} />
             <Route path="/services" element={<Services />} />
             <Route path="/delivery" element={<DeliveryPage />} />
-            <Route path="/delivery-order" element={<DeliveryOrderPage />} /> {/* ДОБАВЛЕНО */}
-            <Route path="/store" element={<Store />} /> {/* ← ДОБАВЛЕНО МАРШРУТ STORE */}
+            <Route path="/delivery-order" element={<DeliveryOrderPage />} />
+            <Route path="/store" element={<Store />} />
           </Routes>
           <ShareButton />
           <DeliveryButton />
+          <PWAInstallPrompt />
+          <OfflineIndicator />
         </main>
         <FooterMain />
       </div>

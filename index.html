@@ -2,13 +2,105 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Чип&Гаджет</title>
+    <title>Чип&Гаджет - Ремонт техники</title>
     <meta name="description" content="Ремонт смартфонов, планшетов, ноутбуков и телевизоров. Профессиональный сервис Чип&Гаджет.">
+    
+    <!-- PWA Мета-теги -->
+    <meta name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <link rel="manifest" href="/manifest.webmanifest">
+    
+    <!-- Для Apple -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Чип&Гаджет">
+    <link rel="apple-touch-icon" href="/logo-192.png">
+    
+    <!-- Для Windows -->
+    <meta name="msapplication-TileColor" content="#2563eb">
+    <meta name="msapplication-TileImage" content="/logo-144.png">
+    <meta name="msapplication-config" content="/browserconfig.xml">
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <!-- Регистрация Service Worker -->
+    <script>
+      // Проверка поддержки Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          // Регистрируем Service Worker
+          navigator.serviceWorker.register('/sw.js', {
+            scope: '/'
+          })
+          .then(registration => {
+            console.log('✅ Service Worker зарегистрирован успешно:', registration.scope);
+            
+            // Проверяем обновления
+            registration.addEventListener('updatefound', () => {
+              const newWorker = registration.installing;
+              console.log('🔄 Обнаружено обновление Service Worker');
+              
+              newWorker.addEventListener('statechange', () => {
+                if (newWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  console.log('📦 Новый Service Worker установлен. Обновите страницу.');
+                }
+              });
+            });
+          })
+          .catch(error => {
+            console.error('❌ Ошибка регистрации Service Worker:', error);
+          });
+          
+          // Периодически проверяем обновления
+          setInterval(() => {
+            navigator.serviceWorker.getRegistration().then(registration => {
+              if (registration) {
+                registration.update();
+              }
+            });
+          }, 60 * 60 * 1000); // Каждый час
+        });
+        
+        // Отслеживаем состояние Service Worker
+        navigator.serviceWorker.addEventListener('controllerchange', () => {
+          console.log('🎮 Активный Service Worker изменился');
+          window.location.reload();
+        });
+      }
+      
+      // Проверка, запущено ли как PWA
+      function checkPWA() {
+        const isPWA = window.matchMedia('(display-mode: standalone)').matches ||
+                     window.navigator.standalone === true;
+        
+        if (isPWA) {
+          console.log('📱 Приложение запущено как PWA');
+          document.documentElement.setAttribute('data-pwa', 'true');
+        }
+      }
+      
+      // Проверка при загрузке
+      checkPWA();
+      
+      // Отслеживаем изменения display-mode
+      window.matchMedia('(display-mode: standalone)').addEventListener('change', checkPWA);
+    </script>
+    
+    <!-- Обработка оффлайн/онлайн событий -->
+    <script>
+      window.addEventListener('online', () => {
+        console.log('🌐 Соединение восстановлено');
+        document.dispatchEvent(new CustomEvent('connectionRestored'));
+      });
+      
+      window.addEventListener('offline', () => {
+        console.log('⚠️ Потеряно соединение');
+        document.dispatchEvent(new CustomEvent('connectionLost'));
+      });
+    </script>
   </body>
 </html>

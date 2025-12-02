@@ -1,0 +1,41 @@
+{
+  "name": "Чип&Гаджет Ремонт",
+  "short_name": "Чип&Гаджет",
+  "description": "Ремонт смартфонов, планшетов, ноутбуков и телевизоров",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "ru",
+  "icons": [
+    {
+      "src": "/logo-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/logo-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["utilities", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Цены на ремонт",
+      "short_name": "Цены",
+      "description": "Узнать стоимость ремонта",
+      "url": "/services"
+    },
+    {
+      "name": "Заказать доставку",
+      "short_name": "Доставка",
+      "description": "Бесплатная доставка устройства",
+      "url": "/delivery"
+    }
+  ]
+}
