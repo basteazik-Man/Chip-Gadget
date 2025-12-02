@@ -21,14 +21,9 @@ jobs:
     
     - name: Build project (Vite)
       run: npm run build
-      
-    - name: Create .htaccess file
-      run: |
-        cd dist
-        echo 'RewriteEngine On
-        RewriteCond %{REQUEST_FILENAME} !-f
-        RewriteCond %{REQUEST_FILENAME} !-d
-        RewriteRule . /index.html [L]' > .htaccess
+    
+    - name: Check what's in dist
+      run: ls -la dist/
     
     - name: Deploy to Beget via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.0
