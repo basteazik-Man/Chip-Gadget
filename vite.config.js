@@ -140,5 +140,5 @@ export default defineConfig({
   },
   
   // Для Beget используем корневой путь
-  base: './'
+  base: '/'
 });
