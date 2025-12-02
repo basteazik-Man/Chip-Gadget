@@ -6,12 +6,13 @@ export default defineConfig({
   plugins: [
     react(),
     
+    // ⚙️ ИСПРАВЛЕННАЯ КОНФИГУРАЦИЯ PWA ДЛЯ BEGET
     VitePWA({
-      // ОСНОВНЫЕ НАСТРОЙКИ
+      // 🔧 ОСНОВНЫЕ НАСТРОЙКИ
       registerType: 'autoUpdate',
-      injectRegister: 'auto',
+      injectRegister: 'auto', // Важно! Автоматически инжектирует registerSW.js
       
-      // ФАЙЛЫ ДЛЯ PWA
+      // 🔧 ФАЙЛЫ ДЛЯ КЭШИРОВАНИЯ
       includeAssets: [
         'favicon.ico',
         'favicon.svg',
@@ -21,7 +22,7 @@ export default defineConfig({
         'apple-touch-icon.png'
       ],
       
-      // КОНФИГУРАЦИЯ SERVICE WORKER
+      // 🔧 КОНФИГУРАЦИЯ SERVICE WORKER
       workbox: {
         globPatterns: ['**/*.{js,css,html,ico,png,svg,json,webmanifest}'],
         navigateFallback: '/index.html',
@@ -29,7 +30,19 @@ export default defineConfig({
         skipWaiting: true,
         clientsClaim: true,
         
+        // Безопасное кэширование для SPA
         runtimeCaching: [
+          {
+            urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+            handler: 'CacheFirst',
+            options: {
+              cacheName: 'google-fonts-cache',
+              expiration: {
+                maxEntries: 10,
+                maxAgeSeconds: 60 * 60 * 24 * 365 // 365 дней
+              }
+            }
+          },
           {
             urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|ico)$/,
             handler: 'CacheFirst',
@@ -37,14 +50,14 @@ export default defineConfig({
               cacheName: 'image-cache',
               expiration: {
                 maxEntries: 100,
-                maxAgeSeconds: 30 * 24 * 60 * 60
+                maxAgeSeconds: 30 * 24 * 60 * 60 // 30 дней
               }
             }
           }
         ]
       },
       
-      // MANIFEST
+      // 🔧 МАНИФЕСТ
       manifest: {
         name: 'Чип&Гаджет Ремонт',
         short_name: 'Чип&Гаджет',
@@ -79,6 +92,7 @@ export default defineConfig({
           }
         ],
         
+        // 🔧 ДОПОЛНИТЕЛЬНЫЕ НАСТРОЙКИ
         categories: ['utilities', 'productivity'],
         shortcuts: [
           {
@@ -98,15 +112,19 @@ export default defineConfig({
         ]
       },
       
-      // НАСТРОЙКИ РАЗРАБОТКИ
+      // 🔧 НАСТРОЙКИ РАЗРАБОТКИ
       devOptions: {
-        enabled: false,
+        enabled: false, // Отключаем в продакшене
         type: 'module'
-      }
+      },
+      
+      // 🔧 ДОПОЛНИТЕЛЬНЫЕ ОПЦИИ
+      minify: true,
+      sourcemap: false,
+      outDir: 'dist'
     })
   ],
   
-  // БИЛД НАСТРОЙКИ
   build: {
     outDir: 'dist',
     rollupOptions: {
@@ -114,12 +132,13 @@ export default defineConfig({
         main: './index.html'
       }
     },
+    // Оптимизация для PWA
     target: 'es2020',
     minify: 'terser',
     cssCodeSplit: true,
     reportCompressedSize: false
   },
   
-  // КРИТИЧЕСКОЕ ИЗМЕНЕНИЕ: './' вместо '/'
+  // Для Beget используем корневой путь
   base: './'
 });
