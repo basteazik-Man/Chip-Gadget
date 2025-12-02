@@ -2,23 +2,19 @@
 <html lang="ru">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/x-icon" href="/favicon.ico?v=3" />
-    
-    <!-- 🔧 ДОБАВЛЕНО: Предзагрузка манифеста -->
-    <link rel="manifest" href="/manifest.webmanifest" crossorigin="use-credentials">
-    
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Чип&Гаджет</title>
+    <title>Чип&Гаджет - Ремонт техники</title>
     <meta name="description" content="Ремонт смартфонов, планшетов, ноутбуков и телевизоров. Профессиональный сервис Чип&Гаджет.">
     
-    <!-- 🔧 ДОБАВЛЕНО: Тема для PWA -->
-    <meta name="theme-color" content="#2563EB">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    
+    <!-- Убираем deprecated мета-теги -->
+    <!-- УБРАНО: <meta name="apple-mobile-web-app-capable" content="yes"> -->
+    <!-- Вместо этого: -->
+    <meta name="mobile-web-app-capable" content="yes">
   </head>
   <body>
     <div id="root"></div>
+    <!-- Vite автоматически добавит скрипт сюда -->
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
