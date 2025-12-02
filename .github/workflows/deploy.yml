@@ -37,88 +37,55 @@ jobs:
         find . -name "*.js" -o -name "*.webmanifest" -o -name "*.html" | xargs grep -l "manifest\|register\|service-worker" 2>/dev/null || echo "No PWA files found"
         
         echo -e "\n📄 Checking for generated files:"
-        [ -f "manifest.webmanifest" ] && echo "✅ manifest.webmanifest exists" || echo "❌ manifest.webmanifest missing"
-        [ -f "registerSW.js" ] && echo "✅ registerSW.js exists" || echo "❌ registerSW.js missing"
+        if [ -f "manifest.webmanifest" ]; then
+          echo "✅ manifest.webmanifest exists"
+        else
+          echo "❌ manifest.webmanifest missing"
+        fi
+        
+        if [ -f "registerSW.js" ]; then
+          echo "✅ registerSW.js exists"
+        else
+          echo "❌ registerSW.js missing"
+        fi
     
     - name: Create .htaccess for Beget
       run: |
         cd dist
         
-        # Создаем правильный .htaccess для Beget с PWA
-        cat > .htaccess << 'EOF'
-# ============================================
-# React Vite PWA Configuration for Beget
-# ============================================
-
-RewriteEngine On
-RewriteBase /
-
-# Serve existing files and directories
-RewriteCond %{REQUEST_FILENAME} -f [OR]
-RewriteCond %{REQUEST_FILENAME} -d
-RewriteRule ^ - [L]
-
-# SPA fallback
-RewriteRule ^ index.html [L]
-
-# ========== MIME TYPES FOR VITE PWA ==========
-# JavaScript
-AddType application/javascript          .js
-AddType application/javascript          .mjs
-AddType application/wasm                .wasm
-
-# CSS
-AddType text/css                        .css
-
-# Images
-AddType image/jpeg                      .jpeg .jpg
-AddType image/png                       .png
-AddType image/gif                       .gif
-AddType image/svg+xml                   .svg
-AddType image/webp                      .webp
-AddType image/x-icon                    .ico
-
-# Data
-AddType application/json                .json
-AddType application/manifest+json       .webmanifest
-AddType application/xml                 .xml
-AddType text/xml                        .xml
-
-# Fonts
-AddType font/woff                       .woff
-AddType font/woff2                      .woff2
-AddType application/vnd.ms-fontobject   .eot
-AddType font/ttf                        .ttf
-AddType font/otf                        .otf
-
-# ========== SECURITY & PERFORMANCE ==========
-# Disable directory listing
-Options -Indexes
-
-# Prevent access to .htaccess
-<Files .htaccess>
-  Order allow,deny
-  Deny from all
-</Files>
-
-# Security headers (optional)
-<IfModule mod_headers.c>
-  Header set X-Content-Type-Options "nosniff"
-  Header set X-Frame-Options "SAMEORIGIN"
-  Header set X-XSS-Protection "1; mode=block"
-</IfModule>
-EOF
+        # Удаляем старый .htaccess если есть
+        rm -f .htaccess
+        
+        # Создаем правильный .htaccess по строкам
+        echo 'RewriteEngine On' >> .htaccess
+        echo 'RewriteBase /' >> .htaccess
+        echo '' >> .htaccess
+        echo '# Serve existing files and directories' >> .htaccess
+        echo 'RewriteCond %{REQUEST_FILENAME} -f [OR]' >> .htaccess
+        echo 'RewriteCond %{REQUEST_FILENAME} -d' >> .htaccess
+        echo 'RewriteRule ^ - [L]' >> .htaccess
+        echo '' >> .htaccess
+        echo '# SPA fallback' >> .htaccess
+        echo 'RewriteRule ^ index.html [L]' >> .htaccess
+        echo '' >> .htaccess
+        echo '# MIME TYPES FOR VITE PWA' >> .htaccess
+        echo 'AddType application/javascript .js .mjs' >> .htaccess
+        echo 'AddType application/wasm .wasm' >> .htaccess
+        echo 'AddType text/css .css' >> .htaccess
+        echo 'AddType image/jpeg .jpeg .jpg' >> .htaccess
+        echo 'AddType image/png .png' >> .htaccess
+        echo 'AddType image/svg+xml .svg' >> .htaccess
+        echo 'AddType application/json .json' >> .htaccess
+        echo 'AddType application/manifest+json .webmanifest' >> .htaccess
         
         echo "✅ .htaccess created"
-        
-        # Проверяем содержимое
         echo -e "\n📄 .htaccess content:"
-        head -30 .htaccess
+        cat .htaccess
     
     - name: Create _redirects for SPA
       run: |
         cd dist
-        echo "/*    /index.html   200" > _redirects
+        echo '/*    /index.html   200' > _redirects
         echo "✅ _redirects created"
     
     - name: Deploy to Beget via FTP
