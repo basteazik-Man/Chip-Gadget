@@ -15,14 +15,41 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
     
-    - name: Install dependencies
-      run: npm install
+    - name: Clean install
+      run: |
+        rm -rf node_modules
+        rm -f package-lock.json
+        npm install --legacy-peer-deps
     
-    - name: Build project (Vite)
+    - name: Check Vite installation
+      run: |
+        echo "Checking Vite..."
+        npx vite --version
+        ls node_modules/.bin/ | grep vite
+    
+    - name: Build project
       run: npm run build
     
-    - name: Check what's in dist
+    - name: Add .htaccess to build
+      run: |
+        cd dist
+        echo 'RewriteEngine On
+        RewriteCond %{REQUEST_FILENAME} !-f
+        RewriteCond %{REQUEST_FILENAME} !-d
+        RewriteRule . /index.html [L]
+        
+        AddType application/javascript .js
+        AddType application/javascript .mjs
+        AddType application/wasm .wasm
+        AddType text/css .css
+        AddType application/json .json
+        AddType image/svg+xml .svg' > .htaccess
+        
+        echo '/*    /index.html   200' > _redirects
+    
+    - name: List build files
       run: ls -la dist/
     
     - name: Deploy to Beget via FTP

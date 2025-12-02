@@ -5,9 +5,9 @@
   "private": true,
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build",
+    "build": "npx vite build",
     "preview": "vite preview",
-    "deploy": "npm run build && echo 'Сборка завершена. Загрузите папку dist на сервер.'"
+    "deploy": "npm run build && echo 'Сборка завершена.'"
   },
   "dependencies": {
     "@vitejs/plugin-react": "^5.1.0",
