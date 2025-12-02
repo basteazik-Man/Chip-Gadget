@@ -639,7 +639,7 @@ const ProductEditor = () => {
                   name="screen"
                   value={formData.specs.screen}
                   onChange={handleSpecChange}
-                  placeholder="Например: 6.1" OLED"
+                  placeholder="Например: 6.1 OLED"
                   className="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-blue-500"
                 />
               </div>
