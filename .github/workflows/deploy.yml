@@ -15,58 +15,111 @@ jobs:
       uses: actions/setup-node@v3
       with:
         node-version: '18'
+        cache: 'npm'
     
     - name: Install dependencies
-      run: npm install
+      run: |
+        npm ci --legacy-peer-deps
+        echo "✅ Dependencies installed"
     
-    - name: Build project (Vite)
-      run: npm run build
-      
-    - name: Create CORRECT .htaccess file
+    - name: Build project
+      run: |
+        npm run build
+        echo "✅ Build completed"
+    
+    - name: Verify PWA files
       run: |
         cd dist
-        echo '# Правила для React Vite на Beget
-        RewriteEngine On
-        RewriteBase /
-        
-        # Существующие файлы отдаем как есть
-        RewriteCond %{REQUEST_FILENAME} -f [OR]
-        RewriteCond %{REQUEST_FILENAME} -d
-        RewriteRule ^ - [L]
-        
-        # Все остальное на index.html
-        RewriteRule ^ index.html [L]
-        
-        # КРИТИЧНО: Правильные MIME-типы для Vite
-        AddType application/javascript          .js
-        AddType application/javascript          .mjs
-        AddType application/wasm                .wasm
-        AddType text/css                        .css
-        AddType application/json                .json
-        AddType image/svg+xml                   .svg
-        AddType application/manifest+json       .webmanifest
-        
-        # Кэширование для производительности
-        <IfModule mod_expires.c>
-          ExpiresActive On
-          ExpiresByType image/jpg "access plus 1 year"
-          ExpiresByType image/jpeg "access plus 1 year"
-          ExpiresByType image/gif "access plus 1 year"
-          ExpiresByType image/png "access plus 1 year"
-          ExpiresByType image/svg+xml "access plus 1 year"
-          ExpiresByType text/css "access plus 1 month"
-          ExpiresByType application/javascript "access plus 1 month"
-        </IfModule>' > .htaccess
-        
-        # Создаем _redirects для надежности
-        echo '/*    /index.html   200' > _redirects
-    
-    - name: Check files in dist
-      run: |
-        cd dist
+        echo "📁 Files in dist after build:"
         ls -la
-        echo "=== .htaccess content ==="
-        cat .htaccess
+        
+        echo -e "\n🔍 Looking for PWA files:"
+        find . -name "*.js" -o -name "*.webmanifest" -o -name "*.html" | xargs grep -l "manifest\|register\|service-worker" 2>/dev/null || echo "No PWA files found"
+        
+        echo -e "\n📄 Checking for generated files:"
+        [ -f "manifest.webmanifest" ] && echo "✅ manifest.webmanifest exists" || echo "❌ manifest.webmanifest missing"
+        [ -f "registerSW.js" ] && echo "✅ registerSW.js exists" || echo "❌ registerSW.js missing"
+    
+    - name: Create .htaccess for Beget
+      run: |
+        cd dist
+        
+        # Создаем правильный .htaccess для Beget с PWA
+        cat > .htaccess << 'EOF'
+# ============================================
+# React Vite PWA Configuration for Beget
+# ============================================
+
+RewriteEngine On
+RewriteBase /
+
+# Serve existing files and directories
+RewriteCond %{REQUEST_FILENAME} -f [OR]
+RewriteCond %{REQUEST_FILENAME} -d
+RewriteRule ^ - [L]
+
+# SPA fallback
+RewriteRule ^ index.html [L]
+
+# ========== MIME TYPES FOR VITE PWA ==========
+# JavaScript
+AddType application/javascript          .js
+AddType application/javascript          .mjs
+AddType application/wasm                .wasm
+
+# CSS
+AddType text/css                        .css
+
+# Images
+AddType image/jpeg                      .jpeg .jpg
+AddType image/png                       .png
+AddType image/gif                       .gif
+AddType image/svg+xml                   .svg
+AddType image/webp                      .webp
+AddType image/x-icon                    .ico
+
+# Data
+AddType application/json                .json
+AddType application/manifest+json       .webmanifest
+AddType application/xml                 .xml
+AddType text/xml                        .xml
+
+# Fonts
+AddType font/woff                       .woff
+AddType font/woff2                      .woff2
+AddType application/vnd.ms-fontobject   .eot
+AddType font/ttf                        .ttf
+AddType font/otf                        .otf
+
+# ========== SECURITY & PERFORMANCE ==========
+# Disable directory listing
+Options -Indexes
+
+# Prevent access to .htaccess
+<Files .htaccess>
+  Order allow,deny
+  Deny from all
+</Files>
+
+# Security headers (optional)
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set X-Frame-Options "SAMEORIGIN"
+  Header set X-XSS-Protection "1; mode=block"
+</IfModule>
+EOF
+        
+        echo "✅ .htaccess created"
+        
+        # Проверяем содержимое
+        echo -e "\n📄 .htaccess content:"
+        head -30 .htaccess
+    
+    - name: Create _redirects for SPA
+      run: |
+        cd dist
+        echo "/*    /index.html   200" > _redirects
+        echo "✅ _redirects created"
     
     - name: Deploy to Beget via FTP
       uses: SamKirkland/FTP-Deploy-Action@v4.3.0
@@ -76,3 +129,8 @@ jobs:
         password: ${{ secrets.FTP_PASSWORD }}
         local-dir: ./dist/
         server-dir: ${{ secrets.FTP_DIR }}
+        dangerous-clean-slate: false
+        exclude: |
+          **/.git*
+          **/.git*/**
+          **/.DS_Store
