@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
 import DeliveryEditor from "../components/admin/DeliveryEditor";
+import ProductEditor from "../components/admin/ProductEditor"; // ← ДОБАВЛЕНО
 import AdminAuth from "../components/AdminAuth";
 import { getBrandStatus } from "../utils/priceUtils";
 import { BRANDS } from "../data/brands";
@@ -157,8 +158,65 @@ const exportDeliveryData = () => {
   }
 };
 
+// === ФУНКЦИИ ДЛЯ ТОВАРОВ ===
+const exportProducts = () => {
+  try {
+    const productsData = localStorage.getItem("chipgadget_products");
+    if (!productsData) {
+      alert("Нет товаров для экспорта");
+      return false;
+    }
+    
+    const blob = new Blob([productsData], { type: "application/json" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `chipgadget-products-${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    
+    return true;
+  } catch (error) {
+    console.error('Ошибка при экспорте товаров:', error);
+    return false;
+  }
+};
+
+const importProducts = (event) => {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const importedProducts = JSON.parse(e.target.result);
+      
+      if (!confirm(`Импортировать товары? Будет добавлено/обновлено ${Object.keys(importedProducts).length} товаров.`)) {
+        return;
+      }
+
+      // Получаем текущие товары
+      const currentProducts = JSON.parse(localStorage.getItem("chipgadget_products") || "{}");
+      
+      // Объединяем старые и новые (новые перезаписывают старые при совпадении ID)
+      const mergedProducts = { ...currentProducts, ...importedProducts };
+      
+      // Сохраняем обратно
+      localStorage.setItem("chipgadget_products", JSON.stringify(mergedProducts));
+      
+      alert(`✅ Товары успешно импортированы! Теперь у вас ${Object.keys(mergedProducts).length} товаров.`);
+      
+      // Перезагружаем страницу, чтобы обновить данные
+      window.location.reload();
+      
+    } catch (error) {
+      console.error('Ошибка парсинга JSON:', error);
+      alert('❌ Ошибка: неверный формат файла JSON');
+    }
+  };
+  reader.readAsText(file);
+  event.target.value = '';
+};
+
 // === ИСПРАВЛЕННАЯ ФУНКЦИЯ ТРАНСФОРМАЦИИ ===
-// Теперь она умеет работать и с массивами (старые модели), и с объектами (новые модели)
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -438,10 +496,11 @@ export default function AdminPanel() {
   const [message, setMessage] = useState("");
   const [unsaved, setUnsaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [activeTab, setActiveTab] = useState("brands");
+  const [activeTab, setActiveTab] = useState("brands"); // ← ПО УМОЛЧАНИЮ БРЕНДЫ
   const saveTimer = useRef(null);
   const importJsonRef = useRef(null);
   const importJsRef = useRef(null);
+  const importProductsRef = useRef(null); // ← ДОБАВЛЕН ДЛЯ ТОВАРОВ
 
   const handleLogout = () => {
     if (confirm("Вы уверены, что хотите выйти из админ-панели?")) {
@@ -621,6 +680,22 @@ export default function AdminPanel() {
     event.target.value = '';
   };
 
+  // === ФУНКЦИИ ДЛЯ ТОВАРОВ ===
+  const handleExportProducts = () => {
+    const success = exportProducts();
+    if (success) {
+      setMessage("✅ Товары экспортированы в JSON файл");
+      setTimeout(() => setMessage(""), 3000);
+    } else {
+      setMessage("❌ Ошибка при экспорте товаров");
+      setTimeout(() => setMessage(""), 3000);
+    }
+  };
+
+  const handleImportProducts = (event) => {
+    importProducts(event);
+  };
+
   const addBrand = () => {
     const name = prompt("Введите название нового бренда:");
     if (!name) return;
@@ -790,7 +865,7 @@ export default function AdminPanel() {
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 px-4 py-8">
       <div className="bg-gradient-to-r from-cyan-700 to-purple-700 text-white text-sm py-2 px-4 rounded-b-lg shadow-md mb-6 relative">
         <div className="text-center">
-          ⚙️ Админка Chip&Gadget — редактирование брендов, моделей и услуг
+          ⚙️ Админка Chip&Gadget — редактирование брендов, моделей, услуг и товаров
         </div>
         <button
           onClick={handleLogout}
@@ -833,84 +908,116 @@ export default function AdminPanel() {
           >
             🚚 Доставка
           </button>
+          {/* ← НОВАЯ КНОПКА ДЛЯ ТОВАРОВ */}
+          <button
+            onClick={() => setActiveTab("products")}
+            className={`px-6 py-2 rounded-md font-medium transition-colors ${
+              activeTab === "products" 
+                ? "bg-blue-600 text-white" 
+                : "text-gray-600 hover:text-gray-800"
+            }`}
+          >
+            🛒 Товары магазина
+          </button>
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6 justify-center">
-        <button
-          onClick={handleSave}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-cyan-600 hover:bg-cyan-700"
-        >
-          💾 Сохранить
-        </button>
-        <button
-          onClick={handleExport}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
-        >
-          ⬇️ Экспорт JSON
-        </button>
-        <button
-          onClick={handleExportJS}
-          disabled={isExporting}
-          className={`px-4 py-2 rounded-lg text-white font-medium ${
-            isExporting ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
-          }`}
-        >
-          {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
-        </button>
-        <button
-          onClick={handleExportBrandData}
-          disabled={isExporting}
-          className={`px-4 py-2 rounded-lg text-white font-medium ${
-            isExporting ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"
-          }`}
-        >
-          📝 Экспорт BrandData
-        </button>
-        <button
-          onClick={handleExportCategoryServices}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
-        >
-          📺 Экспорт ТВ/ноутбуки
-        </button>
-        <button
-          onClick={handleExportDeliveryData}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-red-600 hover:bg-red-700"
-        >
-          🚚 Экспорт доставки
-        </button>
-        <button
-          onClick={() => importJsonRef.current?.click()}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700"
-        >
-          📤 Импорт JSON
-        </button>
-        <button
-          onClick={() => importJsRef.current?.click()}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-purple-600 hover:bg-purple-700"
-        >
-          📤 Импорт JS
-        </button>
-        <button
-          onClick={addBrand}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-emerald-600 hover:bg-emerald-700"
-        >
-          ➕ Добавить бренд
-        </button>
-        <button
-          onClick={deleteBrand}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-rose-600 hover:bg-rose-700"
-        >
-          🗑️ Удалить бренд
-        </button>
-        <button
-          onClick={restoreAllBrands}
-          className="px-4 py-2 rounded-lg text-white font-medium bg-amber-600 hover:bg-amber-700"
-        >
-          🔄 Восстановить бренды
-        </button>
+        {/* Кнопки для товаров */}
+        {activeTab === "products" ? (
+          <>
+            <button
+              onClick={handleExportProducts}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
+            >
+              📤 Экспорт товаров
+            </button>
+            <button
+              onClick={() => importProductsRef.current?.click()}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700"
+            >
+              📥 Импорт товаров
+            </button>
+          </>
+        ) : (
+          <>
+            <button
+              onClick={handleSave}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-cyan-600 hover:bg-cyan-700"
+            >
+              💾 Сохранить
+            </button>
+            <button
+              onClick={handleExport}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-green-600 hover:bg-green-700"
+            >
+              ⬇️ Экспорт JSON
+            </button>
+            <button
+              onClick={handleExportJS}
+              disabled={isExporting}
+              className={`px-4 py-2 rounded-lg text-white font-medium ${
+                isExporting ? "bg-indigo-400" : "bg-indigo-600 hover:bg-indigo-700"
+              }`}
+            >
+              {isExporting ? "📦 Архив..." : "📁 Экспорт ZIP"}
+            </button>
+            <button
+              onClick={handleExportBrandData}
+              disabled={isExporting}
+              className={`px-4 py-2 rounded-lg text-white font-medium ${
+                isExporting ? "bg-purple-400" : "bg-purple-600 hover:bg-purple-700"
+              }`}
+            >
+              📝 Экспорт BrandData
+            </button>
+            <button
+              onClick={handleExportCategoryServices}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-orange-600 hover:bg-orange-700"
+            >
+              📺 Экспорт ТВ/ноутбуки
+            </button>
+            <button
+              onClick={handleExportDeliveryData}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-red-600 hover:bg-red-700"
+            >
+              🚚 Экспорт доставки
+            </button>
+            <button
+              onClick={() => importJsonRef.current?.click()}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-blue-600 hover:bg-blue-700"
+            >
+              📤 Импорт JSON
+            </button>
+            <button
+              onClick={() => importJsRef.current?.click()}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-purple-600 hover:bg-purple-700"
+            >
+              📤 Импорт JS
+            </button>
+            <button
+              onClick={addBrand}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-emerald-600 hover:bg-emerald-700"
+            >
+              ➕ Добавить бренд
+            </button>
+            <button
+              onClick={deleteBrand}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-rose-600 hover:bg-rose-700"
+            >
+              🗑️ Удалить бренд
+            </button>
+            <button
+              onClick={restoreAllBrands}
+              className="px-4 py-2 rounded-lg text-white font-medium bg-amber-600 hover:bg-amber-700"
+            >
+              🔄 Восстановить бренды
+            </button>
+          </>
+        )}
       </div>
 
+      {/* Скрытые input'ы для импорта */}
       <input
         type="file"
         accept=".json"
@@ -923,6 +1030,13 @@ export default function AdminPanel() {
         accept=".js"
         ref={importJsRef}
         onChange={handleImportJS}
+        style={{ display: 'none' }}
+      />
+      <input
+        type="file"
+        accept=".json"
+        ref={importProductsRef}
+        onChange={handleImportProducts}
         style={{ display: 'none' }}
       />
 
@@ -940,6 +1054,7 @@ export default function AdminPanel() {
         </div>
       )}
 
+      {/* Рендерим активную вкладку */}
       {activeTab === "brands" ? (
         <>
           <div className="max-w-md mx-auto bg-white/90 rounded-2xl shadow p-6 border border-gray-200 mb-8">
@@ -986,9 +1101,11 @@ export default function AdminPanel() {
           data={categoryServices} 
           onChange={setCategoryServices} 
         />
-      ) : (
+      ) : activeTab === "delivery" ? (
         <DeliveryEditor />
-      )}
+      ) : activeTab === "products" ? (
+        <ProductEditor />
+      ) : null}
     </div>
   );
 }
