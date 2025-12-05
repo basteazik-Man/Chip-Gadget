@@ -11,8 +11,9 @@ export default {
       {
         "name": "Замена экрана от",
         "price": 2500,
-        "finalPrice": 2500,
-        "active": true
+        "finalPrice": 2125,
+        "active": true,
+        "discount": 15
       },
       {
         "name": "Замена аккумулятора от",
