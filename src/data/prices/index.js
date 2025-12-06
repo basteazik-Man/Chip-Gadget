@@ -1,4 +1,4 @@
-// === index.js (финальный v4) ===
+// === index.js (финальный v5) ===
 import * as appleModule from "./apple.js";
 import * as samsungModule from "./samsung.js";
 import * as xiaomiModule from "./xiaomi.js";
@@ -7,6 +7,10 @@ import * as huaweiModule from "./huawei.js";
 import * as realmeModule from "./realme.js";
 import * as infinixModule from "./infinix.js";
 import * as tecnoModule from "./tecno.js";
+import * as blackviewModule from "./blackview.js";
+import * as doogeeModule from "./doogee.js";
+import * as oneplusModule from "./oneplus.js";
+import * as oukitelModule from "./oukitel.js";
 
 function getPrices(mod) {
   return mod.prices || mod.default || {};
@@ -20,7 +24,11 @@ export const PRICES = {
   huawei: getPrices(huaweiModule),
   realme: getPrices(realmeModule),
   infinix: getPrices(infinixModule),
-  tecno: getPrices(tecnoModule)
+  tecno: getPrices(tecnoModule),
+  blackview: getPrices(blackviewModule),
+  doogee: getPrices(doogeeModule),
+  oneplus: getPrices(oneplusModule),
+  oukitel: getPrices(oukitelModule)
 };
 
 export async function initPrices() {
