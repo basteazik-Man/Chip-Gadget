@@ -1,6 +1,6 @@
 // === brandData.js ===
 // Автоматически обновлено через админку Chip&Gadget
-// Сгенерировано: 06.12.2025, 10:30:05
+// Сгенерировано: 06.12.2025, 11:05:08
 // Новые модели: 0
 // Удаленные модели: 1
 
@@ -2405,6 +2405,11 @@ export const brandData = {
           "id": "oneplus-5",
           "name": "ONEPLUS 7",
           "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "oneplus-11",
+          "name": "ONEPLUS 7T",
+          "image": "/logos/default-phone.jpg"
         }
       ]
     }
@@ -2413,11 +2418,6 @@ export const brandData = {
     "brand": "Blackview",
     "categories": {
       "все_модели": [
-        {
-          "id": "blackview-a100",
-          "name": "Blackview A100",
-          "image": "/logos/default-phone.jpg"
-        },
         {
           "id": "bv4900/bv4900-pro/bv4900s",
           "name": "BV4900/BV4900 Pro/BV4900S",

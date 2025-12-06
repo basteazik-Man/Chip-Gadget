@@ -7,38 +7,6 @@ export default {
     "value": 0
   },
   "models": {
-    "blackview-a100": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в уз ванне",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      }
-    ],
     "bv4900/bv4900-pro/bv4900s": [
       {
         "name": "Замена дисплейного модуля",
