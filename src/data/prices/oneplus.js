@@ -6,8 +6,5 @@ export default {
     "type": "none",
     "value": 0
   },
-  "models": {
-    "oneplus-5": [],
-    "oneplus-11": []
-  }
+  "models": {}
 };

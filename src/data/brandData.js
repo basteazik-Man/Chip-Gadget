@@ -1,8 +1,8 @@
 // === brandData.js ===
 // Автоматически обновлено через админку Chip&Gadget
-// Сгенерировано: 06.12.2025, 11:05:08
+// Сгенерировано: 06.12.2025, 11:20:40
 // Новые модели: 0
-// Удаленные модели: 1
+// Удаленные модели: 2
 
 export const brandData = {
   "apple": {
@@ -2400,18 +2400,7 @@ export const brandData = {
   "oneplus": {
     "brand": "OnePlus",
     "categories": {
-      "все_модели": [
-        {
-          "id": "oneplus-5",
-          "name": "ONEPLUS 7",
-          "image": "/logos/default-phone.jpg"
-        },
-        {
-          "id": "oneplus-11",
-          "name": "ONEPLUS 7T",
-          "image": "/logos/default-phone.jpg"
-        }
-      ]
+      "все_модели": []
     }
   },
   "blackview": {
