@@ -2,9 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import BrandEditor from "../components/admin/BrandEditor";
 import CategoryServicesEditor from "../components/admin/CategoryServicesEditor";
 import DeliveryEditor from "../components/admin/DeliveryEditor";
-import ProductEditor from "../components/admin/ProductEditor"; // ← ДОБАВЛЕНО
+import ProductEditor from "../components/admin/ProductEditor";
 import AdminAuth from "../components/AdminAuth";
-import { getBrandStatus } from "../utils/priceUtils";
+import { getBrandStatus, normalizeKey } from "../utils/priceUtils";
 import { BRANDS } from "../data/brands";
 import { brandData } from "../data/brandData";
 
@@ -158,7 +158,6 @@ const exportDeliveryData = () => {
   }
 };
 
-// === ФУНКЦИИ ДЛЯ ТОВАРОВ ===
 const exportProducts = () => {
   try {
     const productsData = localStorage.getItem("chipgadget_products");
@@ -193,18 +192,14 @@ const importProducts = (event) => {
         return;
       }
 
-      // Получаем текущие товары
       const currentProducts = JSON.parse(localStorage.getItem("chipgadget_products") || "{}");
       
-      // Объединяем старые и новые (новые перезаписывают старые при совпадении ID)
       const mergedProducts = { ...currentProducts, ...importedProducts };
       
-      // Сохраняем обратно
       localStorage.setItem("chipgadget_products", JSON.stringify(mergedProducts));
       
       alert(`✅ Товары успешно импортированы! Теперь у вас ${Object.keys(mergedProducts).length} товаров.`);
       
-      // Перезагружаем страницу, чтобы обновить данные
       window.location.reload();
       
     } catch (error) {
@@ -216,7 +211,6 @@ const importProducts = (event) => {
   event.target.value = '';
 };
 
-// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ТРАНСФОРМАЦИИ ===
 const transformDataForExport = (data) => {
   const transformed = JSON.parse(JSON.stringify(data));
   
@@ -225,24 +219,19 @@ const transformDataForExport = (data) => {
     const normalizedModels = {};
     
     Object.keys(brand.models).forEach(modelKey => {
-      // НОРМАЛИЗУЕМ КЛЮЧ МОДЕЛИ ПРИ ЭКСПОРТЕ
       const normalizedKey = normalizeKey(modelKey);
       
-      // Если модель с таким нормализованным ключом уже есть, объединяем услуги
       if (normalizedModels[normalizedKey]) {
-        // Объединяем услуги из обеих моделей (уникальные по названию)
         const existingServices = normalizedModels[normalizedKey];
         const newServices = brand.models[modelKey];
         
         const serviceMap = {};
         
-        // Добавляем существующие услуги
         existingServices.forEach(service => {
           const serviceName = normalizeKey(service.name || service.title || "");
           serviceMap[serviceName] = service;
         });
         
-        // Добавляем новые услуги (перезаписываем при совпадении)
         newServices.forEach(service => {
           const serviceName = normalizeKey(service.name || service.title || "");
           serviceMap[serviceName] = {
@@ -256,7 +245,6 @@ const transformDataForExport = (data) => {
         
         normalizedModels[normalizedKey] = Object.values(serviceMap);
       } else {
-        // Первая модель с таким нормализованным ключом
         normalizedModels[normalizedKey] = brand.models[modelKey].map(service => {
           const transformedService = {
             name: service.name || service.title || "Услуга",
@@ -280,7 +268,6 @@ const transformDataForExport = (data) => {
   return transformed;
 };
 
-// === ИСПРАВЛЕННАЯ ФУНКЦИЯ ИМПОРТА ===
 const mergeImportedData = (currentData, importedData) => {
   const merged = { ...currentData };
   
@@ -294,7 +281,6 @@ const mergeImportedData = (currentData, importedData) => {
       if (importedBrand.models) {
         Object.keys(importedBrand.models).forEach(modelKey => {
           if (merged[brandKey].models[modelKey]) {
-            // Получаем текущий массив услуг (даже если он внутри объекта)
             let currentServices = [];
             let isObjectStructure = false;
             
@@ -329,7 +315,6 @@ const mergeImportedData = (currentData, importedData) => {
                 return currentService;
               });
 
-              // Сохраняем обновленные услуги обратно в правильную структуру
               if (isObjectStructure) {
                 merged[brandKey].models[modelKey].services = updatedServices;
               } else {
@@ -428,7 +413,6 @@ ${Object.keys(transformedData).map(key => `- ${key}.js → ${transformedData[key
   }
 };
 
-// УПРОЩЕННАЯ ФУНКЦИЯ ДЛЯ ИМПОРТА JS ФАЙЛОВ
 const parseJSFile = (fileContent, fileName) => {
   try {
     if (fileName === 'category-services') {
@@ -465,7 +449,6 @@ const parseJSFile = (fileContent, fileName) => {
   }
 };
 
-// ФУНКЦИЯ ЭКСПОРТА BRANDDATA
 const exportBrandData = async (data) => {
   try {
     const { generateUpdatedBrandData } = await import('../utils/updateBrandData');
@@ -516,11 +499,11 @@ export default function AdminPanel() {
   const [message, setMessage] = useState("");
   const [unsaved, setUnsaved] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
-  const [activeTab, setActiveTab] = useState("brands"); // ← ПО УМОЛЧАНИЮ БРЕНДЫ
+  const [activeTab, setActiveTab] = useState("brands");
   const saveTimer = useRef(null);
   const importJsonRef = useRef(null);
   const importJsRef = useRef(null);
-  const importProductsRef = useRef(null); // ← ДОБАВЛЕН ДЛЯ ТОВАРОВ
+  const importProductsRef = useRef(null);
 
   const handleLogout = () => {
     if (confirm("Вы уверены, что хотите выйти из админ-панели?")) {
@@ -539,7 +522,6 @@ export default function AdminPanel() {
     }
   };
 
-  // ВСЕ ХУКИ useEffect ВЫЗЫВАЮТСЯ БЕЗУСЛОВНО
   useEffect(() => {
     if (saveTimer.current) clearTimeout(saveTimer.current);
     saveTimer.current = setTimeout(() => {
@@ -665,7 +647,6 @@ export default function AdminPanel() {
                 const modelData = mergedData[fileName].models[modelKey];
                 const importedModels = importedData.models[modelKey];
                 
-                // Поддержка новой структуры
                 const newServices = importedModels.map(service => ({
                   name: service.name || service.title || "Услуга",
                   price: service.price || service.basePrice || 0,
@@ -700,7 +681,6 @@ export default function AdminPanel() {
     event.target.value = '';
   };
 
-  // === ФУНКЦИИ ДЛЯ ТОВАРОВ ===
   const handleExportProducts = () => {
     const success = exportProducts();
     if (success) {
@@ -802,7 +782,6 @@ export default function AdminPanel() {
     }
   };
 
-  // ФУНКЦИЯ ЭКСПОРТА BRANDDATA
   const handleExportBrandData = async () => {
     setIsExporting(true);
     setMessage("🔄 Генерация обновленного BrandData...");
@@ -876,7 +855,6 @@ export default function AdminPanel() {
 
   const currentBrand = brandKey ? data[brandKey] : null;
 
-  // УСЛОВНЫЙ РЕНДЕРИНГ КОМПОНЕНТОВ - ПОСЛЕ ВСЕХ ХУКОВ
   if (!authenticated) {
     return <AdminAuth onAuthenticate={setAuthenticated} />;
   }
@@ -928,7 +906,6 @@ export default function AdminPanel() {
           >
             🚚 Доставка
           </button>
-          {/* ← НОВАЯ КНОПКА ДЛЯ ТОВАРОВ */}
           <button
             onClick={() => setActiveTab("products")}
             className={`px-6 py-2 rounded-md font-medium transition-colors ${
@@ -943,7 +920,6 @@ export default function AdminPanel() {
       </div>
 
       <div className="flex flex-wrap gap-2 mb-6 justify-center">
-        {/* Кнопки для товаров */}
         {activeTab === "products" ? (
           <>
             <button
@@ -1037,7 +1013,6 @@ export default function AdminPanel() {
         )}
       </div>
 
-      {/* Скрытые input'ы для импорта */}
       <input
         type="file"
         accept=".json"
@@ -1074,7 +1049,6 @@ export default function AdminPanel() {
         </div>
       )}
 
-      {/* Рендерим активную вкладку */}
       {activeTab === "brands" ? (
         <>
           <div className="max-w-md mx-auto bg-white/90 rounded-2xl shadow p-6 border border-gray-200 mb-8">
