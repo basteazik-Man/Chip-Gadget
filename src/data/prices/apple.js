@@ -49,6 +49,12 @@ export default {
         "price": 2500,
         "finalPrice": 2500,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1000,
+        "finalPrice": 1000,
+        "active": true
       }
     ],
     "iphone-8-plus": [
@@ -92,6 +98,12 @@ export default {
         "name": "Замена микрофона",
         "price": 3000,
         "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1000,
+        "finalPrice": 1000,
         "active": true
       }
     ],
@@ -143,6 +155,12 @@ export default {
         "price": 4000,
         "finalPrice": 4000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1500,
+        "finalPrice": 1500,
+        "active": true
       }
     ],
     "iphone-xr": [
@@ -192,6 +210,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1000,
+        "finalPrice": 1000,
         "active": true
       }
     ],
@@ -243,6 +267,12 @@ export default {
         "price": 4000,
         "finalPrice": 4000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1500,
+        "finalPrice": 1500,
+        "active": true
       }
     ],
     "iphone-xs-max": [
@@ -292,6 +322,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1700,
+        "finalPrice": 1700,
         "active": true
       }
     ],
@@ -343,6 +379,12 @@ export default {
         "price": 4000,
         "finalPrice": 4000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1500,
+        "finalPrice": 1500,
+        "active": true
       }
     ],
     "iphone-11-pro": [
@@ -392,6 +434,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -443,6 +491,12 @@ export default {
         "price": 5500,
         "finalPrice": 5500,
         "active": true
+      },
+      {
+        "name": "Замена стекала камеры",
+        "price": 1500,
+        "finalPrice": 1500,
+        "active": true
       }
     ],
     "iphone-12": [
@@ -492,6 +546,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4500,
         "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       }
     ],
@@ -543,6 +603,12 @@ export default {
         "price": 4500,
         "finalPrice": 4500,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
       }
     ],
     "iphone-12-pro": [
@@ -592,6 +658,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       }
     ],
@@ -643,6 +715,12 @@ export default {
         "price": 5000,
         "finalPrice": 5000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3200,
+        "finalPrice": 3200,
+        "active": true
       }
     ],
     "iphone-13": [
@@ -693,6 +771,12 @@ export default {
         "price": 6000,
         "finalPrice": 6000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
       }
     ],
     "iphone-13-mini": [
@@ -736,6 +820,12 @@ export default {
         "name": "Замена микрофона",
         "price": 6000,
         "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 3500,
+        "finalPrice": 3500,
         "active": true
       }
     ],
@@ -787,6 +877,12 @@ export default {
         "price": 6600,
         "finalPrice": 6600,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
       }
     ],
     "iphone-13-pro-max": [
@@ -836,6 +932,12 @@ export default {
         "name": "Замена микрофона",
         "price": 7000,
         "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       }
     ],
@@ -887,6 +989,12 @@ export default {
         "price": 8000,
         "finalPrice": 8000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
       }
     ],
     "iphone-14-plus": [
@@ -930,6 +1038,12 @@ export default {
         "name": "Замена микрофона",
         "price": 8000,
         "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       }
     ],
@@ -981,6 +1095,12 @@ export default {
         "price": 10000,
         "finalPrice": 10000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
       }
     ],
     "iphone-14-pro-max": [
@@ -1030,6 +1150,12 @@ export default {
         "name": "Замена микрофона",
         "price": 12000,
         "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4500,
+        "finalPrice": 4500,
         "active": true
       }
     ],
@@ -1081,6 +1207,12 @@ export default {
         "price": 15000,
         "finalPrice": 15000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
       }
     ],
     "iphone-15-plus": [
@@ -1118,6 +1250,12 @@ export default {
         "name": "Замена микрофона",
         "price": 15000,
         "finalPrice": 15000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 4500,
+        "finalPrice": 4500,
         "active": true
       }
     ],
@@ -1157,6 +1295,12 @@ export default {
         "price": 16000,
         "finalPrice": 16000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
       }
     ],
     "iphone-15-pro-max": [
@@ -1189,6 +1333,12 @@ export default {
         "price": 18000,
         "finalPrice": 18000,
         "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
       }
     ],
     "iphone-16": [
@@ -1208,6 +1358,12 @@ export default {
         "name": "Замена задней крышки",
         "price": 16000,
         "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 5000,
+        "finalPrice": 5000,
         "active": true
       }
     ],

@@ -7,6 +7,297 @@ export default {
     "value": 0
   },
   "models": {
+    "gt": [],
+    "gt-master": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      }
+    ],
+    "gt-2": [],
+    "gt-2-pro": [
+      {
+        "name": "Замена аккумулятора",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      }
+    ],
+    "gt-neo2": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      }
+    ],
+    "gt-neo-2t": [],
+    "gt-3": [],
+    "gt-neo-3": [],
+    "gt-neo-3t": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      }
+    ],
+    "gt-5": [],
+    "gt-neo-5": [],
+    "gt-neo-5-240w": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      }
+    ],
+    "gt-neo-5-se": [],
+    "gt-5-pro": [],
+    "gt-6": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      }
+    ],
+    "gt-neo-6": [],
+    "gt-6t": [
+      {
+        "name": "Замена дисплейного модуля",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Чистка платы от влаги в ультразвуковой ванне",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      }
+    ],
+    "gt-7": [],
+    "gt-7t": [],
+    "gt-7-pro": [],
     "realme-6": [
       {
         "name": "Замена дисплейного модуля",
@@ -1001,297 +1292,6 @@ export default {
     "realme-15-5g": [],
     "realme-15-pro": [],
     "realme-15t": [],
-    "gt": [],
-    "gt-master": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 6000,
-        "finalPrice": 6000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      }
-    ],
-    "gt-2": [],
-    "gt-2-pro": [
-      {
-        "name": "Замена аккумулятора",
-        "price": 3500,
-        "finalPrice": 3500,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      }
-    ],
-    "gt-neo2": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 10000,
-        "finalPrice": 10000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 4000,
-        "finalPrice": 4000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      }
-    ],
-    "gt-neo-2t": [],
-    "gt-3": [],
-    "gt-neo-3": [],
-    "gt-neo-3t": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 10000,
-        "finalPrice": 10000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 4500,
-        "finalPrice": 4500,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      }
-    ],
-    "gt-5": [],
-    "gt-neo-5": [],
-    "gt-neo-5-240w": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Замена задней крышки",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 0,
-        "finalPrice": 0,
-        "active": true
-      }
-    ],
-    "gt-neo-5-se": [],
-    "gt-5-pro": [],
-    "gt-6": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 10000,
-        "finalPrice": 10000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 4000,
-        "finalPrice": 4000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      }
-    ],
-    "gt-neo-6": [],
-    "gt-6t": [
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 12000,
-        "finalPrice": 12000,
-        "active": true
-      },
-      {
-        "name": "Замена аккумулятора",
-        "price": 4000,
-        "finalPrice": 4000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 3000,
-        "finalPrice": 3000,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Чистка платы от влаги в ультразвуковой ванне",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      }
-    ],
-    "gt-7": [],
-    "gt-7t": [],
-    "gt-7-pro": [],
     "c2": [
       {
         "name": "Замена дисплейного модуля",
