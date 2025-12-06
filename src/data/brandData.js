@@ -1,7 +1,7 @@
 // === brandData.js ===
 // Автоматически обновлено через админку Chip&Gadget
-// Сгенерировано: 26.11.2025, 05:20:28
-// Новые модели: 2
+// Сгенерировано: 06.12.2025, 09:14:53
+// Новые модели: 23
 // Удаленные модели: 0
 
 export const brandData = {
@@ -2400,25 +2400,144 @@ export const brandData = {
   "oneplus": {
     "brand": "OnePlus",
     "categories": {
-      "все_модели": []
+      "все_модели": [
+        {
+          "id": "oneplus-5",
+          "name": "ONEPLUS 7",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "oneplus-11",
+          "name": "ONEPLUS 7T",
+          "image": "/logos/default-phone.jpg"
+        }
+      ]
     }
   },
   "blackview": {
-    "brand": "Blackview", 
+    "brand": "Blackview",
     "categories": {
-      "все_модели": []
+      "все_модели": [
+        {
+          "id": "blackview-a100",
+          "name": "Blackview A100",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv4900/bv4900-pro/bv4900s",
+          "name": "BV4900/BV4900 Pro/BV4900S",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv5200/bv5200-pro/bv5300/bv5300-pro",
+          "name": "BV5200/BV5200 Pro/BV5300/BV5300 Pro",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv6600/bv6600e",
+          "name": "BV6600/BV6600E",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv7100-",
+          "name": "BV7100 ",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv8800-",
+          "name": "BV8800 ",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv9200-",
+          "name": "BV9200 ",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "bv9300",
+          "name": "BV9300",
+          "image": "/logos/default-phone.jpg"
+        }
+      ]
     }
   },
   "doogee": {
     "brand": "Doogee",
     "categories": {
-      "все_модели": []
+      "все_модели": [
+        {
+          "id": "s100",
+          "name": "S100",
+          "image": "/logos/default-phone.jpg"
+        }
+      ]
     }
   },
   "oukitel": {
     "brand": "Oukitel",
     "categories": {
-      "все_модели": []
+      "все_модели": [
+        {
+          "id": "oukitel-wp12/12-pro",
+          "name": "Oukitel WP12/12 Pro",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp17/wp19/wp19-pro",
+          "name": "WP17/WP19/WP19 Pro",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-20",
+          "name": "WP 20",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-21",
+          "name": "WP 21",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-21-ultra",
+          "name": "WP 21 ULTRA",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-22",
+          "name": "WP 22",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-23",
+          "name": "WP 23",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-26",
+          "name": "WP 26",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-27",
+          "name": "WP 27",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp-28",
+          "name": "WP 28",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "wp36/wp36-pro",
+          "name": "WP36/WP36 Pro",
+          "image": "/logos/default-phone.jpg"
+        },
+        {
+          "id": "-oukitel-k15-plus",
+          "name": " Oukitel K15 Plus",
+          "image": "/logos/default-phone.jpg"
+        }
+      ]
     }
   }
 };
