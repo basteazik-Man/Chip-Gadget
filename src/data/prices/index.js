@@ -9,7 +9,6 @@ import * as infinixModule from "./infinix.js";
 import * as tecnoModule from "./tecno.js";
 import * as blackviewModule from "./blackview.js";
 import * as doogeeModule from "./doogee.js";
-import * as oneplusModule from "./oneplus.js";
 import * as oukitelModule from "./oukitel.js";
 
 function getPrices(mod) {
@@ -27,7 +26,6 @@ export const PRICES = {
   tecno: getPrices(tecnoModule),
   blackview: getPrices(blackviewModule),
   doogee: getPrices(doogeeModule),
-  oneplus: getPrices(oneplusModule),
   oukitel: getPrices(oukitelModule)
 };
 
