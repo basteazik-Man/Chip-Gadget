@@ -1,7 +1,8 @@
 // src/utils/updateBrandData.js
-// ИСПРАВЛЕНО: Модели теперь не дублируются во все категории
+// ИСПРАВЛЕНО: Используем normalizeKey для корректного сравнения моделей
 
 import { brandData as existingBrandData } from '../data/brandData';
+import { normalizeKey } from './priceUtils';
 
 /**
  * Генерирует обновленный brandData.js с учетом удаленных моделей
@@ -18,8 +19,12 @@ export const generateUpdatedBrandData = (pricesData) => {
       return;
     }
 
-    // Получаем все модели из админки для этого бренда
-    const adminModels = new Set(Object.keys(brandInfo.models || {}));
+    // Получаем все модели из админки для этого бренда (нормализованные ключи)
+    const adminModels = new Map();
+    Object.keys(brandInfo.models || {}).forEach(modelKey => {
+      const normalizedKey = normalizeKey(modelKey);
+      adminModels.set(normalizedKey, modelKey); // Сохраняем и оригинальный ключ
+    });
 
     // Перебираем все категории в brandData
     Object.entries(updatedBrandData[brandKey].categories).forEach(([categoryName, categoryModels]) => {
@@ -28,13 +33,16 @@ export const generateUpdatedBrandData = (pricesData) => {
       // 1. Сначала обрабатываем существующие модели в brandData (очистка удаленных)
       categoryModels.forEach(existingModel => {
         const modelId = existingModel.id;
+        const normalizedModelId = normalizeKey(modelId);
         
-        // Проверяем, есть ли эта модель в админке
-        const existsInAdmin = adminModels.has(modelId);
+        // Проверяем, есть ли эта модель в админке (по нормализованному ключу)
+        const existsInAdmin = adminModels.has(normalizedModelId);
         
         if (existsInAdmin) {
           // Модель есть в админке - оставляем
           modelsToKeep.push(existingModel);
+          // Удаляем из карты, чтобы не добавлять повторно
+          adminModels.delete(normalizedModelId);
         } else {
           // Модели нет в админке - помечаем на удаление
           removedModels.push({
@@ -48,35 +56,41 @@ export const generateUpdatedBrandData = (pricesData) => {
       });
 
       // 2. Добавляем новые модели из админки
-      adminModels.forEach(modelKey => {
-        // Проверяем, есть ли уже эта модель в текущей категории
-        const modelExists = modelsToKeep.some(model => model.id === modelKey);
+      adminModels.forEach((originalKey, normalizedKey) => {
+        // Проверяем, не добавлена ли уже эта модель в другую категорию
+        const alreadyAdded = modelsToKeep.some(model => normalizeKey(model.id) === normalizedKey);
         
-        if (!modelExists) {
-          const modelData = brandInfo.models[modelKey];
+        if (!alreadyAdded) {
+          const modelData = brandInfo.models[originalKey];
           
-          // ВАЖНОЕ ИСПРАВЛЕНИЕ: По умолчанию targetCategory = null.
-          // Раньше здесь было categoryName, из-за чего модели без метки попадали во все категории подряд.
           let targetCategory = null;
           
-          // Определяем категорию ТОЛЬКО если она явно указана в админке (для новых моделей)
+          // Определяем категорию ТОЛЬКО если она явно указана в админке
           if (modelData && typeof modelData === 'object' && modelData._category) {
             targetCategory = modelData._category;
           }
           
-          // Добавляем модель, ТОЛЬКО если она явно предназначена для текущей категории цикла
+          // Если модель не привязана к категории, пробуем определить по названию
+          if (!targetCategory) {
+            // Для брендов с категорией "все_модели"
+            if (categoryName === "все_модели") {
+              targetCategory = categoryName;
+            }
+          }
+          
+          // Добавляем модель, если она предназначена для текущей категории
           if (targetCategory && targetCategory === categoryName) {
-            const modelName = getModelDisplayName(modelKey, modelData);
+            const modelName = getModelDisplayName(originalKey, modelData);
             
             modelsToKeep.push({
-              id: modelKey,
+              id: normalizedKey, // Сохраняем нормализованный ключ
               name: modelName,
-              image: "/logos/default-phone.jpg" // Дефолтная картинка для новых
+              image: "/logos/default-phone.jpg"
             });
 
             addedModels.push({
               brand: brandKey,
-              model: modelKey,
+              model: normalizedKey,
               name: modelName,
               category: targetCategory
             });
@@ -117,7 +131,10 @@ const getModelDisplayName = (modelKey, modelData) => {
     return modelData._customName;
   }
   
-  return modelKey
+  // Убираем лишние дефисы в начале/конце
+  const cleanedKey = modelKey.replace(/^-+|-+$/g, '');
+  
+  return cleanedKey
     .replace(/-/g, ' ')
     .replace(/\b\w/g, letter => letter.toUpperCase());
 };

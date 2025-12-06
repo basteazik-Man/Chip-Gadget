@@ -1,10 +1,10 @@
 // src/components/admin/BrandEditor.jsx
-// ВЕРСИЯ С "ЧИСТИЛЬЩИКОМ" (показывает зависшие модели)
+// ВЕРСИЯ С НОРМАЛИЗАЦИЕЙ КЛЮЧЕЙ И ИСПРАВЛЕННЫМ ПОДСЧЕТОМ
 
 import React, { useState, useMemo, useEffect } from "react";
 import ModelEditor from "./ModelEditor";
 import { brandData } from "../../data/brandData";
-import { getBrandStatus, getModelStatus } from "../../utils/priceUtils";
+import { getBrandStatus, getModelStatus, normalizeKey } from "../../utils/priceUtils";
 
 export default function BrandEditor({ brandKey, data, onChange }) {
   const brand = data[brandKey];
@@ -36,7 +36,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     onChange(brandKey, updated);
   };
 
-  // ФУНКЦИЯ: Добавление модели в выбранную категорию
+  // ФУНКЦИЯ: Добавление модели в выбранную категорию (С НОРМАЛИЗАЦИЕЙ)
   const addModelToCategory = () => {
     if (!selectedCategory) {
       alert("❌ Сначала выберите категорию!");
@@ -46,18 +46,19 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     const modelName = prompt("Введите название новой модели:");
     if (!modelName) return;
 
-    const modelId = modelName.toLowerCase().replace(/\s+/g, '-');
+    const modelId = normalizeKey(modelName); // ИСПРАВЛЕНО: используем normalizeKey
     
-    // Проверяем уникальность
-    if (brand.models[modelId]) {
-      alert("❌ Модель с таким ID уже существует!");
+    // Проверяем уникальность (учитывая нормализованные ключи)
+    const existingNormalizedKeys = Object.keys(brand.models || {}).map(key => normalizeKey(key));
+    if (existingNormalizedKeys.includes(modelId)) {
+      alert("❌ Модель с таким названием уже существует (после нормализации)!");
       return;
     }
 
     // Создаем новую модель с явным указанием категории
     const newModel = {
       _customName: modelName,
-      _category: selectedCategory, // ВАЖНО: Эта метка нужна для экспорта
+      _category: selectedCategory,
       services: []
     };
 
@@ -208,36 +209,66 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     return [];
   };
 
-  // Получить модели для выбранной категории
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Получить модели для выбранной категории (без дубликатов)
   const getModelsForCategory = () => {
     if (!selectedCategory) return [];
+    
+    const uniqueModels = new Set();
+    const result = [];
 
-    const modelsFromBrandData = (brandCategories[selectedCategory] || [])
-      .map(model => model.id)
-      .filter(modelKey => brand.models[modelKey]);
-
-    const customModels = Object.keys(brand.models || {}).filter(modelKey => {
-      const modelData = brand.models[modelKey];
-      return modelData && 
-             typeof modelData === 'object' && 
-             modelData._category === selectedCategory;
+    // 1. Модели из brandData
+    const brandDataModels = brandCategories[selectedCategory] || [];
+    brandDataModels.forEach(model => {
+      const normalizedKey = normalizeKey(model.id);
+      if (brand.models[model.id] && !uniqueModels.has(normalizedKey)) {
+        uniqueModels.add(normalizedKey);
+        result.push(model.id);
+      }
     });
 
-    return [...new Set([...modelsFromBrandData, ...customModels])];
+    // 2. Кастомные модели из админки
+    Object.keys(brand.models || {}).forEach(modelKey => {
+      const modelData = brand.models[modelKey];
+      const normalizedKey = normalizeKey(modelKey);
+      
+      // Проверяем, принадлежит ли модель к выбранной категории
+      let belongsToCategory = false;
+      
+      if (modelData && typeof modelData === 'object') {
+        // Если у модели явно указана категория
+        if (modelData._category === selectedCategory) {
+          belongsToCategory = true;
+        }
+      }
+      
+      // ИЛИ если модель есть в brandData для этой категории (уже добавили выше)
+      if (!belongsToCategory) {
+        const inBrandData = brandDataModels.some(m => normalizeKey(m.id) === normalizedKey);
+        belongsToCategory = inBrandData;
+      }
+      
+      if (belongsToCategory && !uniqueModels.has(normalizedKey)) {
+        uniqueModels.add(normalizedKey);
+        result.push(modelKey);
+      }
+    });
+
+    return result;
   };
 
-  // === ПОИСК ПОТЕРЯННЫХ МОДЕЛЕЙ ===
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Поиск потерянных моделей
   const getOrphanedModels = () => {
     return Object.keys(brand.models || {}).filter(modelKey => {
         const modelData = brand.models[modelKey];
         
-        // 1. Проверяем, есть ли модель в стандартном brandData (тогда она не потеряна)
+        // 1. Проверяем, есть ли модель в стандартном brandData (по нормализованному ключу)
+        const normalizedKey = normalizeKey(modelKey);
         const existsInBrandData = Object.values(brandCategories).some(cat => 
-            cat.some(m => m.id === modelKey)
+            cat.some(m => normalizeKey(m.id) === normalizedKey)
         );
         if (existsInBrandData) return false;
 
-        // 2. Проверяем, есть ли у модели метка категории (тогда она не потеряна)
+        // 2. Проверяем, есть ли у модели метка категории
         const hasCategoryTag = modelData && typeof modelData === 'object' && modelData._category;
         if (hasCategoryTag) return false;
 
@@ -250,6 +281,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
   const orphanedModels = getOrphanedModels();
 
   const getCategoryDisplayName = (category) => {
+    if (category === "все_модели") return "Все модели";
     return category.replace(/_/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
   };
 
@@ -372,7 +404,7 @@ export default function BrandEditor({ brandKey, data, onChange }) {
             <button onClick={() => setSelectedModel("")} className="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 text-sm">✕ Закрыть</button>
           </div>
           <ModelEditor 
-            key={selectedModel} // ВАЖНО: Добавляем key для принудительного пересоздания компонента
+            key={selectedModel}
             modelKey={selectedModel} 
             services={getModelServices(selectedModel)} 
             onChange={(updated) => handleModelChange(selectedModel, updated)} 
@@ -382,13 +414,43 @@ export default function BrandEditor({ brandKey, data, onChange }) {
     </div>
   );
 
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ: Подсчет моделей в категории (без дубликатов)
   function getModelsForCategoryCount(category) {
     if (!category) return 0;
-    const modelsFromBrandData = (brandCategories[category] || []).map(model => model.id).filter(modelKey => brand.models[modelKey]).length;
-    const customModels = Object.keys(brand.models || {}).filter(modelKey => {
+    
+    const uniqueModels = new Set();
+    
+    // Модели из brandData
+    const brandDataModels = brandCategories[category] || [];
+    brandDataModels.forEach(model => {
+      if (brand.models[model.id]) {
+        uniqueModels.add(normalizeKey(model.id));
+      }
+    });
+    
+    // Кастомные модели из админки
+    Object.keys(brand.models || {}).forEach(modelKey => {
       const modelData = brand.models[modelKey];
-      return modelData && typeof modelData === 'object' && modelData._category === category;
-    }).length;
-    return modelsFromBrandData + customModels;
+      const normalizedKey = normalizeKey(modelKey);
+      
+      let belongsToCategory = false;
+      
+      if (modelData && typeof modelData === 'object') {
+        if (modelData._category === category) {
+          belongsToCategory = true;
+        }
+      }
+      
+      if (!belongsToCategory) {
+        const inBrandData = brandDataModels.some(m => normalizeKey(m.id) === normalizedKey);
+        belongsToCategory = inBrandData;
+      }
+      
+      if (belongsToCategory) {
+        uniqueModels.add(normalizedKey);
+      }
+    });
+    
+    return uniqueModels.size;
   }
 }

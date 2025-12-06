@@ -222,6 +222,67 @@ const transformDataForExport = (data) => {
   
   Object.keys(transformed).forEach(brandKey => {
     const brand = transformed[brandKey];
+    const normalizedModels = {};
+    
+    Object.keys(brand.models).forEach(modelKey => {
+      // НОРМАЛИЗУЕМ КЛЮЧ МОДЕЛИ ПРИ ЭКСПОРТЕ
+      const normalizedKey = normalizeKey(modelKey);
+      
+      // Если модель с таким нормализованным ключом уже есть, объединяем услуги
+      if (normalizedModels[normalizedKey]) {
+        // Объединяем услуги из обеих моделей (уникальные по названию)
+        const existingServices = normalizedModels[normalizedKey];
+        const newServices = brand.models[modelKey];
+        
+        const serviceMap = {};
+        
+        // Добавляем существующие услуги
+        existingServices.forEach(service => {
+          const serviceName = normalizeKey(service.name || service.title || "");
+          serviceMap[serviceName] = service;
+        });
+        
+        // Добавляем новые услуги (перезаписываем при совпадении)
+        newServices.forEach(service => {
+          const serviceName = normalizeKey(service.name || service.title || "");
+          serviceMap[serviceName] = {
+            name: service.name || service.title || "Услуга",
+            price: service.price || service.basePrice || 0,
+            finalPrice: service.finalPrice || service.price || service.basePrice || 0,
+            active: service.active !== undefined ? service.active : true,
+            discount: service.discount || 0
+          };
+        });
+        
+        normalizedModels[normalizedKey] = Object.values(serviceMap);
+      } else {
+        // Первая модель с таким нормализованным ключом
+        normalizedModels[normalizedKey] = brand.models[modelKey].map(service => {
+          const transformedService = {
+            name: service.name || service.title || "Услуга",
+            price: service.price || service.basePrice || 0,
+            finalPrice: service.finalPrice || service.price || service.basePrice || 0,
+            active: service.active !== undefined ? service.active : true
+          };
+          
+          if (service.discount && service.discount !== 0) {
+            transformedService.discount = service.discount;
+          }
+          
+          return transformedService;
+        });
+      }
+    });
+    
+    brand.models = normalizedModels;
+  });
+  
+  return transformed;
+};
+  const transformed = JSON.parse(JSON.stringify(data));
+  
+  Object.keys(transformed).forEach(brandKey => {
+    const brand = transformed[brandKey];
     
     Object.keys(brand.models).forEach(modelKey => {
       const modelData = brand.models[modelKey];
