@@ -10,8 +10,8 @@ export default {
     "s100": [
       {
         "name": "Замена дисплейного модуля",
-        "price": 4000,
-        "finalPrice": 4000,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
