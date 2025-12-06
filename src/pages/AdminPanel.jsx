@@ -279,47 +279,6 @@ const transformDataForExport = (data) => {
   
   return transformed;
 };
-  const transformed = JSON.parse(JSON.stringify(data));
-  
-  Object.keys(transformed).forEach(brandKey => {
-    const brand = transformed[brandKey];
-    
-    Object.keys(brand.models).forEach(modelKey => {
-      const modelData = brand.models[modelKey];
-      let servicesList = [];
-
-      // 1. Извлекаем массив услуг в зависимости от структуры
-      if (Array.isArray(modelData)) {
-        servicesList = modelData;
-      } else if (modelData && typeof modelData === 'object' && modelData.services) {
-        servicesList = modelData.services;
-      }
-      
-      // 2. Если услуг нет или структура неверная, ставим пустой массив
-      if (!Array.isArray(servicesList)) {
-        servicesList = [];
-      }
-
-      // 3. Трансформируем услуги
-      brand.models[modelKey] = servicesList.map(service => {
-        const transformedService = {
-          name: service.name || service.title || "Услуга",
-          price: service.price || service.basePrice || 0,
-          finalPrice: service.finalPrice || service.price || service.basePrice || 0,
-          active: service.active !== undefined ? service.active : true
-        };
-        
-        if (service.discount && service.discount !== 0) {
-          transformedService.discount = service.discount;
-        }
-        
-        return transformedService;
-      });
-    });
-  });
-  
-  return transformed;
-};
 
 // === ИСПРАВЛЕННАЯ ФУНКЦИЯ ИМПОРТА ===
 const mergeImportedData = (currentData, importedData) => {
