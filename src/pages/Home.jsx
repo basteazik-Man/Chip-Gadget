@@ -4,12 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "../hooks/useSearch";
 import { BRANDS } from "../data/brands";
-import { FaShieldAlt, FaRocket, FaWallet, FaSearch } from "react-icons/fa";
 
-// Импортируем панель
 import DynamicHeroPanel from "../components/DynamicHeroPanel";
 
-// Хук для определения мобильного устройства
+// Определяем мобильное устройство
 const useIsMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
 
@@ -19,9 +17,9 @@ const useIsMobile = () => {
     };
 
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   return isMobile;
@@ -81,61 +79,60 @@ export default function Home() {
   const brandsToShow = BRANDS && BRANDS.length > 0 ? BRANDS : FALLBACK_BRANDS;
 
   const categories = [
-    { 
-      id: "laptops", 
-      title: "Ноутбуки и ПК", 
+    {
+      id: "laptops",
+      title: "Ноутбуки и ПК",
       desc: "Чистка, апгрейд, ремонт плат",
-      icon: "💻", 
+      icon: "💻",
       gradient: "from-indigo-500 to-purple-600",
-      shadow: "shadow-indigo-500/30"
+      shadow: "shadow-indigo-500/30",
     },
-    { 
-      id: "tv", 
-      title: "Телевизоры", 
+    {
+      id: "tv",
+      title: "Телевизоры",
       desc: "Замена подсветки, матриц, БП",
-      icon: "📺", 
+      icon: "📺",
       gradient: "from-emerald-500 to-teal-600",
-      shadow: "shadow-emerald-500/30"
+      shadow: "shadow-emerald-500/30",
     },
   ];
 
-  // Упрощенные варианты анимации для мобильных
   const containerVariants = {
     hidden: { opacity: 0 },
-    visible: { 
-      opacity: 1, 
-      transition: { 
+    visible: {
+      opacity: 1,
+      transition: {
         staggerChildren: isMobile ? 0 : 0.1,
-        duration: isMobile ? 0.3 : 0.6
-      } 
-    }
+        duration: isMobile ? 0.3 : 0.6,
+      },
+    },
   };
 
   const itemVariants = {
     hidden: { opacity: 0, y: isMobile ? 0 : 20 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
-      transition: { duration: isMobile ? 0.2 : 0.4 }
-    }
+      transition: { duration: isMobile ? 0.2 : 0.4 },
+    },
   };
 
-  // Упрощенная анимация для брендов на мобильных
-  const brandHoverAnimation = isMobile ? {} : {
-    whileHover: { scale: 1.05, y: -5 },
-    whileTap: { scale: 0.95 }
-  };
+  const brandHoverAnimation = isMobile
+    ? {}
+    : {
+        whileHover: { scale: 1.05, y: -5 },
+        whileTap: { scale: 0.95 },
+      };
 
-  // Упрощенная анимация для категорий на мобильных
-  const categoryAnimation = isMobile ? {} : {
-    whileHover: { scale: 1.01 },
-    whileTap: { scale: 0.98 }
-  };
+  const categoryAnimation = isMobile
+    ? {}
+    : {
+        whileHover: { scale: 1.01 },
+        whileTap: { scale: 0.98 },
+      };
 
   return (
     <div className="relative w-full min-h-screen overflow-hidden bg-slate-50 text-gray-800">
-      
-      {/* === ФОНОВЫЕ ДЕКОРАЦИИ (упрощены на мобильных) === */}
       {!isMobile && (
         <>
           <div className="absolute top-[-10%] left-[-10%] w-96 h-96 bg-blue-300/30 rounded-full blur-[100px] pointer-events-none" />
@@ -145,30 +142,33 @@ export default function Home() {
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 pt-12 pb-20 flex flex-col items-center">
         
-        {/* === ЗАГОЛОВОК И КНОПКА МАГАЗИНА === */}
-        <motion.div 
+        {/* Заголовок и поиск */}
+        <motion.div
           className="text-center max-w-3xl mb-10"
           initial={{ opacity: 0, y: isMobile ? 0 : -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
           <h1 className="text-4xl md:text-6xl font-extrabold text-slate-800 mb-6 tracking-tight">
-            Ремонт <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">будущего</span>
+            Ремонт{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+              будущего
+            </span>
           </h1>
-          
-          {/* Кнопка "Перейти в магазин" с тем же градиентом */}
+
           <div className="mb-8">
             <button
-              onClick={() => navigate('/store')}
+              onClick={() => navigate("/store")}
               className="inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 transition-all shadow-xl hover:shadow-2xl transform hover:-translate-y-1"
             >
               <span className="text-2xl">🛒</span>
               <span>Перейти в магазин</span>
             </button>
           </div>
-        
+
+          {/* Поиск */}
           <div ref={searchRef} className="relative w-full max-w-2xl mx-auto">
-            <div className={`relative ${isMobile ? '' : 'group'}`}>
+            <div className={`relative ${isMobile ? "" : "group"}`}>
               {!isMobile && (
                 <div className="absolute -inset-1 bg-gradient-to-r from-blue-400 to-purple-400 rounded-2xl blur opacity-25 group-hover:opacity-50 transition duration-200"></div>
               )}
@@ -178,7 +178,9 @@ export default function Home() {
                   placeholder="Найти модель (например: iPhone 13)..."
                   value={query}
                   onChange={handleInputChange}
-                  onFocus={() => query.trim().length > 0 && setShowSuggestions(true)}
+                  onFocus={() =>
+                    query.trim().length > 0 && setShowSuggestions(true)
+                  }
                   onKeyDown={(e) => e.key === "Enter" && handleSearchAll()}
                   className="w-full p-4 pl-6 rounded-l-2xl outline-none text-gray-700 text-lg placeholder-gray-400"
                 />
@@ -186,7 +188,7 @@ export default function Home() {
                   onClick={handleSearchAll}
                   className="px-6 sm:px-8 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded-r-2xl transition-colors flex items-center gap-2"
                 >
-                  <FaSearch />
+                  🔍
                   <span className="hidden sm:inline">Найти</span>
                 </button>
               </div>
@@ -206,16 +208,24 @@ export default function Home() {
                       {results.slice(0, 8).map((item, idx) => (
                         <li
                           key={idx}
-                          onClick={() => handleSelect(item.brandKey, item.modelId)}
+                          onClick={() =>
+                            handleSelect(item.brandKey, item.modelId)
+                          }
                           className="px-6 py-3 hover:bg-blue-50 cursor-pointer flex justify-between items-center transition-colors border-b border-gray-100 last:border-none"
                         >
-                          <span className="font-medium text-gray-700">{item.model}</span>
-                          <span className="text-xs font-bold text-blue-500 bg-blue-100 px-2 py-1 rounded-full">{item.brand}</span>
+                          <span className="font-medium text-gray-700">
+                            {item.model}
+                          </span>
+                          <span className="text-xs font-bold text-blue-500 bg-blue-100 px-2 py-1 rounded-full">
+                            {item.brand}
+                          </span>
                         </li>
                       ))}
                     </>
                   ) : (
-                    <li className="px-6 py-4 text-center text-gray-500">Ничего не найдено 😔</li>
+                    <li className="px-6 py-4 text-center text-gray-500">
+                      Ничего не найдено 😔
+                    </li>
                   )}
                 </motion.ul>
               )}
@@ -223,40 +233,63 @@ export default function Home() {
           </div>
         </motion.div>
 
-        {/* === БЛОК ПРЕИМУЩЕСТВ (СКРЫТ НА МОБИЛЬНЫХ) === */}
+        {/* === НАШИ ПРЕИМУЩЕСТВА (с картинками) === */}
         {!isMobile && (
-          <motion.div 
+          <motion.div
             className="hidden md:grid grid-cols-3 gap-6 w-full max-w-5xl mb-16"
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
             variants={containerVariants}
           >
-            {[
-              { icon: FaRocket, title: "Экспресс ремонт", text: "От 30 минут на типовые поломки", color: "text-blue-500" },
-              { icon: FaShieldAlt, title: "Гарантия до 1 года", text: "Официальный договор и чек", color: "text-green-500" },
-              { icon: FaWallet, title: "Честные цены", text: "Оплата только за результат", color: "text-purple-500" },
-            ].map((item, index) => (
-              <motion.div 
-                key={index} 
-                variants={itemVariants}
-                className="bg-white p-6 rounded-2xl shadow-lg shadow-gray-200/50 flex flex-col items-center text-center hover:translate-y-[-5px] transition-transform duration-300 border border-gray-100"
-              >
-                <item.icon className={`text-4xl mb-4 ${item.color}`} />
-                <h3 className="font-bold text-lg mb-2">{item.title}</h3>
-                <p className="text-gray-500 text-sm">{item.text}</p>
-              </motion.div>
-            ))}
+            {/* Экспресс ремонт */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center flex flex-col items-center"
+            >
+              <img
+                src="/Гидрогелевая пленка.png"
+                className="w-32 h-32 object-contain mb-4"
+                alt="Гидрогелевая пленка"
+              />
+              <h3 className="font-bold text-lg">-50% на гидрогелевую пленку!</h3>
+            </motion.div>
+
+            {/* Гарантия */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center flex flex-col items-center"
+            >
+              <img
+                src="/remax.png"
+                className="w-32 h-32 object-contain mb-4"
+                alt="Гарантия"
+              />
+              <h3 className="font-bold text-lg">Original!</h3>
+            </motion.div>
+
+            {/* Честные цены */}
+            <motion.div
+              variants={itemVariants}
+              className="bg-white p-6 rounded-2xl shadow-lg border border-gray-100 text-center flex flex-col items-center"
+            >
+              <img
+                src="/Аксессуары.png"
+                className="w-32 h-32 object-contain mb-4"
+                alt="Аксессуары"
+              />
+              <h3 className="font-bold text-lg">АКСЕССУАРЫ</h3>
+            </motion.div>
           </motion.div>
         )}
 
-        {/* === HERO PANEL (Центрирован) === */}
+        {/* === HERO PANEL === */}
         <div className="w-full flex justify-center mb-12 md:mb-16">
-           <DynamicHeroPanel />
+          <DynamicHeroPanel />
         </div>
 
         {/* === БРЕНДЫ === */}
-        <motion.section 
+        <motion.section
           className="w-full max-w-6xl mb-16"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
@@ -264,9 +297,11 @@ export default function Home() {
           transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
           <div className="text-center mb-8">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">Популярные бренды</h2>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
+              Популярные бренды
+            </h2>
           </div>
-          
+
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
             {brandsToShow.slice(0, 12).map((brand) => (
               <motion.button
@@ -280,22 +315,27 @@ export default function Home() {
                   alt={brand.title}
                   className="w-12 h-12 object-contain mb-3"
                 />
-                <span className="font-semibold text-gray-700 text-sm">{brand.title}</span>
+                <span className="font-semibold text-gray-700 text-sm">
+                  {brand.title}
+                </span>
               </motion.button>
             ))}
           </div>
         </motion.section>
 
-        {/* === УСЛУГИ (КРУПНЫЕ КАРТОЧКИ) === */}
-        <motion.section 
+        {/* === УСЛУГИ === */}
+        <motion.section
           className="w-full max-w-6xl"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ duration: isMobile ? 0.3 : 0.6 }}
         >
-           <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">Другие услуги</h2>
-           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-800 mb-8 text-center md:text-left">
+            Другие услуги
+          </h2>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {categories.map((cat) => (
               <motion.div
                 key={cat.id}
@@ -306,22 +346,34 @@ export default function Home() {
                 {!isMobile && (
                   <div className="absolute top-[-20px] right-[-20px] w-32 h-32 bg-white/20 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500" />
                 )}
-                
+
                 <div className="relative z-10 flex items-center justify-between">
                   <div>
-                    <h3 className="text-2xl md:text-3xl font-bold mb-2">{cat.title}</h3>
-                    <p className="text-white/80 font-medium text-sm md:text-base">{cat.desc}</p>
+                    <h3 className="text-2xl md:text-3xl font-bold mb-2">
+                      {cat.title}
+                    </h3>
+                    <p className="text-white/80 font-medium text-sm md:text-base">
+                      {cat.desc}
+                    </p>
+
                     <div className="mt-6 inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-4 py-2 rounded-full text-sm font-semibold group-hover:bg-white group-hover:text-blue-600 transition-colors">
                       Рассчитать стоимость →
                     </div>
                   </div>
-                  <span className={`text-5xl md:text-6xl drop-shadow-lg ${isMobile ? '' : 'transform group-hover:rotate-12 transition-transform duration-300'}`}>
+
+                  <span
+                    className={`text-5xl md:text-6xl drop-shadow-lg ${
+                      isMobile
+                        ? ""
+                        : "transform group-hover:rotate-12 transition-transform duration-300"
+                    }`}
+                  >
                     {cat.icon}
                   </span>
                 </div>
               </motion.div>
             ))}
-           </div>
+          </div>
         </motion.section>
 
       </div>
