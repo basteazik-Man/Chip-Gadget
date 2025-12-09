@@ -43,7 +43,7 @@ const slidesDesktop = [
   },
 ];
 
-// ===== Слайды для мобильной версии (ваши картинки) =====
+// ===== Слайды для мобильной версии =====
 const slidesMobile = [
   {
     id: 1,
@@ -137,7 +137,12 @@ export default function DynamicHeroPanel() {
       </div>
 
       {/* Индикаторы (точки) */}
-      <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-2 z-10">
+      <div
+        className={`
+          absolute left-0 right-0 flex justify-center space-x-2 z-10
+          ${isMobile ? "bottom-14" : "bottom-4"}
+        `}
+      >
         {slides.map((_, i) => (
           <button
             key={i}
