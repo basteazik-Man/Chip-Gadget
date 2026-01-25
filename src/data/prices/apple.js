@@ -109,7 +109,19 @@ export default {
     ],
     "iphone-x": [
       {
-        "name": "Замена экрана AMOLED от",
+        "name": "Замена экрана копия in-cell (без гарантии)",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED ",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. (уточняйте наличие)",
         "price": 5000,
         "finalPrice": 5000,
         "active": true
@@ -165,9 +177,27 @@ export default {
     ],
     "iphone-xr": [
       {
-        "name": "Замена экрана от",
+        "name": "Замена дисплея копия \"Стандарт\"",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплея копия \"Премиум\"",
         "price": 3500,
         "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплея ориг переклей (уточняйте наличие)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена диспллея ориг снятый (уточняйте наличие)",
+        "price": 6000,
+        "finalPrice": 6000,
         "active": true
       },
       {
@@ -221,9 +251,21 @@ export default {
     ],
     "iphone-xs": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 5500,
-        "finalPrice": 5500,
+        "name": "Замена экрана копия in-cell (без гарантии)",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. (уточняйте наличие)",
+        "price": 7000,
+        "finalPrice": 7000,
         "active": true
       },
       {
@@ -277,9 +319,27 @@ export default {
     ],
     "iphone-xs-max": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 6000,
-        "finalPrice": 6000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. (уточняйте наличие)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1700,
+        "finalPrice": 1700,
         "active": true
       },
       {
@@ -323,19 +383,25 @@ export default {
         "price": 4000,
         "finalPrice": 4000,
         "active": true
-      },
-      {
-        "name": "Замена стекла камеры",
-        "price": 1700,
-        "finalPrice": 1700,
-        "active": true
       }
     ],
     "iphone-11": [
       {
-        "name": "Замена экрана от",
+        "name": "Замена экрана копия \"стандарт\"",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия \"премиум\"",
         "price": 3500,
         "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. (уточняйте наличие)",
+        "price": 6000,
+        "finalPrice": 6000,
         "active": true
       },
       {
@@ -389,15 +455,39 @@ export default {
     ],
     "iphone-11-pro": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
         "name": "Замена аккумулятора",
         "price": 3500,
         "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       },
       {
@@ -435,19 +525,37 @@ export default {
         "price": 4000,
         "finalPrice": 4000,
         "active": true
-      },
-      {
-        "name": "Замена стекла камеры",
-        "price": 1500,
-        "finalPrice": 1500,
-        "active": true
       }
     ],
     "iphone-11-pro-max": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 6000,
-        "finalPrice": 6000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED стандарт",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана AMOLED премиум",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг переклей (уточняйте наличие)",
+        "price": 11000,
+        "finalPrice": 11000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг снятый (уточняйте наличие)",
+        "price": 16000,
+        "finalPrice": 16000,
         "active": true
       },
       {
@@ -501,9 +609,33 @@ export default {
     ],
     "iphone-12": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 6500,
-        "finalPrice": 6500,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED стандарт",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана AMOLED премиум",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг переклей (уточняйте наличие)",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг снятый (уточняйте наличие)",
+        "price": 14000,
+        "finalPrice": 14000,
         "active": true
       },
       {
@@ -557,9 +689,33 @@ export default {
     ],
     "iphone-12-mini": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED стандарт",
+        "price": 6500,
+        "finalPrice": 6500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED премиум ",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг переклей (уточняйте наличие)",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг снятый (уточняйте наличие)",
+        "price": 15000,
+        "finalPrice": 15000,
         "active": true
       },
       {
@@ -613,9 +769,33 @@ export default {
     ],
     "iphone-12-pro": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 6500,
-        "finalPrice": 6500,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 11000,
+        "finalPrice": 11000,
         "active": true
       },
       {
@@ -669,9 +849,33 @@ export default {
     ],
     "iphone-12-pro-max": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 8000,
-        "finalPrice": 8000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED-  стандарт",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED-  премиум",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг переклей (уточняйте наличие)",
+        "price": 18000,
+        "finalPrice": 18000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг снятый (уточняйте наличие)",
+        "price": 23000,
+        "finalPrice": 23000,
         "active": true
       },
       {
@@ -725,9 +929,39 @@ export default {
     ],
     "iphone-13": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 14000,
+        "finalPrice": 14000,
         "active": true
       },
       {
@@ -781,9 +1015,15 @@ export default {
     ],
     "iphone-13-mini": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 8000,
+        "finalPrice": 8000,
         "active": true
       },
       {
@@ -831,9 +1071,39 @@ export default {
     ],
     "iphone-13-pro": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 10000,
-        "finalPrice": 10000,
+        "name": "Замена экрана in-cell",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- старндарт",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- старндарт плюс",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум ",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплея ориг. переклей (уточняйте наличие)",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплея ориг. снятый  (уточняйте наличие)",
+        "price": 21000,
+        "finalPrice": 21000,
         "active": true
       },
       {
@@ -887,9 +1157,39 @@ export default {
     ],
     "iphone-13-pro-max": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 10000,
-        "finalPrice": 10000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана AMOLED - премиум",
+        "price": 12500,
+        "finalPrice": 12500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 18000,
+        "finalPrice": 18000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 28000,
+        "finalPrice": 28000,
         "active": true
       },
       {
@@ -943,9 +1243,33 @@ export default {
     ],
     "iphone-14": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 11000,
-        "finalPrice": 11000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -999,9 +1323,21 @@ export default {
     ],
     "iphone-14-plus": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 15000,
-        "finalPrice": 15000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED станадарт",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED премиум",
+        "price": 12500,
+        "finalPrice": 12500,
         "active": true
       },
       {
@@ -1049,9 +1385,33 @@ export default {
     ],
     "iphone-14-pro": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 18000,
-        "finalPrice": 18000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 21500,
+        "finalPrice": 21500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 30000,
+        "finalPrice": 30000,
         "active": true
       },
       {
@@ -1105,9 +1465,39 @@ export default {
     ],
     "iphone-14-pro-max": [
       {
-        "name": "Замена экрана AMOLED от",
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарнт",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарнт плюс",
         "price": 18000,
         "finalPrice": 18000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 20000,
+        "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей",
+        "price": 28000,
+        "finalPrice": 28000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый",
+        "price": 45000,
+        "finalPrice": 45000,
         "active": true
       },
       {
@@ -1161,9 +1551,39 @@ export default {
     ],
     "iphone-15": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 20000,
-        "finalPrice": 20000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт пллюс",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 22000,
+        "finalPrice": 22000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 0,
+        "finalPrice": 0,
         "active": true
       },
       {
@@ -1217,9 +1637,39 @@ export default {
     ],
     "iphone-15-plus": [
       {
-        "name": "Замена экрана AMOLED от",
+        "name": "Замена экрана in-cell (без гарантии) НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
         "price": 20000,
         "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей. (уточняйте наличие)",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 0,
+        "finalPrice": 0,
         "active": true
       },
       {
@@ -1261,9 +1711,39 @@ export default {
     ],
     "iphone-15-pro": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 20000,
-        "finalPrice": 20000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 12500,
+        "finalPrice": 12500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 18000,
+        "finalPrice": 18000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 27000,
+        "finalPrice": 27000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 39000,
+        "finalPrice": 39000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 43000,
+        "finalPrice": 43000,
         "active": true
       },
       {
@@ -1305,9 +1785,39 @@ export default {
     ],
     "iphone-15-pro-max": [
       {
-        "name": "Замена экрана AMOLED от",
-        "price": 22000,
-        "finalPrice": 22000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 6500,
+        "finalPrice": 6500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 14000,
+        "finalPrice": 14000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт пллюс",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 27000,
+        "finalPrice": 27000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 40000,
+        "finalPrice": 40000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 50000,
+        "finalPrice": 50000,
         "active": true
       },
       {
@@ -1343,9 +1853,39 @@ export default {
     ],
     "iphone-16": [
       {
-        "name": "Замена экрана AMOLED AMOLED от",
-        "price": 20000,
-        "finalPrice": 20000,
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 6500,
+        "finalPrice": 6500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 18000,
+        "finalPrice": 18000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей ( наличие уточняйте)",
+        "price": 30000,
+        "finalPrice": 30000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (наличие уточняйте)",
+        "price": 34000,
+        "finalPrice": 34000,
         "active": true
       },
       {
@@ -1367,9 +1907,120 @@ export default {
         "active": true
       }
     ],
-    "iphone-16-plus": [],
-    "iphone-16-pro": [],
-    "iphone-16-pro-max": [],
+    "iphone-16-plus": [
+      {
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 21000,
+        "finalPrice": 21000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 27000,
+        "finalPrice": 27000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 46500,
+        "finalPrice": 46500,
+        "active": true
+      }
+    ],
+    "iphone-16-pro": [
+      {
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 14000,
+        "finalPrice": 14000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс НЕТ В НАЛИЧИИ",
+        "price": 0,
+        "finalPrice": 0,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 20000,
+        "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 38000,
+        "finalPrice": 38000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 45000,
+        "finalPrice": 45000,
+        "active": true
+      }
+    ],
+    "iphone-16-pro-max": [
+      {
+        "name": "Замена экрана in-cell (без гарантии)",
+        "price": 6500,
+        "finalPrice": 6500,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- стандарт плюс",
+        "price": 19000,
+        "finalPrice": 19000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
+        "price": 36000,
+        "finalPrice": 36000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. переклей (уточняйте наличие)",
+        "price": 45000,
+        "finalPrice": 45000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана ориг. снятый (уточняйте наличие)",
+        "price": 50000,
+        "finalPrice": 50000,
+        "active": true
+      }
+    ],
     "ipad-2017": [
       {
         "name": "Замена тачскрина(стекла)",
