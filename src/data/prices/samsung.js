@@ -9,6 +9,18 @@ export default {
   "models": {
     "s20": [
       {
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля ориг. переклей",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
         "name": "Замена аккумулятора",
         "price": 5000,
         "finalPrice": 5000,
@@ -31,19 +43,19 @@ export default {
         "price": 2500,
         "finalPrice": 2500,
         "active": true
-      },
-      {
-        "name": "Замена дисплейного модуля",
-        "price": 12500,
-        "finalPrice": 12500,
-        "active": true
       }
     ],
     "s20-plus": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 10000,
-        "finalPrice": 10000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 21000,
+        "finalPrice": 21000,
         "active": true
       },
       {
@@ -79,9 +91,15 @@ export default {
     ],
     "s20-ultra": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 12000,
         "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 27000,
+        "finalPrice": 27000,
         "active": true
       },
       {
@@ -111,9 +129,15 @@ export default {
     ],
     "s20-fe": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 5000,
         "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -143,9 +167,21 @@ export default {
     ],
     "s21": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 13000,
-        "finalPrice": 13000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 14000,
+        "finalPrice": 14000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
         "active": true
       },
       {
@@ -175,9 +211,21 @@ export default {
     ],
     "s21-plus": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 9000,
         "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля ориг. перклей",
+        "price": 15000,
+        "finalPrice": 15000,
         "active": true
       },
       {
@@ -207,9 +255,21 @@ export default {
     ],
     "s21-ultra": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 11000,
         "finalPrice": 11000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 30000,
+        "finalPrice": 30000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля ориг. переклей",
+        "price": 28000,
+        "finalPrice": 28000,
         "active": true
       },
       {
@@ -239,9 +299,15 @@ export default {
     ],
     "s21-fe": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 6500,
-        "finalPrice": 6500,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 6000,
+        "finalPrice": 6000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 18000,
+        "finalPrice": 18000,
         "active": true
       },
       {
@@ -271,9 +337,15 @@ export default {
     ],
     "s22": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 13000,
-        "finalPrice": 13000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
         "active": true
       },
       {
@@ -303,9 +375,15 @@ export default {
     ],
     "s22-plus": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 13000,
-        "finalPrice": 13000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
         "active": true
       },
       {
@@ -335,9 +413,21 @@ export default {
     ],
     "s22-ultra": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 15000,
-        "finalPrice": 15000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED как оригинал",
+        "price": 30000,
+        "finalPrice": 30000,
         "active": true
       },
       {
@@ -367,9 +457,9 @@ export default {
     ],
     "s23": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 22000,
-        "finalPrice": 22000,
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 20000,
+        "finalPrice": 20000,
         "active": true
       },
       {
@@ -399,7 +489,7 @@ export default {
     ],
     "s23-plus": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED премиум",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
@@ -431,9 +521,15 @@ export default {
     ],
     "s23-ultra": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 13000,
-        "finalPrice": 13000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 38000,
+        "finalPrice": 38000,
         "active": true
       },
       {
@@ -463,9 +559,21 @@ export default {
     ],
     "s23-fe": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 6500,
-        "finalPrice": 6500,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 14000,
+        "finalPrice": 14000,
         "active": true
       },
       {
@@ -495,7 +603,13 @@ export default {
     ],
     "s24": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
@@ -527,7 +641,7 @@ export default {
     ],
     "s24-plus": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
         "price": 20000,
         "finalPrice": 20000,
         "active": true
@@ -559,9 +673,21 @@ export default {
     ],
     "s24-ultra": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 30000,
-        "finalPrice": 30000,
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 20000,
+        "finalPrice": 20000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 28000,
+        "finalPrice": 28000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 32000,
+        "finalPrice": 32000,
         "active": true
       },
       {
@@ -591,7 +717,7 @@ export default {
     ],
     "a12": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия стандарт",
         "price": 2500,
         "finalPrice": 2500,
         "active": true
@@ -629,9 +755,9 @@ export default {
     ],
     "a30": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 3500,
-        "finalPrice": 3500,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -661,9 +787,15 @@ export default {
     ],
     "a32": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия ориг. переклей",
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
@@ -693,9 +825,15 @@ export default {
     ],
     "a33": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
@@ -731,9 +869,15 @@ export default {
     ],
     "a34": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
@@ -769,7 +913,7 @@ export default {
     ],
     "a50": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -807,9 +951,15 @@ export default {
     ],
     "a51": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
@@ -845,9 +995,15 @@ export default {
     ],
     "a52": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -889,9 +1045,15 @@ export default {
     ],
     "a52s": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -933,9 +1095,15 @@ export default {
     ],
     "a53": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -971,9 +1139,15 @@ export default {
     ],
     "a54": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
@@ -1009,9 +1183,15 @@ export default {
     ],
     "a73": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 5000,
-        "finalPrice": 5000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 8000,
+        "finalPrice": 8000,
         "active": true
       },
       {
@@ -1047,7 +1227,7 @@ export default {
     ],
     "galaxy-a31": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -1079,9 +1259,9 @@ export default {
     ],
     "galaxy-a22": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4500,
+        "finalPrice": 4500,
         "active": true
       },
       {
@@ -1117,7 +1297,7 @@ export default {
     ],
     "galaxy-a20": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -1149,9 +1329,15 @@ export default {
     ],
     "m12": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия стандарт",
         "price": 2500,
         "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия премиум",
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -1187,9 +1373,15 @@ export default {
     ],
     "m21": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 3500,
-        "finalPrice": 3500,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
@@ -1219,9 +1411,15 @@ export default {
     ],
     "m22": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 5000,
+        "finalPrice": 5000,
         "active": true
       },
       {
@@ -1251,39 +1449,13 @@ export default {
     ],
     "m31": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 3500,
         "finalPrice": 3500,
         "active": true
       },
       {
-        "name": "Замена аккумулятора",
-        "price": 2500,
-        "finalPrice": 2500,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      },
-      {
-        "name": "Замена слухового динамика",
-        "price": 2000,
-        "finalPrice": 2000,
-        "active": true
-      }
-    ],
-    "m32": [
-      {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
         "price": 4000,
         "finalPrice": 4000,
         "active": true
@@ -1313,9 +1485,47 @@ export default {
         "active": true
       }
     ],
+    "m32": [
+      {
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 4000,
+        "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора",
+        "price": 2500,
+        "finalPrice": 2500,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      },
+      {
+        "name": "Замена слухового динамика",
+        "price": 2000,
+        "finalPrice": 2000,
+        "active": true
+      }
+    ],
     "m33": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия стандарт",
         "price": 3000,
         "finalPrice": 3000,
         "active": true
@@ -1347,9 +1557,21 @@ export default {
     ],
     "m52": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 5000,
         "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум",
+        "price": 6500,
+        "finalPrice": 6500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
@@ -1386,9 +1608,9 @@ export default {
     "m53": [],
     "m54": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 6000,
+        "finalPrice": 6000,
         "active": true
       },
       {
@@ -1418,9 +1640,15 @@ export default {
     ],
     "note-10": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 6500,
-        "finalPrice": 6500,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 20000,
+        "finalPrice": 20000,
         "active": true
       },
       {
@@ -1456,9 +1684,15 @@ export default {
     ],
     "note-10-plus": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 9000,
         "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 27000,
+        "finalPrice": 27000,
         "active": true
       },
       {
@@ -1494,9 +1728,15 @@ export default {
     ],
     "note-20": [
       {
-        "name": "Замена дисплейного модуля",
-        "price": 10000,
-        "finalPrice": 10000,
+        "name": "Замена дисплейного модуля копия OLED стандарт",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
@@ -1532,9 +1772,15 @@ export default {
     ],
     "note-20-ultra": [
       {
-        "name": "Замена дисплейного модуля",
+        "name": "Замена дисплейного модуля копия OLED стандарт",
         "price": 12000,
         "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплейного модуля копия OLED премиум Service Pack",
+        "price": 27000,
+        "finalPrice": 27000,
         "active": true
       },
       {
@@ -1588,25 +1834,17 @@ export default {
         "active": true
       }
     ],
-    "z-fold-3": [],
-    "z-flip-4": [
+    "z-fold-3": [
       {
-        "name": "Замена дисплейного модуля (внутр.)",
-        "price": 50000,
-        "finalPrice": 50000,
-        "active": true
-      },
-      {
-        "name": "Замена разъема питания",
-        "price": 0,
-        "finalPrice": 0,
+        "name": "Замена экрана внутр. копия Service Pack",
+        "price": 45000,
+        "finalPrice": 45000,
         "active": true
       }
     ],
-    "z-fold-4": [],
-    "z-flip-5": [
+    "z-flip-4": [
       {
-        "name": "Замена дисплйеного модуля (внутр.)",
+        "name": "Замена дисплейного модуля копия Service Pack (внутр.)",
         "price": 40000,
         "finalPrice": 40000,
         "active": true
@@ -1618,7 +1856,42 @@ export default {
         "active": true
       }
     ],
-    "z-fold-5": [],
+    "z-fold-4": [
+      {
+        "name": "Замена экрана копия Service Pack внешн.",
+        "price": 14000,
+        "finalPrice": 14000,
+        "active": true
+      }
+    ],
+    "z-flip-5": [
+      {
+        "name": "Замена дисплйеного модуля копия Service Pack (внутр.)",
+        "price": 40000,
+        "finalPrice": 40000,
+        "active": true
+      },
+      {
+        "name": "Замена дисплйеного модуля копия Service Pack (внешн.)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена разъема питания",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      }
+    ],
+    "z-fold-5": [
+      {
+        "name": "Замена экрана копия премиум внешн.",
+        "price": 14000,
+        "finalPrice": 14000,
+        "active": true
+      }
+    ],
     "tab-s6": [],
     "tab-s7": [],
     "tab-s8": [],
