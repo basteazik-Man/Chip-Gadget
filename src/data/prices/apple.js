@@ -51,7 +51,7 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры 1шт",
         "price": 1000,
         "finalPrice": 1000,
         "active": true
@@ -101,7 +101,7 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры 1шт",
         "price": 1000,
         "finalPrice": 1000,
         "active": true
@@ -169,7 +169,7 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ",
         "price": 1500,
         "finalPrice": 1500,
         "active": true
@@ -312,8 +312,8 @@ export default {
       },
       {
         "name": "Замена стекла камеры",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 1000,
+        "finalPrice": 1000,
         "active": true
       }
     ],
@@ -334,12 +334,6 @@ export default {
         "name": "Замена экрана ориг. (уточняйте наличие)",
         "price": 8000,
         "finalPrice": 8000,
-        "active": true
-      },
-      {
-        "name": "Замена стекла камеры",
-        "price": 1700,
-        "finalPrice": 1700,
         "active": true
       },
       {
@@ -382,6 +376,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры",
+        "price": 1000,
+        "finalPrice": 1000,
         "active": true
       }
     ],
@@ -448,8 +448,8 @@ export default {
       },
       {
         "name": "Замена стекла камеры",
-        "price": 1500,
-        "finalPrice": 1500,
+        "price": 1000,
+        "finalPrice": 1000,
         "active": true
       }
     ],
@@ -482,12 +482,6 @@ export default {
         "name": "Замена аккумулятора",
         "price": 3500,
         "finalPrice": 3500,
-        "active": true
-      },
-      {
-        "name": "Замена стекла камеры",
-        "price": 1500,
-        "finalPrice": 1500,
         "active": true
       },
       {
@@ -524,6 +518,12 @@ export default {
         "name": "Замена микрофона",
         "price": 4000,
         "finalPrice": 4000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры 1шт.",
+        "price": 1500,
+        "finalPrice": 1500,
         "active": true
       }
     ],
@@ -601,7 +601,7 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекала камеры",
+        "name": "Замена стекала камеры 1шт.",
         "price": 1500,
         "finalPrice": 1500,
         "active": true
@@ -681,9 +681,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт",
         "price": 3000,
         "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла копия  1шт",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -761,9 +767,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
         "price": 3000,
         "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -841,9 +853,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
         "price": 3000,
         "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -921,9 +939,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
         "price": 3200,
         "finalPrice": 3200,
+        "active": true
+      },
+      {
+        "name": "Замена стекла копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -990,8 +1014,8 @@ export default {
       },
       {
         "name": "Замена фронтальной камеры",
-        "price": 3999,
-        "finalPrice": 3999,
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       },
       {
@@ -1007,9 +1031,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 3500,
-        "finalPrice": 3500,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1063,9 +1093,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг. (уточняйте наличие)",
         "price": 3500,
         "finalPrice": 3500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1149,9 +1185,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1235,9 +1277,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1315,9 +1363,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1348,8 +1402,8 @@ export default {
       },
       {
         "name": "Замена задней крышки",
-        "price": 9000,
-        "finalPrice": 9000,
+        "price": 7000,
+        "finalPrice": 7000,
         "active": true
       },
       {
@@ -1377,9 +1431,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1416,14 +1476,14 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 9000,
-        "finalPrice": 9000,
+        "price": 7000,
+        "finalPrice": 7000,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 9000,
-        "finalPrice": 9000,
+        "price": 6500,
+        "finalPrice": 6500,
         "active": true
       },
       {
@@ -1457,9 +1517,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4000,
-        "finalPrice": 4000,
+        "name": "Замена стекла камеры ориг (уточняйте наличие) 1шт.",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1502,14 +1568,14 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 10000,
-        "finalPrice": 10000,
+        "price": 7500,
+        "finalPrice": 7500,
         "active": true
       },
       {
         "name": "Замена задней крышки",
-        "price": 9000,
-        "finalPrice": 9000,
+        "price": 7000,
+        "finalPrice": 7000,
         "active": true
       },
       {
@@ -1519,33 +1585,39 @@ export default {
         "active": true
       },
       {
-        "name": "Замена разъема",
+        "name": "Замена разъема (нижний шлейф ориг)",
+        "price": 90000,
+        "finalPrice": 90000,
+        "active": true
+      },
+      {
+        "name": "Замена микрофона (нижний шлейф ориг)",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена фронтальной камеры ориг.",
+        "price": 10000,
+        "finalPrice": 10000,
+        "active": true
+      },
+      {
+        "name": "Замена основной камеры ориг.",
         "price": 12000,
         "finalPrice": 12000,
         "active": true
       },
       {
-        "name": "Замена фронтальной камеры",
-        "price": 12000,
-        "finalPrice": 12000,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
+        "price": 3500,
+        "finalPrice": 3500,
         "active": true
       },
       {
-        "name": "Замена основной камеры",
-        "price": 12000,
-        "finalPrice": 12000,
-        "active": true
-      },
-      {
-        "name": "Замена микрофона",
-        "price": 12000,
-        "finalPrice": 12000,
-        "active": true
-      },
-      {
-        "name": "Замена стекла камеры",
-        "price": 4500,
-        "finalPrice": 4500,
+        "name": "Замена стекла копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1588,14 +1660,20 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 14000,
-        "finalPrice": 14000,
+        "price": 7500,
+        "finalPrice": 7500,
         "active": true
       },
       {
-        "name": "Замена задней крышки",
-        "price": 10000,
-        "finalPrice": 10000,
+        "name": "Замена задней крышки ориг. (наличие уточняйте)",
+        "price": 8000,
+        "finalPrice": 8000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия",
+        "price": 5000,
+        "finalPrice": 5000,
         "active": true
       },
       {
@@ -1606,14 +1684,14 @@ export default {
       },
       {
         "name": "Замена разъема",
-        "price": 15000,
-        "finalPrice": 15000,
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
         "name": "Замена фронтальной камеры",
-        "price": 12000,
-        "finalPrice": 12000,
+        "price": 8500,
+        "finalPrice": 8500,
         "active": true
       },
       {
@@ -1624,14 +1702,20 @@ export default {
       },
       {
         "name": "Замена микрофона",
-        "price": 15000,
-        "finalPrice": 15000,
+        "price": 9100,
+        "finalPrice": 9100,
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 4500,
-        "finalPrice": 4500,
+        "name": "Замена стекла камеры ориг. (уточняйте наличие) 1шт.",
+        "price": 3000,
+        "finalPrice": 3000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1674,14 +1758,20 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 12000,
-        "finalPrice": 12000,
+        "price": 7500,
+        "finalPrice": 7500,
         "active": true
       },
       {
-        "name": "Замена задней крышки",
-        "price": 12000,
-        "finalPrice": 12000,
+        "name": "Замена задней крышки ориг (уточняйте наличие)",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия",
+        "price": 5000,
+        "finalPrice": 5000,
         "active": true
       },
       {
@@ -1692,20 +1782,26 @@ export default {
       },
       {
         "name": "Замена разъема",
-        "price": 15000,
-        "finalPrice": 15000,
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
         "name": "Замена микрофона",
-        "price": 15000,
-        "finalPrice": 15000,
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена стекла камеры ориг.  1шт.",
         "price": 4500,
         "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1748,38 +1844,50 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 15000,
-        "finalPrice": 15000,
+        "price": 7000,
+        "finalPrice": 7000,
         "active": true
       },
       {
-        "name": "Замена задней крышки",
-        "price": 14000,
-        "finalPrice": 14000,
+        "name": "Замена задней крышки ориг (наличие уточняйте)",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия",
+        "price": 5500,
+        "finalPrice": 5500,
         "active": true
       },
       {
         "name": "Замена слухового динамика",
-        "price": 16000,
-        "finalPrice": 16000,
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
-        "name": "Замена разъема",
-        "price": 16000,
-        "finalPrice": 16000,
+        "name": "Замена разъема (нижний шлейф ориг)",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
-        "name": "Замена микрофона",
-        "price": 16000,
-        "finalPrice": 16000,
+        "name": "Замена микрофона (нижний шлейф ориг)",
+        "price": 10000,
+        "finalPrice": 10000,
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 6000,
-        "finalPrice": 6000,
+        "name": "Замена стекла камеры ориг (наличие уточняйте) 1шт.",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1822,32 +1930,44 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 18000,
-        "finalPrice": 18000,
+        "price": 8000,
+        "finalPrice": 8000,
         "active": true
       },
       {
-        "name": "Замена задней крышки",
-        "price": 14000,
-        "finalPrice": 14000,
+        "name": "Замена задней крышки ориг. (наличие уточняйте)",
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
-        "name": "Замена разъема",
-        "price": 18000,
-        "finalPrice": 18000,
+        "name": "Замена задней крышки копия",
+        "price": 5500,
+        "finalPrice": 5500,
         "active": true
       },
       {
-        "name": "Замена микрофона",
-        "price": 18000,
-        "finalPrice": 18000,
+        "name": "Замена разъема (нижний шлейф ориг)",
+        "price": 12000,
+        "finalPrice": 12000,
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
-        "price": 6000,
-        "finalPrice": 6000,
+        "name": "Замена микрофона (нижний шлейф ориг)",
+        "price": 12000,
+        "finalPrice": 12000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры ориг. (наличие уточняйте) 1шт.",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1890,20 +2010,38 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 17000,
-        "finalPrice": 17000,
+        "price": 7500,
+        "finalPrice": 7500,
         "active": true
       },
       {
-        "name": "Замена задней крышки",
-        "price": 16000,
-        "finalPrice": 16000,
+        "name": "Замена задней крышки ориг. (наличие уточняйте)",
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
-        "name": "Замена стекла камеры",
+        "name": "Замена задней крышки копия- премиум",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия",
         "price": 5000,
         "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры ориг. (наличие уточняйте) 1шт",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2000,
+        "finalPrice": 2000,
         "active": true
       }
     ],
@@ -1981,6 +2119,42 @@ export default {
         "price": 45000,
         "finalPrice": 45000,
         "active": true
+      },
+      {
+        "name": "Замена аккумулятора от",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки ориг. (наличие уточняйте)",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия- премиум",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия ",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры ориг.  1шт.",
+        "price": 7500,
+        "finalPrice": 7500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия- премиум 1шт",
+        "price": 3500,
+        "finalPrice": 3500,
+        "active": true
       }
     ],
     "iphone-16-pro-max": [
@@ -2018,6 +2192,42 @@ export default {
         "name": "Замена экрана ориг. снятый (уточняйте наличие)",
         "price": 50000,
         "finalPrice": 50000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора от",
+        "price": 9000,
+        "finalPrice": 9000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки ориг (уточняйте наличие)",
+        "price": 8500,
+        "finalPrice": 8500,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия- премиум",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена задней крышки копия",
+        "price": 5500,
+        "finalPrice": 5500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры ориг 1шт. (уточняйте наличие)",
+        "price": 7500,
+        "finalPrice": 7500,
+        "active": true
+      },
+      {
+        "name": "Замена стекла камеры копия 1шт.",
+        "price": 2500,
+        "finalPrice": 2500,
         "active": true
       }
     ],
