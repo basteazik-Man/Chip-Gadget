@@ -128,8 +128,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 3500,
-        "finalPrice": 3500,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -202,8 +202,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 3500,
-        "finalPrice": 3500,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -270,8 +270,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 3500,
-        "finalPrice": 3500,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -338,8 +338,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 3500,
-        "finalPrice": 3500,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -406,8 +406,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора",
-        "price": 3500,
-        "finalPrice": 3500,
+        "price": 3000,
+        "finalPrice": 3000,
         "active": true
       },
       {
@@ -898,8 +898,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 4500,
-        "finalPrice": 4500,
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       },
       {
@@ -990,8 +990,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 5000,
-        "finalPrice": 5000,
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       },
       {
@@ -1144,8 +1144,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 6000,
-        "finalPrice": 6000,
+        "price": 4000,
+        "finalPrice": 4000,
         "active": true
       },
       {
@@ -1236,8 +1236,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 6500,
-        "finalPrice": 6500,
+        "price": 4500,
+        "finalPrice": 4500,
         "active": true
       },
       {
@@ -1321,7 +1321,13 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
+        "name": "Замена аккумулятора копия (официальная привязка)",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
         "price": 7000,
         "finalPrice": 7000,
         "active": true
@@ -1396,8 +1402,8 @@ export default {
       },
       {
         "name": "Замена аккумулятора от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "price": 4500,
+        "finalPrice": 4500,
         "active": true
       },
       {
@@ -1475,9 +1481,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена аккумулятора (Официальная привязка)",
+        "price": 4500,
+        "finalPrice": 4500,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
+        "price": 7500,
+        "finalPrice": 7500,
         "active": true
       },
       {
@@ -1567,9 +1579,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 7500,
-        "finalPrice": 7500,
+        "name": "Замена аккумулятора (Официальная привязка)",
+        "price": 5000,
+        "finalPrice": 5000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
+        "price": 8000,
+        "finalPrice": 8000,
         "active": true
       },
       {
@@ -1659,9 +1677,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 7500,
-        "finalPrice": 7500,
+        "name": "Замена аккумулятора (Официальная привязка)",
+        "price": 5500,
+        "finalPrice": 5500,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
+        "price": 8500,
+        "finalPrice": 8500,
         "active": true
       },
       {
@@ -1757,9 +1781,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 7500,
-        "finalPrice": 7500,
+        "name": "Замена аккумулятора копия (Официальная привязка)",
+        "price": 5500,
+        "finalPrice": 5500,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
+        "price": 8500,
+        "finalPrice": 8500,
         "active": true
       },
       {
@@ -1843,9 +1873,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 7000,
-        "finalPrice": 7000,
+        "name": "Замена аккумулятора копия (Официальная привязка)",
+        "price": 5500,
+        "finalPrice": 5500,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания)",
+        "price": 8500,
+        "finalPrice": 8500,
         "active": true
       },
       {
@@ -1929,9 +1965,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
-        "price": 8000,
-        "finalPrice": 8000,
+        "name": "Замена аккумулятора копия (официальная привязка)",
+        "price": 7000,
+        "finalPrice": 7000,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (без записи в истории обслуживания)",
+        "price": 9000,
+        "finalPrice": 9000,
         "active": true
       },
       {
@@ -2009,9 +2051,15 @@ export default {
         "active": true
       },
       {
-        "name": "Замена аккумулятора от",
+        "name": "Замена аккумулятора копия (Официальная привязка)",
         "price": 7500,
         "finalPrice": 7500,
+        "active": true
+      },
+      {
+        "name": "Замена аккумулятора (Без записи в истории обслуживания) (уточняйте)",
+        "price": 0,
+        "finalPrice": 0,
         "active": true
       },
       {
