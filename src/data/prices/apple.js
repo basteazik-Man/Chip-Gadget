@@ -1544,32 +1544,32 @@ export default {
     "iphone-14-pro-max": [
       {
         "name": "Замена экрана in-cell (без гарантии)",
-        "price": 6000,
-        "finalPrice": 6000,
+        "price": 5000,
+        "finalPrice": 5000,
         "active": true
       },
       {
         "name": "Замена экрана копия AMOLED- стандарнт",
-        "price": 12000,
-        "finalPrice": 12000,
+        "price": 8000,
+        "finalPrice": 8000,
         "active": true
       },
       {
         "name": "Замена экрана копия AMOLED- стандарнт плюс",
+        "price": 16000,
+        "finalPrice": 16000,
+        "active": true
+      },
+      {
+        "name": "Замена экрана копия AMOLED- премиум",
         "price": 18000,
         "finalPrice": 18000,
         "active": true
       },
       {
-        "name": "Замена экрана копия AMOLED- премиум",
+        "name": "Замена экрана ориг. переклей",
         "price": 20000,
         "finalPrice": 20000,
-        "active": true
-      },
-      {
-        "name": "Замена экрана ориг. переклей",
-        "price": 28000,
-        "finalPrice": 28000,
         "active": true
       },
       {
